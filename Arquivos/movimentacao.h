@@ -8,8 +8,8 @@ float movx(float posx) {
     if (posx < 0) {
         posx = 0;
     }
-    if (posx > 1100) {
-        posx = 1100;
+    if (posx > 1200) {
+        posx = 1200;
     }
     return posx;
 }
@@ -24,9 +24,14 @@ float movy(float posy, float gravidade) {
     if (posy < 0) {
         posy = 0;
     }
-    if (posy > 500) {
-        posy = 500;
+    if (posy > 600) {
+        posy = 600;
     }
+    posy = posy + gravidade;
+    return posy;
+}
+
+float pulo(float posy, float gravidade){
     if(IsKeyDown(KEY_SPACE)){
        posy = posy - 2.2; 
     }

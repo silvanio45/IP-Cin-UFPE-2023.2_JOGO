@@ -4,14 +4,15 @@
 int main() {
     InitWindow(1280, 720, "Tela Inicial");
 
-    Texture2D boneco = LoadTexture("./boneco1.png");
-    Texture2D cenario = LoadTexture("./cenario1.png");
+    Texture2D boneco = LoadTexture("./boneco3.png");
+    Texture2D cenario = LoadTexture("./cenario2.png");
+    Texture2D cenarioLog = LoadTexture("./cenario0.png");
     Texture2D botaoStart = LoadTexture("./botao2.png");
 
-    Rectangle botaoinicio = { 300, 250, botaoStart.width, botaoStart.height };
+    Rectangle botaoinicio = { 300, 250, (1280 - botaoStart.width) / 2, (720 - botaoStart.height + 50) / 2 };
 
-    float posx = 0;
-    float posy = 720 - boneco.height;
+    float posx = 0 + boneco.width;
+    float posy = 0 + boneco.height;
     float gravidade = 0.4;
 
     bool loading = false;
@@ -20,8 +21,8 @@ int main() {
         if (!loading) {
             BeginDrawing();
             ClearBackground(WHITE);
-            DrawText("CInvire", 20, 60, 30, BLUE);
-            DrawTexture(botaoStart, botaoinicio.x, botaoinicio.y, WHITE);
+            DrawTexture(cenarioLog, 0, 0, WHITE);
+            DrawTexture(botaoStart, (1280 - botaoinicio.x) / 2, (720 - botaoinicio.y + 50) / 2, WHITE);
             EndDrawing();
 
             if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) &&
@@ -29,14 +30,16 @@ int main() {
                 loading = true;
             }
         } else {
+
             posx = movx(posx);
             posy = movy(posy, gravidade);
+            posy = pulo(posy, gravidade);
 
             BeginDrawing();
             ClearBackground(WHITE);
-            DrawText("CInvire", 20, 60, 30, BLUE);
             DrawTexture(cenario, 0, 0, WHITE);
             DrawTexture(boneco, posx, posy, WHITE);
+       
             EndDrawing();
         }
     }
