@@ -1,4 +1,5 @@
 #include "raylib.h"
+#include <stdio.h>
 #include "movimentacao.h"
 
 int main() {
@@ -11,11 +12,21 @@ int main() {
 
     Rectangle botaoinicio = { 300, 250, (1280 - botaoStart.width) / 2, (720 - botaoStart.height + 50) / 2 };
 
-    // Define a rectangle for the character
-    Rectangle bonecoRec = { 0 + boneco.width, 1100 + boneco.height, boneco.width, boneco.height };
-    float gravidade = 0.4;
+    // Define the source rectangle for the texture
+    Rectangle sourceRec = { 0, 0, boneco.width, boneco.height };
+
+    float velY = 0;
+    float jumpSpeed = 200.0f; // The initial upward speed when the player jumps
+
+    float posx = 0 + boneco.width;
+    float posy = 1100 + boneco.height;
+    float gravidade = 2.8f;
 
     bool loading = false;
+    bool isJumping = false; bool jump = true;
+
+    // Set the target frames per second
+    SetTargetFPS(60);
 
     while (!WindowShouldClose()) {
         if (!loading) {
@@ -30,15 +41,32 @@ int main() {
                 loading = true;
             }
         } else {
+            float delta = GetFrameTime();
+            posx = movx(posx);
+            posy = movy(posy, gravidade);
 
-            bonecoRec.x = movx(bonecoRec.x);
-            bonecoRec.y = movy(bonecoRec.y, gravidade);
-            bonecoRec.y = pulo(bonecoRec.y, gravidade);
+            
+            if((IsKeyPressed(KEY_SPACE) && (posy >= (600 - boneco.height))) || isJumping){
+                isJumping = 1;
+                velY = jumpSpeed; // Start the jump by setting the upward speed
+                posy = pulo(posy, &velY, gravidade, boneco.height, delta, &isJumping, &jump);
+            }   
+
+            printf("%d", isJumping);
+
+            if (posy > 600 ) {
+                posy = 600;
+            }
 
             BeginDrawing();
             ClearBackground(WHITE);
             DrawTexture(cenario, 0, 0, WHITE);
-            DrawTextureRec(boneco, (Rectangle){ 0, 0, boneco.width, boneco.height }, (Vector2){ bonecoRec.x, bonecoRec.y }, WHITE);
+
+            // Define the destination rectangle for the texture
+            Rectangle destRec = { posx, posy, boneco.width, boneco.height };
+
+            // Draw the texture as a rectangle
+            DrawTextureRec(boneco, sourceRec, (Vector2){ destRec.x, destRec.y }, WHITE);
        
             EndDrawing();
         }
@@ -51,4 +79,3 @@ int main() {
 
     return 0;
 }
-
