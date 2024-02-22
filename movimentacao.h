@@ -44,7 +44,7 @@ float pulo(float posy, float *velY, float gravidade, float bonecoHeight, float d
 
     // printf("AAAA");
 
-    if (posy <= (600 - bonecoHeight)) {
+    if (posy <= (360 - bonecoHeight)) {
         *isJumping = false;
         *velY = 0;  // Reset vertical velocity
     }

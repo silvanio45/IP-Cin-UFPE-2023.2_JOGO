@@ -37,17 +37,19 @@ void removeBullet(Bullet* bullet) {
     free(bullet);
 }
 
+#define SCREEN_HEIGHT 540
+#define SCREE_WIDTH 1280
 
 int main() {
-    InitWindow(1280, 720, "Tela Inicial");
+    InitWindow(SCREE_WIDTH, SCREEN_HEIGHT, "Tela Inicial");
 
     Texture2D boneco = LoadTexture("./resources/boneco3.png");
     Texture2D bulletTexture = LoadTexture("./resources/bullet2.png");
-    Texture2D cenario = LoadTexture("./resources/cenario2.png");
+    Texture2D cenario = LoadTexture("./resources/cenario.png");
     Texture2D cenarioLog = LoadTexture("./resources/cenario0.png");
     Texture2D botaoStart = LoadTexture("./resources/botao2.png");
 
-    Rectangle botaoinicio = { 300, 250, (1280 - botaoStart.width) / 2, (720 - botaoStart.height + 20) / 2 };
+    Rectangle botaoinicio = { 300, 250, (SCREE_WIDTH - botaoStart.width) / 2, (SCREEN_HEIGHT - botaoStart.height + 20) / 2 };
 
     
     // Define the source rectangle for the texture
@@ -61,7 +63,7 @@ int main() {
    
 
     float velY = 0;
-    float jumpSpeed = 400.0f; // The initial upward speed when the player jumps
+    float jumpSpeed = 500.0f; // The initial upward speed when the player jumps
 
     float posx = 0 + boneco.width;
     float posy = 1100 + boneco.height;
@@ -85,7 +87,7 @@ int main() {
             BeginDrawing();
             ClearBackground(WHITE);
             DrawTexture(cenarioLog, 0, 0, WHITE);
-            DrawTexture(botaoStart, (1280 - botaoinicio.x) / 2, (720 - botaoinicio.y + 50) / 2, WHITE);
+            DrawTexture(botaoStart, (SCREE_WIDTH - botaoinicio.x) / 2, (SCREEN_HEIGHT - botaoinicio.y + 50) / 2, WHITE);
             EndDrawing();
 
             if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) &&
@@ -110,19 +112,19 @@ int main() {
 
 
 
-            if((IsKeyPressed(KEY_SPACE) && (posy >= (600 - boneco.height))) || isJumping){
+            if((IsKeyPressed(KEY_SPACE) && (posy >= ((SCREEN_HEIGHT - 140) - boneco.height))) || isJumping){
                 isJumping = 1;
                 velY = jumpSpeed; // Start the jump by setting the upward speed
                 posy = pulo(posy, &velY, gravidade, boneco.height, delta, &isJumping, &jump);
             }   
 
-            if (posy > 600 ) {
-                posy = 600;
+            if (posy > (SCREEN_HEIGHT - 140) ) {
+                posy = (SCREEN_HEIGHT - 140);
             }
 
             BeginDrawing();
             ClearBackground(WHITE);
-            DrawTexture(cenario, 0, 0, WHITE);
+            DrawTexture(cenario, 0, SCREEN_HEIGHT - cenario.height, WHITE);
 
             // Define the destination rectangle for the texture
             Rectangle destRec = { posx, posy, boneco.width, boneco.height };
@@ -141,7 +143,7 @@ int main() {
                 DrawTextureRec(bulletTexture, sourceRecBullet, (Vector2){ destRecBullet.x, destRecBullet.y }, WHITE);
 
                 // Check if bullet is off-screen
-                if (current->position.x < 0 || current->position.x > 1280) {
+                if (current->position.x < 0 || current->position.x > SCREE_WIDTH) {
                     Bullet* next = current->next;
                     removeBullet(current);
                     current = next;
