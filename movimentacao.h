@@ -42,7 +42,7 @@ float pulo(float posy, float *velY, float gravidade, float bonecoHeight, float d
     *velY -= gravidade * delta;
     posy -= *velY * delta;
 
-    printf("AAAA");
+    // printf("AAAA");
 
     if (posy <= (600 - bonecoHeight)) {
         *isJumping = false;
