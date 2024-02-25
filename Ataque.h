@@ -1,3 +1,5 @@
+#include "raylib.h"
+
 int AtaquePersonagem(float posx, float posy){
     int cont = 0;
     float py;
