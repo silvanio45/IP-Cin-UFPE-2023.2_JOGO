@@ -14,7 +14,7 @@ float movx(float posx) {
 float movy(float posy, float gravidade) {
     float speed = 40.0f; // Increase this value to make the player move faster vertically
     if (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)) posy += speed;
-    if (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)) posy -= speed;
+    // if (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)) posy -= speed;
     if (posy < 0) posy = 0;
     if (posy > 600) posy = 600;
     posy = posy + gravidade;

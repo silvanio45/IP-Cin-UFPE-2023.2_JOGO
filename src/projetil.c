@@ -8,6 +8,7 @@ Bullet* bulletList = NULL; // Start with an empty list
 
 // Function to add a bullet to the list
 void addBullet(Vector2 position, float speed) {
+    printf("add bullet\n %f %f", position.x, position.y);
     Bullet* newBullet = (Bullet*)malloc(sizeof(Bullet));
     newBullet->position = position;
     newBullet->speed = speed;
@@ -35,7 +36,7 @@ void updateBullets(Texture2D bulletTexture, Rectangle sourceRecBullet, int SCREE
     while (current != NULL) {
                 // Update bullet position
                 current->position.x += current->speed;
-
+                // printf("UpdateBullet\n");
                 // Draw the bullet
                 Rectangle destRecBullet = { current->position.x, current->position.y, bulletTexture.width, bulletTexture.height };
                 DrawTextureRec(bulletTexture, sourceRecBullet, (Vector2){ destRecBullet.x, destRecBullet.y }, WHITE);

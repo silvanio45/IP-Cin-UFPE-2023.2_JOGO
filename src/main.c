@@ -108,6 +108,7 @@ int main()
     UnloadTexture(cenario);
     UnloadTexture(botaoStart);
     UnloadTexture(cenarioLog);
+    UnloadTexture(bulletTexture);
     DisposeSpriteAnimation(playerAnim_idleLeft);
     DisposeSpriteAnimation(playerAnim_idleRight);
     DisposeSpriteAnimation(playerAnim_walkingLeft);
@@ -139,9 +140,9 @@ static void UpdateDrawFrame(void)
 
         if(IsKeyDown(KEY_Z)){
                     if(timeSinceLastShot >= shotDelay){
-                        addBullet((Vector2) {105, 1100}, 15.f);
+                        addBullet((Vector2) {105, 1000}, 15.f);
                         timeSinceLastShot = 0.0f;
-
+                        // printf("AAA\n");
                     }
                 }
     }
@@ -159,13 +160,17 @@ static void UpdateDrawFrame(void)
     {
         BeginDrawing();
             ClearBackground(WHITE);
+            updateBullets(bulletTexture, sourceRecBullet, SCREEN_WIDTH, bulletList);
+            
             DrawTexture(cenario, 0, 0, WHITE);
             playerAnimation(playerDirec, playerRect);
-            updateBullets(bulletTexture, sourceRecBullet, SCREEN_WIDTH, bulletList);
+            
         EndDrawing();
     }
 
-
+    while (bulletList != NULL) {
+        removeBullet(bulletList);
+    }
 
 
 
