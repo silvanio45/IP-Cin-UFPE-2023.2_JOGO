@@ -310,31 +310,41 @@ void playerAnimation(int playerDirec, Rectangle playerRect) {
             case 1:
                 if(IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) 
                 {
-                    if(IsKeyDown(KEY_F))DrawSpriteAnimationPro(playerAnim_runningShotingRight, playerRect, (Vector2){0,0}, 0, WHITE );
+                    if(IsKeyDown(KEY_Z))DrawSpriteAnimationPro(playerAnim_runningShotingRight, playerRect, (Vector2){0,0}, 0, WHITE );
                     else DrawSpriteAnimationPro(playerAnim_walkingRight, playerRect, (Vector2){0,0}, 0, WHITE );
                 }
                 else
                 {
-                    if(IsKeyDown(KEY_F)) DrawSpriteAnimationPro(playerAnim_idleShotingRight, playerRect, (Vector2){0,0}, 0, WHITE );
+                    if(IsKeyDown(KEY_Z)) DrawSpriteAnimationPro(playerAnim_idleShotingRight, playerRect, (Vector2){0,0}, 0, WHITE );
                     else DrawSpriteAnimationPro(playerAnim_idleRight, playerRect, (Vector2){0,0}, 0, WHITE );
                 }
+
                 break;
             case -1:
                 if(IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) 
                 {
-                    if(IsKeyDown(KEY_F)) DrawSpriteAnimationPro(playerAnim_runningShotingLeft, playerRect, (Vector2){0,0}, 0, WHITE );
+                    if(IsKeyDown(KEY_Z)) DrawSpriteAnimationPro(playerAnim_runningShotingLeft, playerRect, (Vector2){0,0}, 0, WHITE );
                     else DrawSpriteAnimationPro(playerAnim_walkingLeft, playerRect, (Vector2){0,0}, 0, WHITE );
+
                 }
                 else 
                 {
-                    if (IsKeyDown(KEY_F)) DrawSpriteAnimationPro(playerAnim_idleShotingLeft, playerRect, (Vector2){0,0}, 0, WHITE );
+                    if (IsKeyDown(KEY_Z)) DrawSpriteAnimationPro(playerAnim_idleShotingLeft, playerRect, (Vector2){0,0}, 0, WHITE );
                     else DrawSpriteAnimationPro(playerAnim_idleLeft, playerRect, (Vector2){0,0}, 0, WHITE );
                 }
                 break;
             default:
-                if (IsKeyDown(KEY_F)) DrawSpriteAnimationPro(playerAnim_idleShotingRight, playerRect, (Vector2){0,0}, 0, WHITE );
+                if (IsKeyDown(KEY_Z)) DrawSpriteAnimationPro(playerAnim_idleShotingRight, playerRect, (Vector2){0,0}, 0, WHITE );
                 else DrawSpriteAnimationPro(playerAnim_idleRight, playerRect, (Vector2){0,0}, 0, WHITE );
                 
+                // if(IsKeyDown(KEY_Z)){
+                    // DrawSpriteAnimationPro(playerAnim_idleShotingRight, playerRect, (Vector2){0,0}, 0, WHITE );
+                // }
+
                 break;
             }
+}
+
+void playerShotAnimation (int playerDirec, Rectangle playerRect) {
+
 }

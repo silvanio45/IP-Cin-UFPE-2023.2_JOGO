@@ -29,7 +29,7 @@ typedef struct SpriteAnimation
 }SpriteAnimation;
 
 SpriteAnimation CreateSpriteAnimation(Texture2D spriteSheet, int framesPerSecond, Rectangle rectangles[], int length);
-
+    
 void DisposeSpriteAnimation(SpriteAnimation animation);
 
 void DrawSpriteAnimationPro(SpriteAnimation animation, Rectangle dest, Vector2 origin, float rotation, Color tint);

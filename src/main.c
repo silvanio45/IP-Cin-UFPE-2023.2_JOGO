@@ -37,16 +37,17 @@ Texture2D bulletTexture;
 float velY = 0;
 float jumpSpeed = 200.0f;
 float gravidade = 2.8f;
-int playerDirec;
+int playerDirec = 1;
 
 bool menu_open = true;
 bool isJumping = false; 
 bool jump = true;
 
 // Add a new variable to keep track of the time since the last shot
-float timeSinceLastShot = 0.0f;
+float timeSinceLastShot = 0.8f;
+float bulletSpeed;
 // Define the delay between each shot (1.0f means one second)
-float shotDelay = 0.2f; 
+float shotDelay = 0.4f; 
 
 
 
@@ -136,10 +137,10 @@ static void UpdateDrawFrame(void)
         }   
 
         if (playerRect.y > 600 ) playerRect.y = 600;
-
+        
         if(IsKeyDown(KEY_Z)){
                     if(timeSinceLastShot >= shotDelay){
-                        addBullet((Vector2) {105, 1000}, 15.f);
+                        addBullet(playerRect, 12.f, playerDirec);
                         timeSinceLastShot = 0.0f;
                         // printf("AAA\n");
                     }
@@ -159,10 +160,12 @@ static void UpdateDrawFrame(void)
     {
         BeginDrawing();
             ClearBackground(WHITE);
-            updateBullets(bulletTexture, sourceRecBullet, SCREEN_WIDTH);
             
+            // printf("%f %f\n", playerRect.x, playerRect.y);
             DrawTexture(cenario, 0, 0, WHITE);
+            updateBullets(bulletTexture, sourceRecBullet, SCREEN_WIDTH);
             playerAnimation(playerDirec, playerRect);
+            
             
         EndDrawing();
     }

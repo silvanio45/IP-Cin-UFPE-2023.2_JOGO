@@ -14,7 +14,7 @@ typedef struct Bullet {
 extern Bullet* bulletList; // Pointer to the first bullet in the list
 
 // Function to add a bullet to the list
-void addBullet(Vector2 position, float speed);
+void addBullet(Rectangle playerRect, float speed, int playerDirec);
 
 // Function to remove a bullet from the list
 void removeBullet(Bullet* bullet);
