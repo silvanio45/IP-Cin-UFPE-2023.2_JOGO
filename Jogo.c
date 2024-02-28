@@ -2,40 +2,7 @@
 #include <stdio.h>
 #include "movimentacao.h"
 #include <stdlib.h>
-
-
-typedef struct Bullet {
-    Vector2 position;
-    float speed;
-    struct Bullet* next; // Pointer to the next bullet in the list
-} Bullet;
-
-Bullet* head = NULL; // Start with an empty list
-
-// Function to add a bullet to the list
-void addBullet(Vector2 position, float speed) {
-    Bullet* newBullet = (Bullet*)malloc(sizeof(Bullet));
-    newBullet->position = position;
-    newBullet->speed = speed;
-    newBullet->next = head;
-    head = newBullet;
-}
-
-// Function to remove a bullet from the list
-void removeBullet(Bullet* bullet) {
-    if (head == bullet) {
-        head = bullet->next;
-    } else {
-        Bullet* current = head;
-        while (current != NULL && current->next != bullet) {
-            current = current->next;
-        }
-        if (current != NULL) {
-            current->next = bullet->next;
-        }
-    }
-    free(bullet);
-}
+#include "projetil.h"
 
 #define SCREEN_HEIGHT 540
 #define SCREE_WIDTH 1280
@@ -133,25 +100,7 @@ int main() {
             DrawTextureRec(boneco, sourceRecBoneco, (Vector2){ destRec.x, destRec.y }, WHITE);
             
             
-            Bullet* current = head;
-            while (current != NULL) {
-                // Update bullet position
-                current->position.x += current->speed;
-
-                // Draw the bullet
-                Rectangle destRecBullet = { current->position.x, current->position.y, bulletTexture.width, bulletTexture.height };
-                DrawTextureRec(bulletTexture, sourceRecBullet, (Vector2){ destRecBullet.x, destRecBullet.y }, WHITE);
-
-                // Check if bullet is off-screen
-                if (current->position.x < 0 || current->position.x > SCREE_WIDTH) {
-                    Bullet* next = current->next;
-                    removeBullet(current);
-                    current = next;
-                } else {
-                    current = current->next;
-                }
-            }
-
+            updateBullets(bulletTexture, sourceRecBullet, SCREE_WIDTH, bulletList);
             EndDrawing();
 
            
@@ -167,8 +116,8 @@ int main() {
     return 0;
 
         // Free all remaining bullets
-    while (head != NULL) {
-        removeBullet(head);
+    while (bulletList != NULL) {
+        removeBullet(bulletList);
     }
 
 }
