@@ -19,7 +19,7 @@ void addBullet(Vector2 position, float speed);
 // Function to remove a bullet from the list
 void removeBullet(Bullet* bullet);
 
-void updateBullets(Texture2D bulletTexture, Rectangle sourceRecBullet, int SCREEN_WIDTH, Bullet* current);
+void updateBullets(Texture2D bulletTexture, Rectangle sourceRecBullet, int SCREEN_WIDTH);
 
 
 

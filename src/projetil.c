@@ -8,7 +8,7 @@ Bullet* bulletList = NULL; // Start with an empty list
 
 // Function to add a bullet to the list
 void addBullet(Vector2 position, float speed) {
-    printf("add bullet\n %f %f", position.x, position.y);
+    printf("add bullet\n %f %f\n", position.x, position.y);
     Bullet* newBullet = (Bullet*)malloc(sizeof(Bullet));
     newBullet->position = position;
     newBullet->speed = speed;
@@ -32,22 +32,31 @@ void removeBullet(Bullet* bullet) {
     free(bullet);
 }
 
-void updateBullets(Texture2D bulletTexture, Rectangle sourceRecBullet, int SCREEN_WIDTH, Bullet* current){
-    while (current != NULL) {
-                // Update bullet position
-                current->position.x += current->speed;
-                // printf("UpdateBullet\n");
-                // Draw the bullet
-                Rectangle destRecBullet = { current->position.x, current->position.y, bulletTexture.width, bulletTexture.height };
-                DrawTextureRec(bulletTexture, sourceRecBullet, (Vector2){ destRecBullet.x, destRecBullet.y }, WHITE);
+void updateBullets(Texture2D bulletTexture, Rectangle sourceRecBullet, int SCREEN_WIDTH){
+    Bullet* current = bulletList;
+    Bullet* prev = NULL;
 
-                // Check if bullet is off-screen
-                if (current->position.x < 0 || current->position.x > SCREEN_WIDTH) {
-                    Bullet* next = current->next;
-                    removeBullet(current);
-                    current = next;
-                } else {
-                    current = current->next;
-                }
+    while (current != NULL) {
+        // Update bullet position
+        current->position.x += current->speed;
+        printf("UpdateBullet\n %f %f\n", current->position.x , current->position.y);
+        // Draw the bullet
+        Rectangle destRecBullet = { current->position.x, current->position.y, bulletTexture.width, bulletTexture.height };
+        DrawTextureRec(bulletTexture, sourceRecBullet, (Vector2){ destRecBullet.x, destRecBullet.y }, WHITE);
+
+        // Check if bullet is off-screen
+        if (current->position.x < 0 || current->position.x > SCREEN_WIDTH) {
+            Bullet* next = current->next;
+            if (prev != NULL) {
+                prev->next = next;
+            } else {
+                bulletList = next;
             }
+            removeBullet(current);
+            current = next;
+        } else {
+            prev = current;
+            current = current->next;
+        }
+    }
 }

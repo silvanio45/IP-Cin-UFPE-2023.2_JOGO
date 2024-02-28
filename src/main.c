@@ -65,14 +65,14 @@ int main()
     // Inicialização
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Tela Inicial");
 
-    playerSpriteSheet = LoadTexture("./resources/Personagem_SpriteSheet.png");
-    inimigo1SpriteSheet = LoadTexture("resources/Inimigo1_SpriteSheet.png");
-    inimigo2SpriteSheet = LoadTexture("resources/Inimigo2_SpriteSheet.png");
-    inimigo3SpriteSheet = LoadTexture("resources/Inimigo3_SpriteSheet.png");
-    bulletTexture = LoadTexture("./resources/bullet2.png");
-    cenario = LoadTexture("./resources/cenario2.png");
-    cenarioLog = LoadTexture("./resources/cenario0.png");
-    botaoStart = LoadTexture("./resources/botao2.png");
+    playerSpriteSheet =     LoadTexture("./resources/Personagem_SpriteSheet.png");
+    inimigo1SpriteSheet =   LoadTexture("resources/Inimigo1_SpriteSheet.png");
+    inimigo2SpriteSheet =   LoadTexture("resources/Inimigo2_SpriteSheet.png");
+    inimigo3SpriteSheet =   LoadTexture("resources/Inimigo3_SpriteSheet.png");
+    bulletTexture =         LoadTexture("./resources/bullet2.png");
+    cenario =               LoadTexture("./resources/cenario2.png");
+    cenarioLog =            LoadTexture("./resources/cenario0.png");
+    botaoStart =            LoadTexture("./resources/botao2.png");
 
     botaoStartColis = (Rectangle){ BOTAOINICIAL_POS_X, BOTAOINICIAL_POS_Y, botaoStart.width, botaoStart.height };
     playerRect = (Rectangle){PLAYER_POSINICIAL_X, PLAYER_POSINICIAL_Y, PLAYER_DIM_X, PLAYER_DIM_Y};
@@ -85,7 +85,6 @@ int main()
 
     // Define the source rectangle for the bullet
     sourceRecBullet = (Rectangle) {0, 0, bulletTexture.width, bulletTexture.height};
-
 
     #if defined(PLATFORM_WEB)
         emscripten_set_main_loop(UpdateDrawFrame, 60, 1);
@@ -160,7 +159,7 @@ static void UpdateDrawFrame(void)
     {
         BeginDrawing();
             ClearBackground(WHITE);
-            updateBullets(bulletTexture, sourceRecBullet, SCREEN_WIDTH, bulletList);
+            updateBullets(bulletTexture, sourceRecBullet, SCREEN_WIDTH);
             
             DrawTexture(cenario, 0, 0, WHITE);
             playerAnimation(playerDirec, playerRect);
@@ -168,9 +167,9 @@ static void UpdateDrawFrame(void)
         EndDrawing();
     }
 
-    while (bulletList != NULL) {
-        removeBullet(bulletList);
-    }
+    // while (bulletList != NULL) {
+    //     removeBullet(bulletList);
+    // }
 
 
 
