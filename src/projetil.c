@@ -1,6 +1,7 @@
 #include "raylib.h"
 #include <stdio.h>
 
+#include <stdlib.h>
 #include "../include/projetil.h"
 
 Bullet* bulletList = NULL; // Start with an empty list
