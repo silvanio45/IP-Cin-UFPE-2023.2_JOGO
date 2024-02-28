@@ -14,10 +14,10 @@ RDIR = ./resources
 SDIR = ./src
 
 # Files
-_DEPS = animacao.h movimentacao.h movimentacao.h
+_DEPS = animacao.h movimentacao.h projetil.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = animacao.o main.o movimentacao.o
+_OBJ = animacao.o main.o movimentacao.o projetil.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 # Default make

@@ -1,10 +1,11 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "raylib.h"
 
 #include "../include/movimentacao.h"
 #include "../include/animacao.h"
-
+#include "../include/projetil.h"
 
 #if defined(PLATFORM_WEB)
     #include <emscripten/emscripten.h>
@@ -14,6 +15,9 @@
 //----------------------------------------------------------------------------------
 // Variáveis Locais (local para este módulo)
 //----------------------------------------------------------------------------------
+
+#define SCREEN_WIDTH 1280
+#define SCREEN_HEIGHT 720
 
 Texture2D playerSpriteSheet;
 Texture2D inimigo2SpriteSheet;
@@ -26,6 +30,9 @@ Texture2D botaoStart;
 Rectangle botaoStartColis;
 Rectangle playerRect;
 
+Rectangle sourceRecBullet;
+Texture2D bulletTexture;
+// Bullet* bulletList = NULL; // Start with an empty list
 
 float velY = 0;
 float jumpSpeed = 200.0f;
@@ -35,6 +42,13 @@ int playerDirec;
 bool menu_open = true;
 bool isJumping = false; 
 bool jump = true;
+
+// Add a new variable to keep track of the time since the last shot
+float timeSinceLastShot = 0.0f;
+// Define the delay between each shot (1.0f means one second)
+float shotDelay = 0.2f; 
+
+
 
 //----------------------------------------------------------------------------------
 // Declaração de Funções Locais
@@ -49,12 +63,13 @@ static void UpdateDrawFrame(void);
 int main()
 {
     // Inicialização
-    InitWindow(1280, 720, "Tela Inicial");
+    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Tela Inicial");
 
     playerSpriteSheet = LoadTexture("./resources/Personagem_SpriteSheet.png");
     inimigo1SpriteSheet = LoadTexture("resources/Inimigo1_SpriteSheet.png");
     inimigo2SpriteSheet = LoadTexture("resources/Inimigo2_SpriteSheet.png");
     inimigo3SpriteSheet = LoadTexture("resources/Inimigo3_SpriteSheet.png");
+    bulletTexture = LoadTexture("./resources/bullet2.png");
     cenario = LoadTexture("./resources/cenario2.png");
     cenarioLog = LoadTexture("./resources/cenario0.png");
     botaoStart = LoadTexture("./resources/botao2.png");
@@ -68,13 +83,21 @@ int main()
 
     initAnimations(playerSpriteSheet, inimigo1SpriteSheet, inimigo2SpriteSheet, inimigo3SpriteSheet);
 
+    // Define the source rectangle for the bullet
+    sourceRecBullet = (Rectangle) {0, 0, bulletTexture.width, bulletTexture.height};
+
+
     #if defined(PLATFORM_WEB)
         emscripten_set_main_loop(UpdateDrawFrame, 60, 1);
     #else
         SetTargetFPS(60);
+
+
+
         // Loop principal do jogo
         while (!WindowShouldClose())
         {
+            timeSinceLastShot += GetFrameTime();
             UpdateDrawFrame();
         }
     #endif
@@ -113,6 +136,14 @@ static void UpdateDrawFrame(void)
         }   
 
         if (playerRect.y > 600 ) playerRect.y = 600;
+
+        if(IsKeyDown(KEY_Z)){
+                    if(timeSinceLastShot >= shotDelay){
+                        addBullet((Vector2) {105, 1100}, 15.f);
+                        timeSinceLastShot = 0.0f;
+
+                    }
+                }
     }
 
     // Desenho
@@ -130,6 +161,12 @@ static void UpdateDrawFrame(void)
             ClearBackground(WHITE);
             DrawTexture(cenario, 0, 0, WHITE);
             playerAnimation(playerDirec, playerRect);
+            updateBullets(bulletTexture, sourceRecBullet, SCREEN_WIDTH, bulletList);
         EndDrawing();
     }
+
+
+
+
+
 }
