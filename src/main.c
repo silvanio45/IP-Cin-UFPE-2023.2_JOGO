@@ -6,6 +6,7 @@
 #include "../include/movimentacao.h"
 #include "../include/animacao.h"
 #include "../include/projetil.h"
+#include "../include/entity.h"
 
 #if defined(PLATFORM_WEB)
     #include <emscripten/emscripten.h>
@@ -34,14 +35,14 @@ Rectangle sourceRecBullet;
 Texture2D bulletTexture;
 // Bullet* bulletList = NULL; // Start with an empty list
 
-float velY = 0;
+
+Player player;
+
+// float velY = 0;
 float jumpSpeed = 200.0f;
 float gravidade = 2.8f;
-int playerDirec = 1;
 
 bool menu_open = true;
-bool isJumping = false; 
-bool jump = true;
 
 // Add a new variable to keep track of the time since the last shot
 float timeSinceLastShot = 0.8f;
@@ -76,7 +77,13 @@ int main()
     botaoStart =            LoadTexture("./resources/botao2.png");
 
     botaoStartColis = (Rectangle){ BOTAOINICIAL_POS_X, BOTAOINICIAL_POS_Y, botaoStart.width, botaoStart.height };
-    playerRect = (Rectangle){PLAYER_POSINICIAL_X, PLAYER_POSINICIAL_Y, PLAYER_DIM_X, PLAYER_DIM_Y};
+    // playerRect = (Rectangle){PLAYER_POSINICIAL_X, PLAYER_POSINICIAL_Y, PLAYER_DIM_X, PLAYER_DIM_Y};
+
+
+    //Define Player Variables
+    player.position = (Vector2) {PLAYER_POSINICIAL_X, PLAYER_POSINICIAL_Y};
+    player.speed = 6.0f;
+    player.direc = 1;
 
     //----------------------------------------------------------------------------------
     //  Animacoes
@@ -124,23 +131,21 @@ static void UpdateDrawFrame(void)
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && CheckCollisionPointRec(GetMousePosition(), botaoStartColis)) menu_open = false;
     else
     {
-        playerRect.x = movx(playerRect.x);
-        playerRect.y = movy(playerRect.y, gravidade);
+        player.position.x = movx(player.position.x, player.speed);
 
-        if(IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) playerDirec = -1;
-        if(IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) playerDirec = 1;
+        if(IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) player.direc = -1;
+        if(IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) player.direc = 1;
 
-        if((IsKeyPressed(KEY_SPACE) && (playerRect.y >= (600 - playerRect.height))) || isJumping){
-            isJumping = true;
-            velY = jumpSpeed;
-            playerRect.y = pulo(playerRect.y, &velY, gravidade, playerRect.height, GetFrameTime(), &isJumping, &jump);
+        if((IsKeyPressed(KEY_SPACE) && (player.position.y >= (600 - playerRect.height))) || player.isJumping){
+            player.isJumping = true;
+            player.position.y = pulo(player.position.y, &jumpSpeed, gravidade, playerRect.height, GetFrameTime(), &player.isJumping, &jump);
         }   
 
-        if (playerRect.y > 600 ) playerRect.y = 600;
+        if (player.position.y > 600 ) player.position.y = 600;
         
         if(IsKeyDown(KEY_Z)){
                     if(timeSinceLastShot >= shotDelay){
-                        addBullet(playerRect, 12.f, playerDirec);
+                        addBullet(playerRect, 12.f, player.direc);
                         timeSinceLastShot = 0.0f;
                         // printf("AAA\n");
                     }
@@ -161,10 +166,10 @@ static void UpdateDrawFrame(void)
         BeginDrawing();
             ClearBackground(WHITE);
             
-            // printf("%f %f\n", playerRect.x, playerRect.y);
+            // printf("%f %f\n", player.position.x, player.position.y);
             DrawTexture(cenario, 0, 0, WHITE);
             updateBullets(bulletTexture, sourceRecBullet, SCREEN_WIDTH);
-            playerAnimation(playerDirec, playerRect);
+            playerAnimation(player.direc, playerRect);
             
             
         EndDrawing();
