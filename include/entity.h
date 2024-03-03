@@ -5,10 +5,10 @@
 
 typedef struct {
     Vector2 position;
-    Rectangle playerRect;
+    Rectangle rec;
 
     int direc;
-    int isJumping;
+    bool isJumping;
 
     float health;
     float damage;

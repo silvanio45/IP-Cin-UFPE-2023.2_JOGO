@@ -7,7 +7,7 @@
 
 float movx(float posx, float speed);
 
-float movy(float posy, float gravidade, float speed);
+float movy(float posy, float gravidade);
 
 float pulo(float posy, float *velY, float gravidade, float bonecoHeight, float delta, bool *isJumping, bool *jump);
 
