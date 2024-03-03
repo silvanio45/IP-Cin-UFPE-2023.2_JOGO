@@ -1,20 +1,41 @@
-"Makefile" tá funcionando para o linux, para windons é só tirar o "." do ".Makefile" e apagar ou colocar o "." no "Makefile".
-Não testei então não posso garantir que funcione no windowns.
+# PARA RODAR NO NOTEPAD++
+1 - Abra o notepad do raylib (Notepad++ for Raylib)
+2 - Abra o arquivo main dentro da janela do Notepad que aparecer
+3 - Aperte F6 para rodar o código 
+4 - Quando a janela com uns comandos aparecer, apague todos e cole os comendos abaixo:
 
-# OBS
-Para rodar o makefile é só digitar "make game" no terminal e depois rodar o arquivo digitando "game" ou abrindo o game.exe
+echo > Setup required Environment
+echo -------------------------------------
+SET RAYLIB_PATH=C:\raylib\raylib
+SET COMPILER_PATH=C:\raylib\w64devkit\bin
+ENV_SET PATH=$(COMPILER_PATH)
+SET CC=gcc
+SET CFLAGS=$(RAYLIB_PATH)\src\raylib.rc.data -s -static -Os -std=c99 -Wall -I$(RAYLIB_PATH)\src -Iexternal -Iinclude -DPLATFORM_DESKTOP
 
-# OBS 2
-Sempre tentar fazer o código de forma modularizada (separando as funções em um arquivo [auxiliar.c] com seu header [arquivo.h])
+SET LDFLAGS=-lraylib -lopengl32 -lgdi32 -lwinmm
+cd $(CURRENT_DIRECTORY)
+echo
+echo > Clean latest build
+echo ------------------------
+cmd /c IF EXIST $(NAME_PART).exe del /F $(NAME_PART).exe
+echo
+echo > Saving Current File
+echo -------------------------
+npp_save
+echo
+echo > Compile program
+echo -----------------------
+$(CC) --version
+$(CC) -o $(NAME_PART).exe $(FILE_NAME) include/*.c $(CFLAGS) $(LDFLAGS)
 
-Arquivos header não devem ter implementações de funções contidas neles, apenas a declaração (ver arquivos já implementados).
+echo
+echo > Reset Environment
+echo --------------------------
+ENV_UNSET PATH
+echo
+echo > Execute program
+echo -----------------------
+cmd /c IF EXIST $(NAME_PART).exe $(NAME_PART).exe
 
-# Descrição das pastas:
-1. include/
-    Contém os arquivos header (.h) com as declarações de funções e variáveis.
-    
-2. obj/
-    Vai ficar uns arquivos .o, não precisar mexer. Apenas para o funcionamento do Makefile
-    
-3. src/
-    Todos os arquivos com as implementações das diversas funções do código devem ficar aqui. Tanto a main quanto outros arquivos das demais funções do jogo devem ficar aqui e importar seus arquivos .h na forma "../include/arquivo.h"
+
+5 - Aperte Ok.
