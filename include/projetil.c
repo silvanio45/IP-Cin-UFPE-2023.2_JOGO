@@ -9,7 +9,7 @@ Bullet* bulletList = NULL; // Start with an empty list
 // Function to add a bullet to the list
 void addBullet(Rectangle playerRect, float speed, int playerDirec) {
     // printf("add bullet\n %f %f\n", position.x, position.y);
-    printf("DIRET: %d\n", playerDirec);
+    // printf("DIRET: %d\n", playerDirec);
 
     
 
@@ -38,17 +38,30 @@ void removeBullet(Bullet* bullet) {
     free(bullet);
 }
 
-void updateBullets(Texture2D bulletTexture, Rectangle sourceRecBullet, int SCREEN_WIDTH){
+bool updateBullets(Texture2D bulletTexture, Rectangle sourceRecBullet, int SCREEN_WIDTH, Rectangle enemy, bool isAlive){
     Bullet* current = bulletList;
     Bullet* prev = NULL;
 
     while (current != NULL) {
         // Update bullet position
         current->position.x += current->speed;
-        // printf("UpdateBullet\n %f %f\n", current->position.x , current->position.y);
         // Draw the bullet
         Rectangle destRecBullet = { current->position.x, current->position.y, bulletTexture.width, bulletTexture.height };
         DrawTextureRec(bulletTexture, sourceRecBullet, (Vector2){ destRecBullet.x, destRecBullet.y }, WHITE);
+        
+        // Check for collision
+        if (CheckCollisionRecs(destRecBullet, enemy) && isAlive)  {
+            printf("Bullet hit the enemy!\n");
+            Bullet* next = current->next;
+            if (prev != NULL) {
+                prev->next = next;
+            } else {
+                bulletList = next;
+            }
+            removeBullet(current);
+            current = next;
+            return true; // A bullet hit the enemy
+        }
 
         // Check if bullet is off-screen
         if (current->position.x < 0 || current->position.x > SCREEN_WIDTH) {
@@ -65,4 +78,5 @@ void updateBullets(Texture2D bulletTexture, Rectangle sourceRecBullet, int SCREE
             current = current->next;
         }
     }
+    return false; // No bullets hit the enemy
 }

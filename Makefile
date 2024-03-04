@@ -11,13 +11,13 @@ LIBS = -lraylib
 IDIR = ./include
 ODIR = ./obj
 RDIR = ./resources
-SDIR = main
+SDIR = .
 
 # Files
-_DEPS = animacao.h movimentacao.h projetil.h
+_DEPS = animacao.h entity.h projetil.h movimentacao.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = animacao.o main.o movimentacao.o projetil.o
+_OBJ = animacao.o main.o projetil.o movimentacao.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 # Default make
@@ -28,7 +28,10 @@ directories: ${ODIR}
 ${ODIR}:
 	mkdir -p ${ODIR}
 
-$(ODIR)/%.o: $(SDIR)/%.c $(DEPS)
+$(ODIR)/%.o: $(IDIR)/%.c $(DEPS)
+	$(CC) -c -o $@ $< $(CFLAGS)
+
+$(ODIR)/main.o: main.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 game: $(OBJ)
