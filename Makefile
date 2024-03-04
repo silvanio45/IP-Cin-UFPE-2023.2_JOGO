@@ -11,7 +11,7 @@ LIBS = -lraylib
 IDIR = ./include
 ODIR = ./obj
 RDIR = ./resources
-SDIR = ./src
+SDIR = main
 
 # Files
 _DEPS = animacao.h movimentacao.h projetil.h
