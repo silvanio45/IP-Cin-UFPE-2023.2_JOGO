@@ -2,7 +2,7 @@
 #define PROJETIL_H
 
 #include "raylib.h"
-
+#include "inimigos.h"
 
 
 typedef struct Projectil {
@@ -19,7 +19,7 @@ void addProjectil(Rectangle playerRect, float speed, int playerDirec);
 // Function to remove a bullet from the list
 void removeProjectil(Projectil* bullet);
 
-bool updateProjectils(Texture2D bulletTexture, Rectangle sourceRecBullet, int SCREEN_WIDTH, Rectangle enemy, bool isAlive, float shotingAngle);
+bool updateProjectils(Texture2D projectilTexture, Rectangle sourceRecProject, int SCREEN_WIDTH, RU* Ru, int* cont);
 
 
 

@@ -1,25 +1,16 @@
 #include "raylib.h"
 #include "movimentacao.h"
 
-
-float mov(float pos, float speed){
-    // float speed = 6.0f; // Increase this value to make the player move faster horizontally
-    pos -= speed;
-    if (pos < 0) pos = 0;
-    if (pos > 1200) pos = 1200;
-    
-    return pos;
-}
-
 float movx(float posx, float speed) {
     // float speed = 6.0f; // Increase this value to make the player move faster horizontally
     if (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) posx += speed;
     if (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) posx -= speed;
-    if (posx < 0)posx = 0;
+    if (posx < 0) posx = 0;
     if (posx > 1200) posx = 1200;
-    
+
     return posx;
 }
+
 
 float movy(float posy, float gravidade) {
     // float speed = 40.0f; // Increase this value to make the player move faster vertically

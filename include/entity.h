@@ -2,52 +2,45 @@
 #define ENTITY_H
 
 #include "raylib.h"
-#include "animacao.h"
 
 typedef struct {
-
-    char type[30];
-    float damage;
-    float bulletSpeed;
-    float shotDelay;
-    float timeSinceLastShot;
-
-} Gun;
-
-typedef struct {
-    Rectangle rec;
-
-    int direc;
-    bool isJumping;
-    bool isAlive;
-    float deathTimer;
-    float health;
-    float damage;
-    float speed;
-    float hitTimer;
-    
-    Gun gun;
-
-} Player; 
-
-typedef struct Enemy{
     Vector2 position;
     Rectangle rec;
 
     int direc;
     bool isJumping;
-    bool isAlive;
-    float deathTimer;
+    float jumpSpeed;
+
     float health;
     float damage;
     float speed;
-    float hitTimer;
+} Player;  
+
+typedef struct RU {
+    float Ru_POSINICIAL_X;
+    float Ru_POSINICIAL_Y;
+    float Ru_DIM_X;
+    float Ru_DIM_Y;
+
+    Rectangle rec;
+
+    int direc;
+    bool isJumping;
+    bool isAlive;
+
+    float health;
+    float damage;
+    float speed;
     
+    float hitTimer;
+    float deathTimer;
+    bool hit;
 
-} Enemy;  
+    int currentFrame;
+    int frameCount;
+    int frameWidth;
+    int frameHeight;
+    
+} RU; 
 
-
-
-
-
-#endif 
+#endif

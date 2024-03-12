@@ -1,4 +1,5 @@
 #include "animacao.h"
+#include <stdio.h>
 
 SpriteAnimation playerAnim_walkingRight;
 SpriteAnimation playerAnim_walkingLeft;
@@ -245,7 +246,7 @@ void initAnimations(Texture2D playerSpriteSheet, Texture2D inimigo1SpriteSheet, 
         (Rectangle){148, 350, 60, 47},
         (Rectangle){208, 350, 60, 47}
     },13);
-    inim1Anim_dyingLeft = CreateSpriteAnimation(inimigo1SpriteSheet, 12,(Rectangle[]){
+    inim1Anim_dyingLeft = CreateSpriteAnimation(inimigo1SpriteSheet, 10,(Rectangle[]){
         (Rectangle){15, 556, 55, 47},
         (Rectangle){81, 556, 55, 47},
         (Rectangle){148, 556, 55, 47},
@@ -303,7 +304,7 @@ void initAnimations(Texture2D playerSpriteSheet, Texture2D inimigo1SpriteSheet, 
 }
 
 
-void playerAnimation(int playerDirec, Rectangle playerRect) {
+void playerAnimation(int playerDirec, Rectangle playerRect, Player player) {
     //animacao
             switch (playerDirec)
             {
@@ -311,25 +312,31 @@ void playerAnimation(int playerDirec, Rectangle playerRect) {
                 if(IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) 
                 {
                     if(IsKeyDown(KEY_Z))DrawSpriteAnimationPro(playerAnim_runningShotingRight, playerRect, (Vector2){0,0}, 0, WHITE );
+                    else if (IsKeyDown(KEY_SPACE) || player.isJumping) {DrawSpriteAnimationPro(playerAnim_jumppingMovRight, playerRect, (Vector2){0,0}, 0, WHITE ); printf("AAAAAAAA");}
                     else DrawSpriteAnimationPro(playerAnim_walkingRight, playerRect, (Vector2){0,0}, 0, WHITE );
+                
                 }
                 else
                 {
                     if(IsKeyDown(KEY_Z)) DrawSpriteAnimationPro(playerAnim_idleShotingRight, playerRect, (Vector2){0,0}, 0, WHITE );
+                    else if (IsKeyDown(KEY_SPACE) || player.isJumping) DrawSpriteAnimationPro(playerAnim_jumppingRight, playerRect, (Vector2){0,0}, 0, WHITE );
                     else DrawSpriteAnimationPro(playerAnim_idleRight, playerRect, (Vector2){0,0}, 0, WHITE );
                 }
+
 
                 break;
             case -1:
                 if(IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) 
                 {
                     if(IsKeyDown(KEY_Z)) DrawSpriteAnimationPro(playerAnim_runningShotingLeft, playerRect, (Vector2){0,0}, 0, WHITE );
+                    else if (IsKeyDown(KEY_SPACE) || player.isJumping) DrawSpriteAnimationPro(playerAnim_jumppingMovLeft, playerRect, (Vector2){0,0}, 0, WHITE );
                     else DrawSpriteAnimationPro(playerAnim_walkingLeft, playerRect, (Vector2){0,0}, 0, WHITE );
 
                 }
                 else 
                 {
                     if (IsKeyDown(KEY_Z)) DrawSpriteAnimationPro(playerAnim_idleShotingLeft, playerRect, (Vector2){0,0}, 0, WHITE );
+                    else if (IsKeyDown(KEY_SPACE) || player.isJumping) DrawSpriteAnimationPro(playerAnim_jumppingLeft, playerRect, (Vector2){0,0}, 0, WHITE );
                     else DrawSpriteAnimationPro(playerAnim_idleLeft, playerRect, (Vector2){0,0}, 0, WHITE );
                 }
                 break;

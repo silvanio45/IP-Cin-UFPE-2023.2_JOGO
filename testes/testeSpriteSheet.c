@@ -1,33 +1,81 @@
+#include "raylib.h"
+// #include "movimentacao.h"
+
+#define CHARACTER_HEIGHT 40
+#define CHARACTER_WIDTH 40
+
+#define LEGS_HEIGHT 40
+#define LEGS_WIDTH 40
 
 
-void handleEnemyShot(Enemy *enemy, SpriteAnimation SpriteAnimation){
-/*
-Will take care of enemys shot and death animation
-*/
+Texture2D atlas;
 
-            if ((*enemy).hitTimer > 0.0f && enemy->isAlive) {
-                enemy->hitTimer -= GetFrameTime(); // Decrease the timer by the frame time
-                DrawSpriteAnimationPro(inim1Anim_walkingLeft, enemy->rec, (Vector2){0,0}, 0, RED);
-            } else if (enemy->health >= 0){
-                printf("%f\n", enemy->rec.x);
-                DrawSpriteAnimationPro(inim1Anim_walkingLeft, enemy->rec, (Vector2){0,0}, 0, WHITE);
-            }
-            // printf("Heath: %f\n", enemy->health);
+#define CHARACTERC_COUNT 6
+int characterIndex = 0;
+
+void UpdateDrawFrame(void);
+
+int main() {
+
+    srand(time(0));
+
+    InitWindow(1000, 400, "Tela Inicial");
+
+    
+    atlas = LoadTexture("./resources/base2.png");
 
 
+    while(!WindowShouldClose()){
+        WaitTime(0.1);
+        UpdateDrawFrame();
+    }
 
-                    // If the enemy's health drops below 0, start the death animation
-            if (enemy->health < 0 && enemy->isAlive) {
-                enemy->isAlive = false;
-                enemy->deathTimer = 1.3f; // Set the timer to the length of the death animation
-            }
+    CloseWindow();
 
-            // If the deathTimer is greater than 0, draw the death animation
-            if (enemy->deathTimer > 0.0f) {
-                enemy->deathTimer -= GetFrameTime(); // Decrease the timer by the frame time
-                DrawSpriteAnimationPro(inim1Anim_dyingLeft, enemy->rec, (Vector2){0,0}, 0, WHITE);
-            }
-
-            // printf("%f\n", enemy->deathTimer);
-
+    return 0;
 }
+
+void UpdateDrawFrame(void) {
+
+
+    
+    if (IsKeyDown(KEY_RIGHT)){
+        characterIndex++;
+        if(characterIndex >= CHARACTERC_COUNT) {
+            characterIndex = 0;
+        }
+    }
+    if (IsKeyDown(KEY_LEFT)){
+        
+        characterIndex--;
+        if(characterIndex < CHARACTERC_COUNT) {
+            characterIndex = 0;
+        }
+    }
+
+    BeginDrawing();
+
+
+        ClearBackground(RAYWHITE);
+
+        // DrawTexture(atlas, 0, 0, WHITE);
+        // DrawTextureV(atlas, (Vector2){0, 0}, WHITE);
+        // DrawTextureEx(atlas, (Vector2){0, 0}, 0, 1.0f, WHITE);
+        // DrawTextureRec(atlas, source, (Vector2){0, 0}, WHITE);
+
+        // 30 x 40
+
+
+        Rectangle source_legs = (Rectangle){LEGS_WIDTH * characterIndex, CHARACTER_HEIGHT,  LEGS_WIDTH, LEGS_HEIGHT};
+        Rectangle dest_legs = (Rectangle){15, 45, source_legs.width*3, source_legs.height*3};
+
+        DrawTexturePro(atlas, source_legs, dest_legs, (Vector2){0, 0}, 0, WHITE);
+
+        Rectangle source_character = (Rectangle){CHARACTER_WIDTH * characterIndex, 0,  CHARACTER_WIDTH, CHARACTER_HEIGHT};
+        Rectangle dest_character = (Rectangle){30, 0, source_character.width*3, source_character.height*3};
+
+        DrawTexturePro(atlas, source_character, dest_character, (Vector2){0, 0}, 0, WHITE);
+
+    EndDrawing();
+
+} 

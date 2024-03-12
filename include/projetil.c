@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include "projetil.h"
+#include "inimigos.h"
 
 Projectil* projectilList = NULL; // Start with an empty list
 
@@ -35,7 +36,7 @@ void removeProjectil(Projectil* projectil) {
     free(projectil);
 }
 
-bool updateProjectils(Texture2D projectilTexture, Rectangle sourceRecProject, int SCREEN_WIDTH, Rectangle enemy, bool isAlive, float shotingAngle){
+bool updateProjectils(Texture2D projectilTexture, Rectangle sourceRecProject, int SCREEN_WIDTH, RU* Ru, int* cont){
     Projectil* current = projectilList;
     Projectil* prev = NULL;
 
@@ -47,22 +48,24 @@ bool updateProjectils(Texture2D projectilTexture, Rectangle sourceRecProject, in
         // DrawTextureRec(projectilTexture, sourceRecProject, (Vector2){ destRecProject.x, destRecProject.y }, WHITE);
 
         Vector2 origin = { destRecProject.width/2 , destRecProject.height/2};
-        DrawTexturePro(projectilTexture, sourceRecProject, destRecProject, origin, shotingAngle, WHITE);
+        DrawTexturePro(projectilTexture, sourceRecProject, destRecProject, origin, 0, WHITE);
 
-        // Check for collision
-        if (CheckCollisionRecs(destRecProject, enemy) && isAlive)  {
-            printf("Bullet hit the enemy!\n");
-            Projectil* next = current->next;
-            if (prev != NULL) {
-                prev->next = next;
-            } else {
-                projectilList = next;
+        for(int i = 0; i < *cont; i++) {
+            // Check for collision
+            if (CheckCollisionRecs(destRecProject, Ru[i].rec) && Ru[i].isAlive)  {
+                Ru[i].hit = true;
+                printf("Bullet hit the enemy!\n");
+                Projectil* next = current->next;
+                if (prev != NULL) {
+                    prev->next = next;
+                } else {
+                    projectilList = next;
+                }
+                removeProjectil(current);
+                current = next;
+                return true; // A bullet hit the enemy
             }
-            removeProjectil(current);
-            current = next;
-            return true; // A bullet hit the enemy
         }
-
         // Check if bullet is off-screen
         if (current->position.x < 0 || current->position.x > SCREEN_WIDTH) {
             Projectil* next = current->next;

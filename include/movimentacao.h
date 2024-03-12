@@ -3,9 +3,8 @@
 #define MOVIMENTACAO_H
 
 #include "raylib.h"
+#include "../include/entity.h"
 #include <stdlib.h>
-
-float mov(float pos, float speed);
 
 float movx(float posx, float speed);
 

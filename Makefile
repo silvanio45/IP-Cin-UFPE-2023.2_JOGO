@@ -14,10 +14,10 @@ RDIR = ./resources
 SDIR = .
 
 # Files
-_DEPS = animacao.h entity.h projetil.h movimentacao.h
+_DEPS = animacao.h entity.h projetil.h movimentacao.h inimigos.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = animacao.o main.o projetil.o movimentacao.o entity.o
+_OBJ = animacao.o main.o projetil.o movimentacao.o inimigos.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 # Default make

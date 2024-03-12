@@ -3,7 +3,7 @@
 
 #include "raylib.h"
 #include <stdlib.h>
-
+#include "entity.h"
 
 
 
@@ -11,9 +11,10 @@
 #define BOTAOINICIAL_POS_X (1280 - botaoStart.width) / 2
 #define BOTAOINICIAL_POS_Y (720 - botaoStart.height) / 2
 #define PLAYER_POSINICIAL_X 105
-#define PLAYER_POSINICIAL_Y 600
+#define PLAYER_POSINICIAL_Y 1205
 #define PLAYER_DIM_X 105
 #define PLAYER_DIM_Y 105
+#define GROUND_LEVEL 600
 
 
 
@@ -36,7 +37,7 @@ void DrawSpriteAnimationPro(SpriteAnimation animation, Rectangle dest, Vector2 o
 
 void initAnimations(Texture2D playerSpriteSheet, Texture2D inimigo1SpriteSheet, Texture2D inimigo2SpriteSheet, Texture2D inimigo3SpriteSheet);
 
-void playerAnimation(int playerDirec, Rectangle playerRect);
+void playerAnimation(int playerDirec, Rectangle playerRect, Player player);
 
 
 //----------------------------------------------------------------------------------
