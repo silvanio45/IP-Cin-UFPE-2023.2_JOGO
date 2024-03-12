@@ -245,7 +245,7 @@ void initAnimations(Texture2D playerSpriteSheet, Texture2D inimigo1SpriteSheet, 
         (Rectangle){148, 350, 60, 47},
         (Rectangle){208, 350, 60, 47}
     },13);
-    inim1Anim_dyingLeft = CreateSpriteAnimation(inimigo1SpriteSheet, 10,(Rectangle[]){
+    inim1Anim_dyingLeft = CreateSpriteAnimation(inimigo1SpriteSheet, 12,(Rectangle[]){
         (Rectangle){15, 556, 55, 47},
         (Rectangle){81, 556, 55, 47},
         (Rectangle){148, 556, 55, 47},

@@ -4,76 +4,77 @@
 #include <stdlib.h>
 #include "projetil.h"
 
-Bullet* bulletList = NULL; // Start with an empty list
+Projectil* projectilList = NULL; // Start with an empty list
 
 // Function to add a bullet to the list
-void addBullet(Rectangle playerRect, float speed, int playerDirec) {
-    // printf("add bullet\n %f %f\n", position.x, position.y);
-    // printf("DIRET: %d\n", playerDirec);
+void addProjectil(Rectangle playerRect, float speed, int playerDirec) {
 
-    
+    Projectil* newProject = (Projectil*)malloc(sizeof(Projectil));
 
-    Bullet* newBullet = (Bullet*)malloc(sizeof(Bullet));
+    newProject->position = playerDirec > 0 ? (Vector2) {playerRect.x + 80, playerRect.y + 35} : (Vector2) {playerRect.x - 0, playerRect.y + 35};
 
-    newBullet->position = playerDirec > 0 ? (Vector2) {playerRect.x + 60, playerRect.y + 15} : (Vector2) {playerRect.x - 30, playerRect.y + 15};
+    newProject->speed = playerDirec > 0 ? speed : -speed;
+    newProject->next = projectilList;
+    projectilList = newProject;
 
-    newBullet->speed = playerDirec > 0 ? speed : -speed;
-    newBullet->next = bulletList;
-    bulletList = newBullet;
 }
 
 // Function to remove a bullet from the list
-void removeBullet(Bullet* bullet) {
-    if (bulletList == bullet) {
-        bulletList = bullet->next;
+void removeProjectil(Projectil* projectil) {
+    if (projectilList == projectil) {
+        projectilList = projectil->next;
     } else {
-        Bullet* current = bulletList;
-        while (current != NULL && current->next != bullet) {
+        Projectil* current = projectilList;
+        while (current != NULL && current->next != projectil) {
             current = current->next;
         }
         if (current != NULL) {
-            current->next = bullet->next;
+            current->next = projectil->next;
         }
     }
-    free(bullet);
+    free(projectil);
 }
 
-bool updateBullets(Texture2D bulletTexture, Rectangle sourceRecBullet, int SCREEN_WIDTH, Rectangle enemy, bool isAlive){
-    Bullet* current = bulletList;
-    Bullet* prev = NULL;
+bool updateProjectils(Texture2D projectilTexture, Rectangle sourceRecProject, int SCREEN_WIDTH, Rectangle enemy, bool isAlive, float shotingAngle){
+    Projectil* current = projectilList;
+    Projectil* prev = NULL;
 
     while (current != NULL) {
         // Update bullet position
         current->position.x += current->speed;
         // Draw the bullet
-        Rectangle destRecBullet = { current->position.x, current->position.y, bulletTexture.width, bulletTexture.height };
-        DrawTextureRec(bulletTexture, sourceRecBullet, (Vector2){ destRecBullet.x, destRecBullet.y }, WHITE);
-        
+        Rectangle destRecProject = { current->position.x, current->position.y, projectilTexture.width, projectilTexture.height };
+        // DrawTextureRec(projectilTexture, sourceRecProject, (Vector2){ destRecProject.x, destRecProject.y }, WHITE);
+
+        Vector2 origin = { destRecProject.width/2 , destRecProject.height/2};
+        DrawTexturePro(projectilTexture, sourceRecProject, destRecProject, origin, shotingAngle, WHITE);
+
         // Check for collision
-        if (CheckCollisionRecs(destRecBullet, enemy) && isAlive)  {
+        if (CheckCollisionRecs(destRecProject, enemy) && isAlive)  {
             printf("Bullet hit the enemy!\n");
-            Bullet* next = current->next;
+            Projectil* next = current->next;
             if (prev != NULL) {
                 prev->next = next;
             } else {
-                bulletList = next;
+                projectilList = next;
             }
-            removeBullet(current);
+            removeProjectil(current);
             current = next;
             return true; // A bullet hit the enemy
         }
 
         // Check if bullet is off-screen
         if (current->position.x < 0 || current->position.x > SCREEN_WIDTH) {
-            Bullet* next = current->next;
+            Projectil* next = current->next;
+            //if bullet is off-screen remove it and set the previos bullet struct as current
             if (prev != NULL) {
                 prev->next = next;
             } else {
-                bulletList = next;
+                projectilList = next;
             }
-            removeBullet(current);
+            removeProjectil(current);
             current = next;
-        } else {
+        } else { //if is not then change to next bullet 
             prev = current;
             current = current->next;
         }

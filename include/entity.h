@@ -2,7 +2,7 @@
 #define ENTITY_H
 
 #include "raylib.h"
-
+#include "animacao.h"
 
 typedef struct {
 
@@ -15,7 +15,6 @@ typedef struct {
 } Gun;
 
 typedef struct {
-    Vector2 position;
     Rectangle rec;
 
     int direc;
@@ -29,7 +28,24 @@ typedef struct {
     
     Gun gun;
 
-} Player;  
+} Player; 
+
+typedef struct Enemy{
+    Vector2 position;
+    Rectangle rec;
+
+    int direc;
+    bool isJumping;
+    bool isAlive;
+    float deathTimer;
+    float health;
+    float damage;
+    float speed;
+    float hitTimer;
+    
+
+} Enemy;  
+
 
 
 

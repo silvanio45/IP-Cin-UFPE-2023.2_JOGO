@@ -5,6 +5,8 @@
 #include "raylib.h"
 #include <stdlib.h>
 
+float mov(float pos, float speed);
+
 float movx(float posx, float speed);
 
 float movy(float posy, float gravidade);

@@ -17,7 +17,7 @@ SDIR = .
 _DEPS = animacao.h entity.h projetil.h movimentacao.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = animacao.o main.o projetil.o movimentacao.o
+_OBJ = animacao.o main.o projetil.o movimentacao.o entity.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 # Default make

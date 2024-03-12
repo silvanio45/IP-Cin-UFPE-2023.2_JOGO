@@ -13,6 +13,8 @@
 #endif
 
 
+void handleEnemyShot(Enemy *enemy, SpriteAnimation SpriteAnimation);
+
 //----------------------------------------------------------------------------------
 // Variáveis Locais (local para este módulo)
 //----------------------------------------------------------------------------------
@@ -27,11 +29,13 @@ Texture2D inimigo1SpriteSheet;
 Texture2D cenario;
 Texture2D cenarioLog;
 Texture2D botaoStart;
+Texture2D skolTexture;
 
 Rectangle botaoStartColis;
 // Rectangle playerRect;
 
 Rectangle sourceRecBullet;
+Rectangle sourceRecSkoll;
 Texture2D bulletTexture;
 // Bullet* bulletList = NULL; // Start with an empty list
 
@@ -54,8 +58,8 @@ bool jump = true;
 
 
 Player player;
-Player enemy;
-Gun gun;
+Enemy enemy;
+Gun pistol;
 
 float zumbiPosX = 300; 
 float  hitTimer = 0.0f;
@@ -68,7 +72,7 @@ static void UpdateDrawFrame(void);
 //----------------------------------------------------------------------------------
 // Ponto de Entrada Principal
 //----------------------------------------------------------------------------------
-
+float enemyWalkTimer = 0.0f;
 // Rectangle enemy;
 
 int main()
@@ -81,6 +85,7 @@ int main()
     inimigo2SpriteSheet =   LoadTexture("resources/Inimigo2_SpriteSheet.png");
     inimigo3SpriteSheet =   LoadTexture("resources/Inimigo3_SpriteSheet.png");
     bulletTexture =         LoadTexture("./resources/bullet2.png");
+    skolTexture =           LoadTexture("./resources/skol.png");
     cenario =               LoadTexture("./resources/cenario3.png");
     cenarioLog =            LoadTexture("./resources/cenarioLogMetal.png");
     botaoStart =            LoadTexture("./resources/botao2.png");
@@ -94,22 +99,23 @@ int main()
     //----------------------------------------------------------------------------------
     //  Animacoes
 
-    //gun
-    gun.damage = 21;
-    gun.shotDelay = 0.4f;
-    gun.timeSinceLastShot = 0.8f;
-    gun.bulletSpeed = 12.f;
+    //pistol
+    pistol.damage = 21;
+    pistol.shotDelay = 0.2f;
+    pistol.timeSinceLastShot = 0.8f;
+    pistol.bulletSpeed = 12.f;
 
     //  Player
     player.direc = 1;
     player.isJumping = false;
     player.speed = 6.0f;
     player.health = 100.f;
+    // player.gun = pistol;
 
     //enemy teste
     enemy.direc = 1;
     enemy.isJumping = false;
-    enemy.speed = 6.0f;
+    enemy.speed = 1.f;
     enemy.health = 100.f;
     enemy.deathTimer = 0.0f;
     enemy.hitTimer = 0.0f;
@@ -121,6 +127,8 @@ int main()
     // Define the source rectangle for the bullet
     sourceRecBullet = (Rectangle) {0, 0, bulletTexture.width, bulletTexture.height};
 
+    sourceRecSkoll = (Rectangle) {0, 0, skolTexture.width, skolTexture.height};
+
     #if defined(PLATFORM_WEB)
         emscripten_set_main_loop(UpdateDrawFrame, 60, 1);
     #else
@@ -131,7 +139,7 @@ int main()
         // Loop principal do jogo
         while (!WindowShouldClose())
         {
-            gun.timeSinceLastShot += GetFrameTime();
+            pistol.timeSinceLastShot += GetFrameTime();
             UpdateDrawFrame();
         }
     #endif
@@ -172,12 +180,13 @@ static void UpdateDrawFrame(void)
         if (player.rec.y > 600 ) player.rec.y = 600;
         
         if(IsKeyDown(KEY_Z)){
-                    if(gun.timeSinceLastShot >= gun.shotDelay){
-                        addBullet(player.rec, gun.bulletSpeed, player.direc);
-                        gun.timeSinceLastShot = 0.0f;
+                    if(pistol.timeSinceLastShot >= pistol.shotDelay){
+                        addProjectil(player.rec, pistol.bulletSpeed, player.direc);
+                        pistol.timeSinceLastShot = 0.0f;
                     }
                 }
     }
+
 
     // Desenho
     if (menu_open)
@@ -193,53 +202,67 @@ static void UpdateDrawFrame(void)
         BeginDrawing();
             ClearBackground(WHITE);
             
+
+            ClearBackground(RAYWHITE); // Or whatever color you want the background to be
             // printf("%f %f\n", player.rec.x, player.rec.y);
             DrawTexture(cenario, 0, 0, WHITE);
-            collision = updateBullets(bulletTexture, sourceRecBullet, SCREEN_WIDTH, enemy.rec, enemy.isAlive);
+            collision = updateProjectils(bulletTexture, sourceRecBullet, SCREEN_WIDTH, enemy.rec, enemy.isAlive, 0);
+            // collision = updateProjectils(skolTexture, sourceRecSkoll, SCREEN_WIDTH, enemy.rec, enemy.isAlive);
             playerAnimation(player.direc, player.rec);
-            
+
             if (collision) {
                 enemy.hitTimer = 0.2f; // Set the timer to the desired delay in seconds
-                enemy.health -= gun.damage;
+                enemy.health -= pistol.damage;
             }
+            
+            handleEnemyShot(&enemy, inim1Anim_dyingLeft);
+            if (enemy.isAlive) enemy.rec.x = mov(enemy.rec.x, enemy.speed);;
+            
 
-
-
-
-            if (enemy.hitTimer > 0.0f && enemy.isAlive) {
-                enemy.hitTimer -= GetFrameTime(); // Decrease the timer by the frame time
-                DrawSpriteAnimationPro(inim1Anim_walkingLeft, enemy.rec, (Vector2){0,0}, 0, RED);
-            } else if (enemy.health >= 0){
-                DrawSpriteAnimationPro(inim1Anim_walkingLeft, enemy.rec, (Vector2){0,0}, 0, WHITE);
-            }
-            // printf("Heath: %f\n", enemy.health);
-
-
-
-                    // If the enemy's health drops below 0, start the death animation
-            if (enemy.health < 0 && enemy.isAlive) {
-                printf("BBBBBBBB");
-                enemy.isAlive = false;
-                enemy.deathTimer = 1.f; // Set the timer to the length of the death animation
-            }
-
-            // If the deathTimer is greater than 0, draw the death animation
-            if (enemy.deathTimer > 0.0f) {
-                printf("AAAA");
-                enemy.deathTimer -= GetFrameTime(); // Decrease the timer by the frame time
-                DrawSpriteAnimationPro(inim1Anim_dyingLeft, enemy.rec, (Vector2){0,0}, 0, WHITE);
-            }
-
-            // printf("%f\n", enemy.deathTimer);
+        
 
 
         EndDrawing();
     }
 
-    // while (bulletList != NULL) {
-    //     removeBullet(bulletList);
-    // }
 
 
+}
+
+
+
+
+
+void handleEnemyShot(Enemy *enemy, SpriteAnimation SpriteAnimation){
+/*
+Will take care of enemys shot and death animation
+*/
+
+            if (enemy->hitTimer > 0.0f && enemy->isAlive) {
+                enemy->hitTimer -= GetFrameTime(); // Decrease the timer by the frame time
+                DrawSpriteAnimationPro(inim1Anim_walkingLeft, enemy->rec, (Vector2){0,0}, 0, RED);
+            } else if (enemy->health >= 0){
+                // printf("%f\n", enemy->rec.x);
+                DrawSpriteAnimationPro(inim1Anim_attackingLeft, enemy->rec, (Vector2){0,0}, 0, WHITE);
+            }
+            // printf("Heath: %f\n", enemy->health);
+
+
+
+                    // If the enemy's health drops below 0, start the death animation
+            if (enemy->health < 0 && enemy->isAlive) {
+                enemy->isAlive = false;
+                enemy->deathTimer = 1.4f; // Set the timer to the length of the death animation
+            }
+
+            // If the deathTimer is greater than 0, draw the death animation
+            if (enemy->deathTimer > 0.0f && !enemy->isAlive) {
+                printf("A\n");
+                enemy->deathTimer -= GetFrameTime(); // Decrease the timer by the frame time
+                DrawSpriteAnimationPro(inim1Anim_dyingLeft, enemy->rec, (Vector2){0,0}, 0, WHITE);
+                
+            }
+
+            // printf("%f\n", enemy->deathTimer);
 
 }
