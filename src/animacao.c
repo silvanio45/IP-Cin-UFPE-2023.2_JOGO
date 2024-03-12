@@ -1,5 +1,6 @@
 #include "../include/animacao.h"
 
+// Player
 SpriteAnimation playerAnim_walkingRight;
 SpriteAnimation playerAnim_walkingLeft;
 SpriteAnimation playerAnim_idleRight;
@@ -12,7 +13,12 @@ SpriteAnimation playerAnim_jumppingMovRight;
 SpriteAnimation playerAnim_jumppingMovLeft;
 SpriteAnimation playerAnim_jumppingRight;
 SpriteAnimation playerAnim_jumppingLeft;
-
+SpriteAnimation playerAnim_idleShotingUpRight;
+SpriteAnimation playerAnim_idleShotingUpLeft;
+SpriteAnimation playerAnim_runningShotingUpRight;
+SpriteAnimation playerAnim_runningShotingUpLeft;
+SpriteAnimation playerAnim_dyingRight;
+SpriteAnimation playerAnim_dyingLeft;
 // Inimigo 1
 SpriteAnimation inim1Anim_walkingRight;
 SpriteAnimation inim1Anim_walkingLeft;
@@ -34,6 +40,11 @@ SpriteAnimation inim3Anim_attackingRight;
 SpriteAnimation inim3Anim_attackingLeft;
 SpriteAnimation inim3Anim_dyingRight;
 SpriteAnimation inim3Anim_dyingLeft;
+
+//variaveis auxiliares
+int playerLookingUp;
+int playerRunning;
+int playerShoting;
 
 SpriteAnimation CreateSpriteAnimation(Texture2D spriteSheet, int framesPerSecond, Rectangle rectangles[], int length)
 {
@@ -188,7 +199,7 @@ void initAnimations(Texture2D playerSpriteSheet, Texture2D inimigo1SpriteSheet, 
         (Rectangle){160, 511, 40, 50},
         (Rectangle){200, 511, 40, 50}
     },6);
-     playerAnim_jumppingLeft = CreateSpriteAnimation(playerSpriteSheet, 10, (Rectangle[]){
+    playerAnim_jumppingLeft = CreateSpriteAnimation(playerSpriteSheet, 10, (Rectangle[]){
         (Rectangle){0, 561, 40, 50},
         (Rectangle){40, 561, 40, 50},
         (Rectangle){80, 561, 40, 50},
@@ -196,6 +207,99 @@ void initAnimations(Texture2D playerSpriteSheet, Texture2D inimigo1SpriteSheet, 
         (Rectangle){160, 561, 40, 50},
         (Rectangle){200, 561, 40, 50}
     },6);
+    playerAnim_idleShotingUpRight = CreateSpriteAnimation(playerSpriteSheet,15,(Rectangle[]){
+        (Rectangle){(40*0),614,40,80},
+        (Rectangle){(40*1),614,40,80},
+        (Rectangle){(40*2),614,40,80},
+        (Rectangle){(40*3),614,40,80},
+        (Rectangle){(40*4),614,40,80},
+        (Rectangle){(40*5),614,40,80},
+        (Rectangle){(40*6),614,40,80},
+        (Rectangle){(40*7),614,40,80},
+        (Rectangle){(40*8),614,40,80},
+        (Rectangle){(40*9),614,40,80},
+    },10);
+    playerAnim_idleShotingUpLeft = CreateSpriteAnimation(playerSpriteSheet,15,(Rectangle[]){
+        (Rectangle){(40*9),694,40,80},
+        (Rectangle){(40*8),694,40,80},
+        (Rectangle){(40*7),694,40,80},
+        (Rectangle){(40*6),694,40,80},
+        (Rectangle){(40*5),694,40,80},
+        (Rectangle){(40*4),694,40,80},
+        (Rectangle){(40*3),694,40,80},
+        (Rectangle){(40*2),694,40,80},
+        (Rectangle){(40*1),694,40,80},
+        (Rectangle){(40*0),694,40,80},
+    },10);
+    playerAnim_runningShotingUpRight = CreateSpriteAnimation(playerSpriteSheet,15,(Rectangle[]){
+        (Rectangle){(40*0),774,40,85},
+        (Rectangle){(40*1),774,40,85},
+        (Rectangle){(40*2),774,40,85},
+        (Rectangle){(40*3),774,40,85},
+        (Rectangle){(40*4),774,40,85},
+        (Rectangle){(40*5),774,40,85},
+        (Rectangle){(40*6),774,40,85},
+        (Rectangle){(40*7),774,40,85},
+        (Rectangle){(40*8),774,40,85},
+        (Rectangle){(40*9),774,40,85},
+        (Rectangle){(40*10),774,40,85},
+        (Rectangle){(40*11),774,40,85},
+    },12);
+    playerAnim_runningShotingUpLeft = CreateSpriteAnimation(playerSpriteSheet,15,(Rectangle[]){
+        (Rectangle){(40*11),859,40,85},
+        (Rectangle){(40*10),859,40,85},
+        (Rectangle){(40*9),859,40,85},
+        (Rectangle){(40*8),859,40,85},
+        (Rectangle){(40*7),859,40,85},
+        (Rectangle){(40*6),859,40,85},
+        (Rectangle){(40*5),859,40,85},
+        (Rectangle){(40*4),859,40,85},
+        (Rectangle){(40*3),859,40,85},
+        (Rectangle){(40*2),859,40,85},
+        (Rectangle){(40*1),859,40,85},
+        (Rectangle){(40*0),859,40,85},
+    },12);
+    playerAnim_dyingRight = CreateSpriteAnimation(playerSpriteSheet,10,(Rectangle[]){
+        (Rectangle){(40*0),950,40,50},
+        (Rectangle){(40*1),950,40,50},
+        (Rectangle){(40*2),950,40,50},
+        (Rectangle){(40*3),950,40,50},
+        (Rectangle){(40*4),950,40,50},
+        (Rectangle){(40*5),950,40,50},
+        (Rectangle){(40*6),950,40,50},
+        (Rectangle){(40*7),950,40,50},
+        (Rectangle){(40*8),950,40,50},
+        (Rectangle){(40*9),950,40,50},
+        (Rectangle){(40*10),950,40,50},
+        (Rectangle){(40*11),950,40,50},
+        (Rectangle){(40*12),950,40,50},
+        (Rectangle){(40*13),950,40,50},
+        (Rectangle){(40*14),950,40,50},
+        (Rectangle){(40*15),950,40,50},
+        (Rectangle){(40*16),950,40,50},
+        (Rectangle){(40*17),950,40,50},
+    },18);
+    playerAnim_dyingLeft = CreateSpriteAnimation(playerSpriteSheet,10,(Rectangle[]){
+        (Rectangle){(40*17),950,40,50},
+        (Rectangle){(40*16),950,40,50},
+        (Rectangle){(40*15),950,40,50},
+        (Rectangle){(40*14),950,40,50},
+        (Rectangle){(40*13),950,40,50},
+        (Rectangle){(40*12),950,40,50},
+        (Rectangle){(40*11),950,40,50},
+        (Rectangle){(40*10),950,40,50},
+        (Rectangle){(40*9),950,40,50},
+        (Rectangle){(40*8),950,40,50},
+        (Rectangle){(40*7),950,40,50},
+        (Rectangle){(40*6),950,40,50},
+        (Rectangle){(40*5),950,40,50},
+        (Rectangle){(40*4),950,40,50},
+        (Rectangle){(40*3),950,40,50},
+        (Rectangle){(40*2),950,40,50},
+        (Rectangle){(40*1),950,40,50},
+        (Rectangle){(40*0),950,40,50},
+    },18);
+    
     //  Inimigo 1
     inim1Anim_walkingRight = CreateSpriteAnimation(inimigo1SpriteSheet, 15, (Rectangle[]){
         (Rectangle){575, 843, 55, 47},
@@ -302,39 +406,86 @@ void initAnimations(Texture2D playerSpriteSheet, Texture2D inimigo1SpriteSheet, 
     },26);
 }
 
-
 void playerAnimation(int playerDirec, Rectangle playerRect) {
     //animacao
-            switch (playerDirec)
+    playerRect.height = PLAYER_DIM_Y;
+    playerRect.width = PLAYER_DIM_X;
+    playerLookingUp = (IsKeyDown(KEY_W))||(IsKeyDown(KEY_UP));
+    playerRunning = (IsKeyDown(KEY_A))||(IsKeyDown(KEY_LEFT)) || (IsKeyDown(KEY_D))||(IsKeyDown(KEY_RIGHT));
+    playerShoting = (IsKeyDown(KEY_Z));
+    switch (playerDirec)
+    {
+        case 1://direita
+            if(playerRunning) 
             {
-            case 1:
-                if(IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) 
-                {
-                    if(IsKeyDown(KEY_F))DrawSpriteAnimationPro(playerAnim_runningShotingRight, playerRect, (Vector2){0,0}, 0, WHITE );
-                    else DrawSpriteAnimationPro(playerAnim_walkingRight, playerRect, (Vector2){0,0}, 0, WHITE );
-                }
-                else
-                {
-                    if(IsKeyDown(KEY_F)) DrawSpriteAnimationPro(playerAnim_idleShotingRight, playerRect, (Vector2){0,0}, 0, WHITE );
-                    else DrawSpriteAnimationPro(playerAnim_idleRight, playerRect, (Vector2){0,0}, 0, WHITE );
-                }
-                break;
-            case -1:
-                if(IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) 
-                {
-                    if(IsKeyDown(KEY_F)) DrawSpriteAnimationPro(playerAnim_runningShotingLeft, playerRect, (Vector2){0,0}, 0, WHITE );
-                    else DrawSpriteAnimationPro(playerAnim_walkingLeft, playerRect, (Vector2){0,0}, 0, WHITE );
-                }
-                else 
-                {
-                    if (IsKeyDown(KEY_F)) DrawSpriteAnimationPro(playerAnim_idleShotingLeft, playerRect, (Vector2){0,0}, 0, WHITE );
-                    else DrawSpriteAnimationPro(playerAnim_idleLeft, playerRect, (Vector2){0,0}, 0, WHITE );
-                }
-                break;
-            default:
-                if (IsKeyDown(KEY_F)) DrawSpriteAnimationPro(playerAnim_idleShotingRight, playerRect, (Vector2){0,0}, 0, WHITE );
-                else DrawSpriteAnimationPro(playerAnim_idleRight, playerRect, (Vector2){0,0}, 0, WHITE );
-                
-                break;
+                if(playerShoting){
+                    if(playerLookingUp){
+                        playerRect.height = 200;
+                        DrawSpriteAnimationPro(playerAnim_runningShotingUpRight, playerRect, (Vector2){0,95}, 0, WHITE );
+                    } 
+                    else{
+                        playerRect.width = 150;
+                        DrawSpriteAnimationPro(playerAnim_runningShotingRight, playerRect, (Vector2){0,0}, 0, WHITE );
+                    } 
+                }else DrawSpriteAnimationPro(playerAnim_walkingRight, playerRect, (Vector2){0,0}, 0, WHITE );
             }
+            else
+            {
+                if(playerShoting){
+                    if(playerLookingUp){
+                        playerRect.height = 200;
+                        DrawSpriteAnimationPro(playerAnim_idleShotingUpRight, playerRect, (Vector2){0,95}, 0, WHITE );
+                    } 
+                    else{
+                        playerRect.width = 150;
+                        DrawSpriteAnimationPro(playerAnim_idleShotingRight, playerRect, (Vector2){0,0}, 0, WHITE );
+                    } 
+                }else DrawSpriteAnimationPro(playerAnim_idleRight, playerRect, (Vector2){0,0}, 0, WHITE );
+            }
+            break;
+        case -1://esquerda
+            if(playerRunning) 
+            {
+                if(playerShoting){
+                    if(playerLookingUp){
+                        playerRect.height = 200;
+                        DrawSpriteAnimationPro(playerAnim_runningShotingUpLeft, playerRect, (Vector2){0,95}, 0, WHITE );
+                    } 
+                    else{
+                        playerRect.width = 150;
+                        DrawSpriteAnimationPro(playerAnim_runningShotingLeft, playerRect, (Vector2){0,0}, 0, WHITE );
+                    } 
+                }else DrawSpriteAnimationPro(playerAnim_walkingLeft, playerRect, (Vector2){0,0}, 0, WHITE );
+            }
+            else 
+            {
+                if (playerShoting){
+                    if(playerLookingUp){
+                        playerRect.height = 200;
+                        DrawSpriteAnimationPro(playerAnim_idleShotingUpLeft, playerRect, (Vector2){0,95}, 0, WHITE );
+                    } 
+                    else{
+                        playerRect.width = 150;
+                        DrawSpriteAnimationPro(playerAnim_idleShotingLeft, playerRect, (Vector2){0,0}, 0, WHITE );
+                    } 
+                }else DrawSpriteAnimationPro(playerAnim_idleLeft, playerRect, (Vector2){0,0}, 0, WHITE );
+            }
+            break;
+        default:
+            if (playerShoting){
+                if(playerLookingUp){
+                        playerRect.height = 200;
+                        DrawSpriteAnimationPro(playerAnim_idleShotingUpRight, playerRect, (Vector2){0,95}, 0, WHITE );
+                    } 
+                else{
+                    playerRect.width = 150;
+                    DrawSpriteAnimationPro(playerAnim_idleShotingRight, playerRect, (Vector2){0,0}, 0, WHITE );
+                } 
+            }else DrawSpriteAnimationPro(playerAnim_idleRight, playerRect, (Vector2){0,0}, 0, WHITE );
+            break;
+    }
+}
+
+void playerShotAnimation (int playerDirec, Rectangle playerRect) {
+
 }

@@ -4,19 +4,12 @@
 #include "raylib.h"
 #include <stdlib.h>
 
-
-
-
-
 #define BOTAOINICIAL_POS_X (1280 - botaoStart.width) / 2
 #define BOTAOINICIAL_POS_Y (720 - botaoStart.height) / 2
 #define PLAYER_POSINICIAL_X 105
 #define PLAYER_POSINICIAL_Y 1205
 #define PLAYER_DIM_X 105
 #define PLAYER_DIM_Y 105
-
-
-
 
 typedef struct SpriteAnimation
 {
@@ -29,7 +22,7 @@ typedef struct SpriteAnimation
 }SpriteAnimation;
 
 SpriteAnimation CreateSpriteAnimation(Texture2D spriteSheet, int framesPerSecond, Rectangle rectangles[], int length);
-
+    
 void DisposeSpriteAnimation(SpriteAnimation animation);
 
 void DrawSpriteAnimationPro(SpriteAnimation animation, Rectangle dest, Vector2 origin, float rotation, Color tint);
@@ -37,7 +30,6 @@ void DrawSpriteAnimationPro(SpriteAnimation animation, Rectangle dest, Vector2 o
 void initAnimations(Texture2D playerSpriteSheet, Texture2D inimigo1SpriteSheet, Texture2D inimigo2SpriteSheet, Texture2D inimigo3SpriteSheet);
 
 void playerAnimation(int playerDirec, Rectangle playerRect);
-
 
 //----------------------------------------------------------------------------------
 //  Animacoes
@@ -54,7 +46,12 @@ extern SpriteAnimation playerAnim_jumppingMovRight;
 extern SpriteAnimation playerAnim_jumppingMovLeft;
 extern SpriteAnimation playerAnim_jumppingRight;
 extern SpriteAnimation playerAnim_jumppingLeft;
-
+extern SpriteAnimation playerAnim_idleShotingUpRight;
+extern SpriteAnimation playerAnim_idleShotingUpLeft;
+extern SpriteAnimation playerAnim_runningShotingUpRight;
+extern SpriteAnimation playerAnim_runningShotingUpLeft;
+extern SpriteAnimation playerAnim_dyingRight;
+extern SpriteAnimation playerAnim_dyingLeft;
 // Inimigo 1
 extern SpriteAnimation inim1Anim_walkingRight;
 extern SpriteAnimation inim1Anim_walkingLeft;
@@ -77,6 +74,4 @@ extern SpriteAnimation inim3Anim_attackingLeft;
 extern SpriteAnimation inim3Anim_dyingRight;
 extern SpriteAnimation inim3Anim_dyingLeft;
 //----------------------------------------------------------------------------------
-
-
 #endif // ANIMACAO_H
