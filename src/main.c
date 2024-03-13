@@ -20,9 +20,9 @@
 #define SCREEN_HEIGHT 720
 
 Texture2D playerSpriteSheet;
+Texture2D inimigo1SpriteSheet;
 Texture2D inimigo2SpriteSheet;
 Texture2D inimigo3SpriteSheet;
-Texture2D inimigo1SpriteSheet;
 Texture2D cenario;
 Texture2D cenarioLog;
 Texture2D botaoStart;
