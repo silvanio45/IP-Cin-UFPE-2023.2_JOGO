@@ -432,7 +432,7 @@ void playerAnimation(int playerDirec, Rectangle playerRect, Player player) {
                         DrawSpriteAnimationPro(playerAnim_runningShotingRight, playerRect, (Vector2){0,0}, 0, WHITE );
                     } 
                 }
-                else if (IsKeyDown(KEY_SPACE) || player.isJumping) {DrawSpriteAnimationPro(playerAnim_jumppingMovRight, playerRect, (Vector2){0,0}, 0, WHITE );}
+                else if (IsKeyDown(KEY_SPACE) || player.isJumping || player.isPlayerFalling) {DrawSpriteAnimationPro(playerAnim_jumppingMovRight, playerRect, (Vector2){0,0}, 0, WHITE );}
                 else DrawSpriteAnimationPro(playerAnim_walkingRight, playerRect, (Vector2){0,0}, 0, WHITE );
             }
             else
@@ -447,7 +447,7 @@ void playerAnimation(int playerDirec, Rectangle playerRect, Player player) {
                         DrawSpriteAnimationPro(playerAnim_idleShotingRight, playerRect, (Vector2){0,0}, 0, WHITE );
                     } 
                 }
-                else if (IsKeyDown(KEY_SPACE) || player.isJumping) {DrawSpriteAnimationPro(playerAnim_jumppingRight, playerRect, (Vector2){0,0}, 0, WHITE );}
+                else if (IsKeyDown(KEY_SPACE) || player.isJumping || player.isPlayerFalling) {DrawSpriteAnimationPro(playerAnim_jumppingRight, playerRect, (Vector2){0,0}, 0, WHITE );}
                 
                 else DrawSpriteAnimationPro(playerAnim_idleRight, playerRect, (Vector2){0,0}, 0, WHITE );
             }
@@ -465,7 +465,7 @@ void playerAnimation(int playerDirec, Rectangle playerRect, Player player) {
                         DrawSpriteAnimationPro(playerAnim_runningShotingLeft, playerRect, (Vector2){0,0}, 0, WHITE );
                     } 
                 }
-                else if (IsKeyDown(KEY_SPACE) || player.isJumping) {DrawSpriteAnimationPro(playerAnim_jumppingMovLeft, playerRect, (Vector2){0,0}, 0, WHITE );}
+                else if (IsKeyDown(KEY_SPACE) || player.isJumping || player.isPlayerFalling) {DrawSpriteAnimationPro(playerAnim_jumppingMovLeft, playerRect, (Vector2){0,0}, 0, WHITE );}
                 
                 else DrawSpriteAnimationPro(playerAnim_walkingLeft, playerRect, (Vector2){0,0}, 0, WHITE );
             }
@@ -481,7 +481,7 @@ void playerAnimation(int playerDirec, Rectangle playerRect, Player player) {
                         DrawSpriteAnimationPro(playerAnim_idleShotingLeft, playerRect, (Vector2){0,0}, 0, WHITE );
                     } 
                 }
-                else if (IsKeyDown(KEY_SPACE) || player.isJumping) {DrawSpriteAnimationPro(playerAnim_jumppingLeft, playerRect, (Vector2){0,0}, 0, WHITE );}
+                else if (IsKeyDown(KEY_SPACE) || player.isJumping || player.isPlayerFalling) {DrawSpriteAnimationPro(playerAnim_jumppingLeft, playerRect, (Vector2){0,0}, 0, WHITE );}
                 
                 else DrawSpriteAnimationPro(playerAnim_idleLeft, playerRect, (Vector2){0,0}, 0, WHITE );
             }

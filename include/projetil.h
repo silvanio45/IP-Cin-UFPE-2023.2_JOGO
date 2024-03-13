@@ -3,7 +3,7 @@
 
 #include "raylib.h"
 #include "inimigos.h"
-
+#include "entity.h"
 
 typedef struct Projectil {
     Vector2 position;
@@ -21,7 +21,7 @@ void addProjectil(Rectangle playerRect, float speed, int playerDirec, bool isPla
 // Function to remove a bullet from the list
 void removeProjectil(Projectil* bullet);
 
-bool updateProjectils(Texture2D projectilTexture, Rectangle sourceRecProject, int SCREEN_WIDTH, RU* Ru, int* cont, bool isPlayerLookingUp);
+bool updateProjectils(Texture2D projectilTexture, Rectangle sourceRecProject, int SCREEN_WIDTH, RU* Ru, int* cont, bool isPlayerLookingUp, Platforms *platforms);
 
 
 

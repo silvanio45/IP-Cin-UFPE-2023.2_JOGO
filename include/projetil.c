@@ -50,7 +50,7 @@ void removeProjectil(Projectil* projectil) {
     free(projectil);
 }
 
-bool updateProjectils(Texture2D projectilTexture, Rectangle sourceRecProject, int SCREEN_WIDTH, RU* Ru, int* cont, bool isPlayerLookingUp){
+bool updateProjectils(Texture2D projectilTexture, Rectangle sourceRecProject, int SCREEN_WIDTH, RU* Ru, int* cont, bool isPlayerLookingUp, Platforms *platforms){
     Projectil* current = projectilList;
     Projectil* prev = NULL;
     float rotation;
@@ -79,7 +79,7 @@ bool updateProjectils(Texture2D projectilTexture, Rectangle sourceRecProject, in
         DrawTexturePro(projectilTexture, sourceRecProject, destRecProject, origin, rotation, WHITE);
 
         for(int i = 0; i < *cont; i++) {
-            // Check for collision
+            // Check for collision with enemy
             if (CheckCollisionRecs(destRecProject, Ru[i].rec) && Ru[i].isAlive)  {
                 Ru[i].hit = true;
                 printf("Bullet hit the enemy!\n");
@@ -94,6 +94,20 @@ bool updateProjectils(Texture2D projectilTexture, Rectangle sourceRecProject, in
                 return true; // A bullet hit the enemy
             }
         }
+        for(int i = 0; i < 2; i++) {
+            if (CheckCollisionRecs(destRecProject, platforms[i].rec)) {
+                Projectil* next = current->next;
+                if (prev != NULL) {
+                    prev->next = next;
+                } else {
+                    projectilList = next;
+                }
+                removeProjectil(current);
+                current = next;
+                return false; // A bullet hit the platform
+            }
+        }
+
         // Check if bullet is off-screen
         if ((current->position.x < 0 || current->position.x > SCREEN_WIDTH) || 
             (current->position.y < 0 || current->position.y > GetScreenHeight())) {

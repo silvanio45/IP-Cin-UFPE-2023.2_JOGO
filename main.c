@@ -70,7 +70,7 @@ RU* Ru = NULL;
 
 Platforms platforms[] = {
     {{220, 300, 200, 60}, 1},
-    {{900, 200, 400, 60}, 1}
+    {{900, 204, 400, 60}, 1}
 };
 
 //----------------------------------------------------------------------------------
@@ -210,9 +210,9 @@ static void UpdateDrawFrame(void)
             
             // printf("%f %f\n", player.rec.x, player.rec.y);
             DrawTexture(cenario, 0, 0, WHITE);
-            DrawRectangleRec(platforms[0].rec, BLACK);
-            DrawRectangleRec(platforms[1].rec, BLACK);
-            collision = updateProjectils(bulletTexture, sourceRecBullet, SCREEN_WIDTH, Ru, &cont, player.isPlayerLookingUp);    
+            // DrawRectangleRec(platforms[0].rec, BLACK);
+            // DrawRectangleRec(platforms[1].rec, BLACK);
+            collision = updateProjectils(bulletTexture, sourceRecBullet, SCREEN_WIDTH, Ru, &cont, player.isPlayerLookingUp, platforms);    
             updateRu(playerSpriteSheet, inimigo1SpriteSheet, inimigo2SpriteSheet, inimigo3SpriteSheet, Ru, &cont, SCREEN_WIDTH, collision);
             playerAnimation(player.direc, player.rec, player);
             //DrawTexture(RonaldoUmidade, Ru.rec.x, Ru.rec.y, WHITE);

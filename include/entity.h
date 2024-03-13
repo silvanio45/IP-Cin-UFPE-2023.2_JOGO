@@ -10,6 +10,7 @@ typedef struct {
     int direc;
     bool isJumping;
     bool isPlayerLookingUp;
+    bool isPlayerFalling;
     float jumpSpeed;
 
     float health;
