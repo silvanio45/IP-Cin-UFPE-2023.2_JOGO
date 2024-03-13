@@ -25,6 +25,8 @@ SpriteAnimation CreateSpriteAnimation(Texture2D spriteSheet, int framesPerSecond
     
 void DisposeSpriteAnimation(SpriteAnimation animation);
 
+void DisposeAllSpriteAnimation();
+
 void DrawSpriteAnimationPro(SpriteAnimation animation, Rectangle dest, Vector2 origin, float rotation, Color tint);
 
 void initAnimations(Texture2D playerSpriteSheet, Texture2D inimigo1SpriteSheet, Texture2D inimigo2SpriteSheet, Texture2D inimigo3SpriteSheet);

@@ -111,11 +111,7 @@ int main()
     UnloadTexture(cenarioLog);
     UnloadTexture(bulletTexture);
     //dar dispose para todas as animacoes (muita animacao boy)
-    DisposeSpriteAnimation(playerAnim_idleLeft);
-    DisposeSpriteAnimation(playerAnim_idleRight);
-    DisposeSpriteAnimation(playerAnim_walkingLeft);
-    DisposeSpriteAnimation(playerAnim_walkingRight);
-
+    DisposeAllSpriteAnimation();
     return 0;
 }
 
