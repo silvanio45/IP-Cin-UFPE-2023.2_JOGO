@@ -406,7 +406,234 @@ void initAnimations(Texture2D playerSpriteSheet, Texture2D inimigo1SpriteSheet, 
         (Rectangle){346, 1567, 40, 55},
         (Rectangle){306, 1567, 40, 55},
     },26);
+
+    // Inimigo 2
+    inim2Anim_walkingRight = CreateSpriteAnimation(inimigo2SpriteSheet, 20,(Rectangle[]){
+        (Rectangle){(73*10),(60*4),73,60},
+        (Rectangle){(73*9),(60*4),73,60},
+        (Rectangle){(73*8),(60*4),73,60},
+        (Rectangle){(73*7),(60*4),73,60},
+        (Rectangle){(73*6),(60*4),73,60},
+        (Rectangle){(73*4),(60*4),73,60},
+        (Rectangle){(73*3),(60*4),73,60},
+        (Rectangle){(73*5),(60*4),73,60},
+        (Rectangle){(73*2),(60*4),73,60},
+        (Rectangle){(73*1),(60*4),73,60},
+        (Rectangle){(73*0),(60*4),73,60},
+
+        (Rectangle){(73*10),(60*5),73,60},
+        (Rectangle){(73*9),(60*5),73,60},
+        (Rectangle){(73*8),(60*5),73,60},
+        (Rectangle){(73*7),(60*5),73,60},
+        (Rectangle){(73*6),(60*5),73,60},
+        (Rectangle){(73*4),(60*5),73,60},
+        (Rectangle){(73*3),(60*5),73,60},
+        (Rectangle){(73*5),(60*5),73,60},
+        (Rectangle){(73*2),(60*5),73,60},
+        (Rectangle){(73*1),(60*5),73,60},
+        (Rectangle){(73*0),(60*5),73,60},
+
+        (Rectangle){(73*10),(60*6),73,60},
+        (Rectangle){(73*9),(60*6),73,60},
+        (Rectangle){(73*8),(60*6),73,60},
+        (Rectangle){(73*7),(60*6),73,60},
+        (Rectangle){(73*6),(60*6),73,60},
+        (Rectangle){(73*4),(60*6),73,60},
+        (Rectangle){(73*3),(60*6),73,60},
+        (Rectangle){(73*5),(60*6),73,60},
+        (Rectangle){(73*2),(60*6),73,60},
+        (Rectangle){(73*1),(60*6),73,60},
+        (Rectangle){(73*0),(60*6),73,60},
+
+        (Rectangle){(73*6),(60*7),73,60},
+        (Rectangle){(73*5),(60*7),73,60},
+        (Rectangle){(73*4),(60*7),73,60},
+        (Rectangle){(73*3),(60*7),73,60},
+        (Rectangle){(73*2),(60*7),73,60},
+        (Rectangle){(73*1),(60*7),73,60},
+        (Rectangle){(73*0),(60*7),73,60}
+    },40);
+    inim2Anim_walkingLeft = CreateSpriteAnimation(inimigo2SpriteSheet, 20,(Rectangle[]){
+        (Rectangle){(73*0),(60*0),73,60},
+        (Rectangle){(73*1),(60*0),73,60},
+        (Rectangle){(73*2),(60*0),73,60},
+        (Rectangle){(73*3),(60*0),73,60},
+        (Rectangle){(73*4),(60*0),73,60},
+        (Rectangle){(73*5),(60*0),73,60},
+        (Rectangle){(73*6),(60*0),73,60},
+        (Rectangle){(73*7),(60*0),73,60},
+        (Rectangle){(73*8),(60*0),73,60},
+        (Rectangle){(73*9),(60*0),73,60},
+        (Rectangle){(73*10),(60*0),73,60},
+
+        (Rectangle){(73*0),(60*1),73,60},
+        (Rectangle){(73*1),(60*1),73,60},
+        (Rectangle){(73*2),(60*1),73,60},
+        (Rectangle){(73*3),(60*1),73,60},
+        (Rectangle){(73*4),(60*1),73,60},
+        (Rectangle){(73*5),(60*1),73,60},
+        (Rectangle){(73*6),(60*1),73,60},
+        (Rectangle){(73*7),(60*1),73,60},
+        (Rectangle){(73*8),(60*1),73,60},
+        (Rectangle){(73*9),(60*1),73,60},
+        (Rectangle){(73*10),(60*1),73,60},
+
+        (Rectangle){(73*0),(60*2),73,60},
+        (Rectangle){(73*1),(60*2),73,60},
+        (Rectangle){(73*2),(60*2),73,60},
+        (Rectangle){(73*3),(60*2),73,60},
+        (Rectangle){(73*4),(60*2),73,60},
+        (Rectangle){(73*5),(60*2),73,60},
+        (Rectangle){(73*6),(60*2),73,60},
+        (Rectangle){(73*7),(60*2),73,60},
+        (Rectangle){(73*8),(60*2),73,60},
+        (Rectangle){(73*9),(60*2),73,60},
+        (Rectangle){(73*10),(60*2),73,60},
+
+        (Rectangle){(73*0),(60*3),73,60},
+        (Rectangle){(73*1),(60*3),73,60},
+        (Rectangle){(73*2),(60*3),73,60},
+        (Rectangle){(73*3),(60*3),73,60},
+        (Rectangle){(73*4),(60*3),73,60},
+        (Rectangle){(73*5),(60*3),73,60},
+        (Rectangle){(73*6),(60*3),73,60}
+    },40);
+    inim2Anim_attackingRight = CreateSpriteAnimation(inimigo2SpriteSheet,15,(Rectangle[]){
+        (Rectangle){(73*0),(60*11),73,60},
+        (Rectangle){(73*1),(60*11),73,60},
+        (Rectangle){(73*2),(60*11),73,60},
+        (Rectangle){(73*3),(60*11),73,60},
+        (Rectangle){(73*4),(60*11),73,60},
+        (Rectangle){(73*5),(60*11),73,60},
+        (Rectangle){(73*6),(60*11),73,60},
+        (Rectangle){(73*7),(60*11),73,60},
+        (Rectangle){(73*8),(60*11),73,60},
+        (Rectangle){(73*9),(60*11),73,60},
+        (Rectangle){(73*10),(60*11),73,60},
+
+        (Rectangle){(73*0),(60*12),73,60},
+        (Rectangle){(73*1),(60*12),73,60},
+        (Rectangle){(73*2),(60*12),73,60},
+        (Rectangle){(73*3),(60*12),73,60},
+        (Rectangle){(73*4),(60*12),73,60},
+        (Rectangle){(73*5),(60*12),73,60},
+        (Rectangle){(73*6),(60*12),73,60},
+        (Rectangle){(73*7),(60*12),73,60},
+        (Rectangle){(73*8),(60*12),73,60}
+    },20);
+    inim2Anim_attackingLeft = CreateSpriteAnimation(inimigo2SpriteSheet,15,(Rectangle[]){
+        (Rectangle){(73*10),(60*9),73,60},
+        (Rectangle){(73*9),(60*9),73,60},
+        (Rectangle){(73*8),(60*9),73,60},
+        (Rectangle){(73*7),(60*9),73,60},
+        (Rectangle){(73*6),(60*9),73,60},
+        (Rectangle){(73*5),(60*9),73,60},
+        (Rectangle){(73*4),(60*9),73,60},
+        (Rectangle){(73*3),(60*9),73,60},
+        (Rectangle){(73*2),(60*9),73,60},
+        (Rectangle){(73*1),(60*9),73,60},
+        (Rectangle){(73*0),(60*9),73,60},
+
+        (Rectangle){(73*8),(60*10),73,60},
+        (Rectangle){(73*7),(60*10),73,60},
+        (Rectangle){(73*6),(60*10),73,60},
+        (Rectangle){(73*5),(60*10),73,60},
+        (Rectangle){(73*4),(60*10),73,60},
+        (Rectangle){(73*3),(60*10),73,60},
+        (Rectangle){(73*2),(60*10),73,60},
+        (Rectangle){(73*1),(60*10),73,60},
+        (Rectangle){(73*0),(60*10),73,60}
+    },20);
+    inim2Anim_dyingRight = CreateSpriteAnimation(inimigo2SpriteSheet, 13,(Rectangle[]){
+        (Rectangle){(73*10),(60*18),73,60},
+        (Rectangle){(73*9),(60*18),73,60},
+        (Rectangle){(73*8),(60*18),73,60},
+        (Rectangle){(73*7),(60*18),73,60},
+        (Rectangle){(73*6),(60*18),73,60},
+        (Rectangle){(73*4),(60*18),73,60},
+        (Rectangle){(73*3),(60*18),73,60},
+        (Rectangle){(73*5),(60*18),73,60},
+        (Rectangle){(73*2),(60*18),73,60},
+        (Rectangle){(73*1),(60*18),73,60},
+        (Rectangle){(73*0),(60*18),73,60},
+
+        (Rectangle){(73*10),(60*19),73,60},
+        (Rectangle){(73*9),(60*19),73,60},
+        (Rectangle){(73*8),(60*19),73,60},
+        (Rectangle){(73*7),(60*19),73,60},
+        (Rectangle){(73*6),(60*19),73,60},
+        (Rectangle){(73*4),(60*19),73,60},
+        (Rectangle){(73*3),(60*19),73,60},
+        (Rectangle){(73*5),(60*19),73,60},
+        (Rectangle){(73*2),(60*19),73,60},
+        (Rectangle){(73*1),(60*19),73,60},
+        (Rectangle){(73*0),(60*19),73,60},
+
+        (Rectangle){(73*10),(60*20),73,60},
+        (Rectangle){(73*9),(60*20),73,60},
+        (Rectangle){(73*8),(60*20),73,60},
+        (Rectangle){(73*7),(60*20),73,60},
+        (Rectangle){(73*6),(60*20),73,60},
+        (Rectangle){(73*4),(60*20),73,60},
+        (Rectangle){(73*3),(60*20),73,60},
+        (Rectangle){(73*5),(60*20),73,60},
+        (Rectangle){(73*2),(60*20),73,60},
+        (Rectangle){(73*1),(60*20),73,60},
+        (Rectangle){(73*0),(60*20),73,60},
+
+        (Rectangle){(73*6),(60*21),73,60},
+        (Rectangle){(73*5),(60*21),73,60},
+        (Rectangle){(73*4),(60*21),73,60},
+        (Rectangle){(73*3),(60*21),73,60},
+        (Rectangle){(73*2),(60*21),73,60},
+        (Rectangle){(73*1),(60*21),73,60}
+    },39);
+    inim2Anim_dyingLeft = CreateSpriteAnimation(inimigo2SpriteSheet, 13,(Rectangle[]){
+        (Rectangle){(73*0),(60*14),73,60},
+        (Rectangle){(73*1),(60*14),73,60},
+        (Rectangle){(73*2),(60*14),73,60},
+        (Rectangle){(73*3),(60*14),73,60},
+        (Rectangle){(73*4),(60*14),73,60},
+        (Rectangle){(73*5),(60*14),73,60},
+        (Rectangle){(73*6),(60*14),73,60},
+        (Rectangle){(73*7),(60*14),73,60},
+        (Rectangle){(73*8),(60*14),73,60},
+        (Rectangle){(73*9),(60*14),73,60},
+        (Rectangle){(73*10),(60*14),73,60},
+
+        (Rectangle){(73*0),(60*15),73,60},
+        (Rectangle){(73*1),(60*15),73,60},
+        (Rectangle){(73*2),(60*15),73,60},
+        (Rectangle){(73*3),(60*15),73,60},
+        (Rectangle){(73*4),(60*15),73,60},
+        (Rectangle){(73*5),(60*15),73,60},
+        (Rectangle){(73*6),(60*15),73,60},
+        (Rectangle){(73*7),(60*15),73,60},
+        (Rectangle){(73*8),(60*15),73,60},
+        (Rectangle){(73*9),(60*15),73,60},
+        (Rectangle){(73*10),(60*15),73,60},
+
+        (Rectangle){(73*0),(60*16),73,60},
+        (Rectangle){(73*1),(60*16),73,60},
+        (Rectangle){(73*2),(60*16),73,60},
+        (Rectangle){(73*3),(60*16),73,60},
+        (Rectangle){(73*4),(60*16),73,60},
+        (Rectangle){(73*5),(60*16),73,60},
+        (Rectangle){(73*6),(60*16),73,60},
+        (Rectangle){(73*7),(60*16),73,60},
+        (Rectangle){(73*8),(60*16),73,60},
+        (Rectangle){(73*9),(60*16),73,60},
+        (Rectangle){(73*10),(60*16),73,60},
+
+        (Rectangle){(73*0),(60*17),73,60},
+        (Rectangle){(73*1),(60*17),73,60},
+        (Rectangle){(73*2),(60*17),73,60},
+        (Rectangle){(73*3),(60*17),73,60},
+        (Rectangle){(73*4),(60*17),73,60},
+        (Rectangle){(73*5),(60*17),73,60},
+    },39);
 }
+
 
 void playerAnimation(int playerDirec, Rectangle playerRect, Player player) {
     //animacao
@@ -414,7 +641,7 @@ void playerAnimation(int playerDirec, Rectangle playerRect, Player player) {
     playerRect.width = PLAYER_DIM_X;
     playerLookingUp = (IsKeyDown(KEY_W))||(IsKeyDown(KEY_UP));
     playerRunning = (IsKeyDown(KEY_A))||(IsKeyDown(KEY_LEFT)) || (IsKeyDown(KEY_D))||(IsKeyDown(KEY_RIGHT));
-    playerShoting = (IsKeyDown(KEY_K));
+    playerShoting = (IsKeyDown(KEY_F));
     playerStanding = (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) && (IsKeyDown(KEY_D)  || IsKeyDown(KEY_RIGHT));
 
     switch (playerDirec)

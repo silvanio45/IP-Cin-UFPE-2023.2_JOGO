@@ -42,7 +42,6 @@ Rectangle sourceRecBullet;
 Texture2D bulletTexture;
 // Bullet* bulletList = NULL; // Start with an empty list
 
-int cont = 0;
 
 // float velY = 0;
 float jumpSpeed = 2.0f;
@@ -53,20 +52,41 @@ bool menu_open = true;
 // bool player.isJumping = false; 
 bool jump = true;
 
-float timeSinceLastRu = 0.0f; // Adicione esta linha
-float ruDelay = 1.0f; // Adicione esta linha
 
 // Add a new variable to keep track of the time since the last shot
 float timeSinceLastShot = 0.8f;
 float bulletSpeed;
 // Define the delay between each shot (1.0f means one second)
 float shotDelay = 0.4f; 
-float RuDelay = 0.4f;
 
 int TRU = 0; 
 
 Player player;
+
+int cont = 0;
+int contCAC = 0;
+int contCTG = 0;
+int contGunRU = 0;
+int contGunCTG = 0;
+int contGunCAC = 0;
+
+// Gun gun;
+GUNCTG* GunRU = NULL;
+GUNCTG* GunCAC = NULL;
+GUNCTG* GunCTG = NULL;
+
 RU* Ru = NULL;
+CarangueijoArmandoCarlos* CAC = NULL;
+CalabresoTarcioGeometria* CTG = NULL;
+
+float timeSinceLastRu = 0.0f;
+float timeSinceLastCAC = 0.0f;
+float timeSinceLastCTG = 0.0f;
+float zumbiPosX = 300; 
+float  hitTimer = 0.0f;
+float RuDelay = 0.4f;
+float CACDelay = 0.4f;
+float CTGDelay = 0.4f;
 
 float scrollingBack;
 float scrollingClouds;
@@ -139,6 +159,8 @@ int main()
         {
             timeSinceLastShot += GetFrameTime();
             timeSinceLastRu += GetFrameTime();
+            timeSinceLastCAC += GetFrameTime();
+            timeSinceLastCTG += GetFrameTime();
             UpdateDrawFrame();
         }
     #endif
@@ -178,8 +200,20 @@ static void UpdateDrawFrame(void)
         
         if(IsKeyDown(KEY_J)){
             if(timeSinceLastRu >= RuDelay){
-                Ru = addRu(Ru, &cont, playerSpriteSheet, inimigo1SpriteSheet, inimigo2SpriteSheet, inimigo3SpriteSheet);
+                Ru = addRu(Ru, &cont, inimigo1SpriteSheet);
                 timeSinceLastRu = 0.0f;
+            }
+        }
+        if(IsKeyDown(KEY_K)){
+            if(timeSinceLastCAC >= CACDelay){
+                CAC = addCAC(CAC, &contCAC, inimigo1SpriteSheet);
+                timeSinceLastCAC = 0.0f;
+            }
+        }
+        if(IsKeyDown(KEY_L)){
+            if(timeSinceLastCTG >= CTGDelay){
+                CTG = addCTG(CTG, &contCTG, inimigo2SpriteSheet);
+                timeSinceLastCTG = 0.0f;
             }
         }
         
@@ -189,7 +223,7 @@ static void UpdateDrawFrame(void)
        pulo(&player, gravidade, platforms, 2);
 
 
-        if(IsKeyDown(KEY_K)){
+        if(IsKeyDown(KEY_F)){
             if (player.isPlayerLookingUp) {
                     shotDelay = 0.6f;
                 }
@@ -220,7 +254,7 @@ static void UpdateDrawFrame(void)
         BeginDrawing();
             ClearBackground(WHITE);
 
-            scrollingBack -= 4.f;
+            scrollingBack -= 0.08f;
             if (scrollingBack <= -skyBackground.width*1.5) scrollingBack = 0;
 
             scrollingClouds -= 0.2f;
@@ -241,8 +275,13 @@ static void UpdateDrawFrame(void)
             DrawTextureEx(clouds1, (Vector2){ clouds1.width*1 + scrollingClouds1, 0 }, 0.0f, 1.0f, WHITE);
 
             DrawTexture(cenario, 0, 0, WHITE);
+            
             collision = updateProjectils(bulletTexture, sourceRecBullet, SCREEN_WIDTH, Ru, &cont, player.isPlayerLookingUp, platforms);    
-            updateRu(playerSpriteSheet, inimigo1SpriteSheet, inimigo2SpriteSheet, inimigo3SpriteSheet, Ru, &cont, SCREEN_WIDTH, collision);
+            
+            updateRu(inimigo1SpriteSheet, Ru, &cont, SCREEN_WIDTH, &Ru->direct, player.rec.x, bulletTexture, &GunRU, &contGunRU);
+            updateCAC(inimigo1SpriteSheet, CAC, &contCAC, SCREEN_WIDTH, &CAC->direct, player.rec.x, bulletTexture, &GunCAC, &contGunCAC);
+            updateCTG(inimigo2SpriteSheet, CTG, &contCTG, SCREEN_WIDTH, &CTG->direct, player.rec.x, bulletTexture, &GunCTG, &contGunCTG);
+            
             playerAnimation(player.direc, player.rec, player);
             
         EndDrawing();
