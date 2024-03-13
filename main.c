@@ -19,7 +19,7 @@
 //----------------------------------------------------------------------------------
 
 #define SCREEN_WIDTH 1280
-#define SCREEN_HEIGHT 720
+#define SCREEN_HEIGHT 540
 
 
 Texture2D playerSpriteSheet;
@@ -65,6 +65,14 @@ int TRU = 0;
 Player player;
 RU* Ru = NULL;
 
+
+//objetos do cenario
+
+Platforms platforms[] = {
+    {{220, 300, 200, 60}, 1},
+    {{900, 200, 400, 60}, 1}
+};
+
 //----------------------------------------------------------------------------------
 // Declaração de Funções Locais
 //----------------------------------------------------------------------------------
@@ -86,9 +94,11 @@ int main()
     inimigo2SpriteSheet =   LoadTexture("resources/Inimigo2_SpriteSheet.png");
     inimigo3SpriteSheet =   LoadTexture("resources/Inimigo3_SpriteSheet.png");
     bulletTexture =         LoadTexture("./resources/bullet2.png");
-    cenario =               LoadTexture("./resources/cenario3.png");
+    cenario =               LoadTexture("./resources/cenario4.png");
     cenarioLog =            LoadTexture("./resources/cenarioLogMetal.png");
     botaoStart =            LoadTexture("./resources/botao2.png");
+
+
 
 
     //----------------------------------------------------------------------------------
@@ -98,14 +108,9 @@ int main()
     player.isJumping = false;
     player.speed = 6.0f;
     
-   /* Ru.Ru_POSINICIAL_X = 1280;
-    Ru.Ru_POSINICIAL_Y = 640;
-    Ru.Ru_DIM_X = 105;
-    Ru.Ru_DIM_Y = 105;
-    Ru.speed = -5;*/
 
     botaoStartColis = (Rectangle){ BOTAOINICIAL_POS_X, BOTAOINICIAL_POS_Y, botaoStart.width, botaoStart.height };
-    player.rec = (Rectangle){PLAYER_POSINICIAL_X, PLAYER_POSINICIAL_Y, PLAYER_DIM_X, PLAYER_DIM_Y};
+    player.rec = (Rectangle){SCREEN_WIDTH/2, SCREEN_HEIGHT-PLAYER_DIM_Y - 40, PLAYER_DIM_X, PLAYER_DIM_Y};
     //Ru.rec =(Rectangle){Ru.Ru_POSINICIAL_X, Ru.Ru_POSINICIAL_Y, Ru.Ru_DIM_X, Ru.Ru_DIM_Y}; 
 
     initAnimations(playerSpriteSheet, inimigo1SpriteSheet, inimigo2SpriteSheet, inimigo3SpriteSheet);
@@ -153,7 +158,9 @@ static void UpdateDrawFrame(void)
     else
     {
         
-        player.rec.x = movx(player.rec.x, player.speed);
+        // player.rec.x = movx(player.rec.x, player.speed, platforms, player);
+        movx(&player, platforms);
+        
 
         if(IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) player.direc = -1;
         if(IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) player.direc = 1;
@@ -167,38 +174,24 @@ static void UpdateDrawFrame(void)
             }
         }
         
-            
+        if(IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)) player.isPlayerLookingUp = true;
+        else player.isPlayerLookingUp = false;
 
-           // Jumping
-        if (IsKeyDown(KEY_SPACE) && !player.isJumping)
-        {
-            player.isJumping = true;
-            player.jumpSpeed = -5.0f; // Set the initial jump speed
-        }
-
-        // Apply gravity
-        if (player.isJumping){
-            player.jumpSpeed += gravidade * GetFrameTime();
-            player.rec.y += player.jumpSpeed;
+       pulo(&player, gravidade, platforms, 2);
 
 
-        }
-
-        // printf("Jump Speed: %f\n Player y position %f\n Isjumping %d\n", player.jumpSpeed, player.rec.y, player.isJumping);
-        // Check if player is on the ground
-        if (player.rec.y >= GROUND_LEVEL)
-        {
-            player.rec.y = GROUND_LEVEL;
-            player.isJumping = false;
-        }
-
-
-        if(IsKeyDown(KEY_Z)){
-                    if(timeSinceLastShot >= shotDelay){
-                        addProjectil(player.rec, 12.f, player.direc);
-                        timeSinceLastShot = 0.0f;
-                    }
+        if(IsKeyDown(KEY_K)){
+            if (player.isPlayerLookingUp) {
+                    shotDelay = 0.6f;
                 }
+            else {
+                    shotDelay = 0.4f;
+                }
+            if(timeSinceLastShot >= shotDelay){
+                addProjectil(player.rec, 12.f, player.direc, player.isPlayerLookingUp);
+                timeSinceLastShot = 0.0f;
+            }
+        }
     }
 
     // Desenho
@@ -217,7 +210,9 @@ static void UpdateDrawFrame(void)
             
             // printf("%f %f\n", player.rec.x, player.rec.y);
             DrawTexture(cenario, 0, 0, WHITE);
-            collision = updateProjectils(bulletTexture, sourceRecBullet, SCREEN_WIDTH, Ru, &cont);
+            DrawRectangleRec(platforms[0].rec, BLACK);
+            DrawRectangleRec(platforms[1].rec, BLACK);
+            collision = updateProjectils(bulletTexture, sourceRecBullet, SCREEN_WIDTH, Ru, &cont, player.isPlayerLookingUp);    
             updateRu(playerSpriteSheet, inimigo1SpriteSheet, inimigo2SpriteSheet, inimigo3SpriteSheet, Ru, &cont, SCREEN_WIDTH, collision);
             playerAnimation(player.direc, player.rec, player);
             //DrawTexture(RonaldoUmidade, Ru.rec.x, Ru.rec.y, WHITE);

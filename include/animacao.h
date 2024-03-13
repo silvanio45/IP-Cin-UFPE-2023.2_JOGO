@@ -5,19 +5,12 @@
 #include <stdlib.h>
 #include "entity.h"
 
-
-
-
 #define BOTAOINICIAL_POS_X (1280 - botaoStart.width) / 2
 #define BOTAOINICIAL_POS_Y (720 - botaoStart.height) / 2
 #define PLAYER_POSINICIAL_X 105
 #define PLAYER_POSINICIAL_Y 1205
 #define PLAYER_DIM_X 105
 #define PLAYER_DIM_Y 105
-#define GROUND_LEVEL 600
-
-
-
 
 typedef struct SpriteAnimation
 {
@@ -39,7 +32,6 @@ void initAnimations(Texture2D playerSpriteSheet, Texture2D inimigo1SpriteSheet, 
 
 void playerAnimation(int playerDirec, Rectangle playerRect, Player player);
 
-
 //----------------------------------------------------------------------------------
 //  Animacoes
 // Player
@@ -55,7 +47,12 @@ extern SpriteAnimation playerAnim_jumppingMovRight;
 extern SpriteAnimation playerAnim_jumppingMovLeft;
 extern SpriteAnimation playerAnim_jumppingRight;
 extern SpriteAnimation playerAnim_jumppingLeft;
-
+extern SpriteAnimation playerAnim_idleShotingUpRight;
+extern SpriteAnimation playerAnim_idleShotingUpLeft;
+extern SpriteAnimation playerAnim_runningShotingUpRight;
+extern SpriteAnimation playerAnim_runningShotingUpLeft;
+extern SpriteAnimation playerAnim_dyingRight;
+extern SpriteAnimation playerAnim_dyingLeft;
 // Inimigo 1
 extern SpriteAnimation inim1Anim_walkingRight;
 extern SpriteAnimation inim1Anim_walkingLeft;
@@ -78,6 +75,4 @@ extern SpriteAnimation inim3Anim_attackingLeft;
 extern SpriteAnimation inim3Anim_dyingRight;
 extern SpriteAnimation inim3Anim_dyingLeft;
 //----------------------------------------------------------------------------------
-
-
 #endif // ANIMACAO_H

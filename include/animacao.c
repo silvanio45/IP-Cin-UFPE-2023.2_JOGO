@@ -1,4 +1,5 @@
 #include "animacao.h"
+#include <stdio.h>
 
 // Player
 SpriteAnimation playerAnim_walkingRight;
@@ -45,6 +46,7 @@ SpriteAnimation inim3Anim_dyingLeft;
 int playerLookingUp;
 int playerRunning;
 int playerShoting;
+int playerStanding;
 
 SpriteAnimation CreateSpriteAnimation(Texture2D spriteSheet, int framesPerSecond, Rectangle rectangles[], int length)
 {
@@ -412,11 +414,13 @@ void playerAnimation(int playerDirec, Rectangle playerRect, Player player) {
     playerRect.width = PLAYER_DIM_X;
     playerLookingUp = (IsKeyDown(KEY_W))||(IsKeyDown(KEY_UP));
     playerRunning = (IsKeyDown(KEY_A))||(IsKeyDown(KEY_LEFT)) || (IsKeyDown(KEY_D))||(IsKeyDown(KEY_RIGHT));
-    playerShoting = (IsKeyDown(KEY_Z));
+    playerShoting = (IsKeyDown(KEY_K));
+    playerStanding = (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) && (IsKeyDown(KEY_D)  || IsKeyDown(KEY_RIGHT));
+
     switch (playerDirec)
     {
         case 1://direita
-            if(playerRunning) 
+            if(playerRunning && !playerStanding) 
             {
                 if(playerShoting){
                     if(playerLookingUp){
@@ -427,7 +431,9 @@ void playerAnimation(int playerDirec, Rectangle playerRect, Player player) {
                         playerRect.width = 150;
                         DrawSpriteAnimationPro(playerAnim_runningShotingRight, playerRect, (Vector2){0,0}, 0, WHITE );
                     } 
-                }else DrawSpriteAnimationPro(playerAnim_walkingRight, playerRect, (Vector2){0,0}, 0, WHITE );
+                }
+                else if (IsKeyDown(KEY_SPACE) || player.isJumping) {DrawSpriteAnimationPro(playerAnim_jumppingMovRight, playerRect, (Vector2){0,0}, 0, WHITE );}
+                else DrawSpriteAnimationPro(playerAnim_walkingRight, playerRect, (Vector2){0,0}, 0, WHITE );
             }
             else
             {
@@ -440,11 +446,14 @@ void playerAnimation(int playerDirec, Rectangle playerRect, Player player) {
                         playerRect.width = 150;
                         DrawSpriteAnimationPro(playerAnim_idleShotingRight, playerRect, (Vector2){0,0}, 0, WHITE );
                     } 
-                }else DrawSpriteAnimationPro(playerAnim_idleRight, playerRect, (Vector2){0,0}, 0, WHITE );
+                }
+                else if (IsKeyDown(KEY_SPACE) || player.isJumping) {DrawSpriteAnimationPro(playerAnim_jumppingRight, playerRect, (Vector2){0,0}, 0, WHITE );}
+                
+                else DrawSpriteAnimationPro(playerAnim_idleRight, playerRect, (Vector2){0,0}, 0, WHITE );
             }
             break;
         case -1://esquerda
-            if(playerRunning) 
+            if(playerRunning && !playerStanding) 
             {
                 if(playerShoting){
                     if(playerLookingUp){
@@ -455,7 +464,10 @@ void playerAnimation(int playerDirec, Rectangle playerRect, Player player) {
                         playerRect.width = 150;
                         DrawSpriteAnimationPro(playerAnim_runningShotingLeft, playerRect, (Vector2){0,0}, 0, WHITE );
                     } 
-                }else DrawSpriteAnimationPro(playerAnim_walkingLeft, playerRect, (Vector2){0,0}, 0, WHITE );
+                }
+                else if (IsKeyDown(KEY_SPACE) || player.isJumping) {DrawSpriteAnimationPro(playerAnim_jumppingMovLeft, playerRect, (Vector2){0,0}, 0, WHITE );}
+                
+                else DrawSpriteAnimationPro(playerAnim_walkingLeft, playerRect, (Vector2){0,0}, 0, WHITE );
             }
             else 
             {
@@ -468,7 +480,10 @@ void playerAnimation(int playerDirec, Rectangle playerRect, Player player) {
                         playerRect.width = 150;
                         DrawSpriteAnimationPro(playerAnim_idleShotingLeft, playerRect, (Vector2){0,0}, 0, WHITE );
                     } 
-                }else DrawSpriteAnimationPro(playerAnim_idleLeft, playerRect, (Vector2){0,0}, 0, WHITE );
+                }
+                else if (IsKeyDown(KEY_SPACE) || player.isJumping) {DrawSpriteAnimationPro(playerAnim_jumppingLeft, playerRect, (Vector2){0,0}, 0, WHITE );}
+                
+                else DrawSpriteAnimationPro(playerAnim_idleLeft, playerRect, (Vector2){0,0}, 0, WHITE );
             }
             break;
         default:
@@ -481,7 +496,8 @@ void playerAnimation(int playerDirec, Rectangle playerRect, Player player) {
                     playerRect.width = 150;
                     DrawSpriteAnimationPro(playerAnim_idleShotingRight, playerRect, (Vector2){0,0}, 0, WHITE );
                 } 
-            }else DrawSpriteAnimationPro(playerAnim_idleRight, playerRect, (Vector2){0,0}, 0, WHITE );
+            }
+            else DrawSpriteAnimationPro(playerAnim_idleRight, playerRect, (Vector2){0,0}, 0, WHITE );
             break;
     }
 }

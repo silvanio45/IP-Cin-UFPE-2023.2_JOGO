@@ -1,81 +1,86 @@
 #include "raylib.h"
-// #include "movimentacao.h"
+#include "movimentacao.h"
+#include "entity.h"
+#include <stdio.h>
 
-#define CHARACTER_HEIGHT 40
-#define CHARACTER_WIDTH 40
+void movx(Player *player, Platforms *platforms) {
 
-#define LEGS_HEIGHT 40
-#define LEGS_WIDTH 40
+    if ((IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) && (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) ) {player->rec.x += 0;}
+    else if (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) {
+        // if (platforms[0].rec.x <) 
+        if(!CheckCollisionRecs(player->rec, platforms->rec)){
+            player->rec.x += player->speed;
+        }
+        else if(player->rec.y <= platforms[0].rec.y) {
+            player->rec.x += player->speed;
+        }
 
-
-Texture2D atlas;
-
-#define CHARACTERC_COUNT 6
-int characterIndex = 0;
-
-void UpdateDrawFrame(void);
-
-int main() {
-
-    srand(time(0));
-
-    InitWindow(1000, 400, "Tela Inicial");
-
-    
-    atlas = LoadTexture("./resources/base2.png");
-
-
-    while(!WindowShouldClose()){
-        WaitTime(0.1);
-        UpdateDrawFrame();
     }
+    else if (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) {
+            
+        if(!CheckCollisionRecs(player->rec, platforms->rec)){
+            player->rec.x -= player->speed;
+        }
+        else if(player->rec.y <= platforms[0].rec.y) {
+            player->rec.x -= player->speed;
+        }
+        int teste = CheckCollisionRecs(player->rec, platforms->rec);
+        printf("%d\n", teste);
+    }   
+    
+    if (player->rec.x < 0) player->rec.x = 0;
+    if (player->rec.x > 1200) player->rec.x = 1200;
 
-    CloseWindow();
+    // printf("x: %.2f, y: %.2f\n", player.rec.x, player.rec.y);
 
-    return 0;
+    // return posx;
 }
 
-void UpdateDrawFrame(void) {
 
+float movy(float posy, float gravidade) {
+    if (posy < 0) posy = 0;
+    if (posy > 600) posy = 600;
+    posy = posy + gravidade;
 
+    return posy;
+}
+
+void pulo(Player *player, float gravidade, Platforms *platforms){
     
-    if (IsKeyDown(KEY_RIGHT)){
-        characterIndex++;
-        if(characterIndex >= CHARACTERC_COUNT) {
-            characterIndex = 0;
+ // Jumping
+        if (IsKeyDown(KEY_SPACE) && !player->isJumping)
+        {
+            player->isJumping = true;
+            player->jumpSpeed = -6.0f; // Set the initial jump speed
         }
-    }
-    if (IsKeyDown(KEY_LEFT)){
-        
-        characterIndex--;
-        if(characterIndex < CHARACTERC_COUNT) {
-            characterIndex = 0;
+
+        // Apply gravity
+        if (player->isJumping && CheckCollisionRecs(player->rec, platforms[0].rec)){
+
+                if(player->rec.y <= platforms[0].rec.y) {
+                    player->isJumping = false;
+                }
+                else {
+                    player->jumpSpeed = 3.f;
+                }
+                // printf("AAA\n");
         }
-    }
+        if (player->isJumping || !CheckCollisionRecs(player->rec, platforms[0].rec)) {
+            player->jumpSpeed += gravidade * GetFrameTime();
+            player->rec.y += player->jumpSpeed;
+            // printf("%.2f\n", player->jumpSpeed);
+        }
 
-    BeginDrawing();
+                // player->jumpSpeed += gravidade * GetFrameTime();
+                // player->rec.y += player->jumpSpeed;
+
+        // Check if player is on the ground
+        if (player->rec.y >= GROUND_LEVEL)
+        {
+            player->rec.y = GROUND_LEVEL;
+            player->isJumping = false;
+        }
+
+}
 
 
-        ClearBackground(RAYWHITE);
-
-        // DrawTexture(atlas, 0, 0, WHITE);
-        // DrawTextureV(atlas, (Vector2){0, 0}, WHITE);
-        // DrawTextureEx(atlas, (Vector2){0, 0}, 0, 1.0f, WHITE);
-        // DrawTextureRec(atlas, source, (Vector2){0, 0}, WHITE);
-
-        // 30 x 40
-
-
-        Rectangle source_legs = (Rectangle){LEGS_WIDTH * characterIndex, CHARACTER_HEIGHT,  LEGS_WIDTH, LEGS_HEIGHT};
-        Rectangle dest_legs = (Rectangle){15, 45, source_legs.width*3, source_legs.height*3};
-
-        DrawTexturePro(atlas, source_legs, dest_legs, (Vector2){0, 0}, 0, WHITE);
-
-        Rectangle source_character = (Rectangle){CHARACTER_WIDTH * characterIndex, 0,  CHARACTER_WIDTH, CHARACTER_HEIGHT};
-        Rectangle dest_character = (Rectangle){30, 0, source_character.width*3, source_character.height*3};
-
-        DrawTexturePro(atlas, source_character, dest_character, (Vector2){0, 0}, 0, WHITE);
-
-    EndDrawing();
-
-} 

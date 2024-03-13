@@ -3,14 +3,17 @@
 #define MOVIMENTACAO_H
 
 #include "raylib.h"
-#include "../include/entity.h"
+#include "entity.h"
 #include <stdlib.h>
 
-float movx(float posx, float speed);
+#define GROUND_LEVEL 400
+
+
+void movx(Player *player, Platforms *platforms);
 
 float movy(float posy, float gravidade);
 
-float pulo(float posy, float *velY, float gravidade, float bonecoHeight, float delta, bool *isJumping, bool *jump);
+void pulo(Player *player, float gravidade, Platforms *platforms, int platformsLenght);
 
 
 #endif // MOVIMENTACAO_H

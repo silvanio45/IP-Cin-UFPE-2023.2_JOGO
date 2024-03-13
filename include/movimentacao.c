@@ -1,21 +1,28 @@
 #include "raylib.h"
 #include "movimentacao.h"
+#include "entity.h"
+#include <stdio.h>
 
-float movx(float posx, float speed) {
-    // float speed = 6.0f; // Increase this value to make the player move faster horizontally
-    if (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) posx += speed;
-    if (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) posx -= speed;
-    if (posx < 0) posx = 0;
-    if (posx > 1200) posx = 1200;
+void movx(Player *player, Platforms *platforms) {
 
-    return posx;
+    if ((IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) && (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) ) {player->rec.x += 0;}
+    else if (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) {
+      
+        player->rec.x += player->speed;
+
+    }
+    else if (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) player->rec.x -= player->speed;
+    
+    if (player->rec.x < 0) player->rec.x = 0;
+    if (player->rec.x > 1200) player->rec.x = 1200;
+
+    // printf("x: %.2f, y: %.2f\n", player.rec.x, player.rec.y);
+
+    // return posx;
 }
 
 
 float movy(float posy, float gravidade) {
-    // float speed = 40.0f; // Increase this value to make the player move faster vertically
-    // if (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)) posy += speed;
-    // if (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)) posy -= speed;
     if (posy < 0) posy = 0;
     if (posy > 600) posy = 600;
     posy = posy + gravidade;
@@ -23,19 +30,52 @@ float movy(float posy, float gravidade) {
     return posy;
 }
 
-float pulo(float posy, float *velY, float gravidade, float bonecoHeight, float delta, bool *isJumping, bool *jump){
-    // float initPosY = 600;
-
-    // Apply gravity and update position (fix logic here)
-    *velY -= gravidade * delta;
-    posy -= *velY * delta;
-
-    if (posy <= (600 - bonecoHeight)) {
-        *isJumping = false;
-        *velY = 0;  // Reset vertical velocity
+void pulo(Player *player, float gravidade, Platforms *platforms, int platformsLenght){
+    
+    // Jumping
+    if (IsKeyDown(KEY_SPACE) && !player->isJumping)
+    {
+        player->isJumping = true;
+        player->jumpSpeed = -6.0f; // Set the initial jump speed
     }
 
-    return posy;
+    // int platformsLenght = sizeof(platforms)/sizeof(platforms[0]);
+
+    // Apply gravity
+        if (player->isJumping && CheckCollisionRecs(player->rec, platforms[0].rec)){
+            
+            if(player->rec.y > 200) {
+                player->isJumping = false;
+                player->jumpSpeed = 0.0f;
+                printf("%.2f %.2f\n", player->rec.x, player->rec.y);
+            }
+            else {
+                player->jumpSpeed = 3.f;
+            }
+        }
+        if (player->isJumping || !CheckCollisionRecs(player->rec, platforms[0].rec)) {
+            player->jumpSpeed += gravidade * GetFrameTime();
+            player->rec.y += player->jumpSpeed;
+        }
+
+        // Check if player is on the ground
+        if (player->rec.y >= GROUND_LEVEL)
+        {
+            player->rec.y = GROUND_LEVEL;
+            player->isJumping = false;
+        }
+
+        // Check for side collisions
+        // if (CheckCollisionRecs(player->rec, platforms[0].rec) && (player->rec.y > 200) && !player->isJumping){
+        
+        //     if(player->rec.x <= platforms[0].rec.x) {
+        //         player->rec.x = platforms[0].rec.x - player->rec.width;
+        //         // printf("%.2f %.2f\n", player->rec.x, platforms[0].rec.x);
+        //     }
+        //     else if(player->rec.x <= platforms[0].rec.x + platforms[0].rec.width) {
+        //         player->rec.x = platforms[0].rec.x + platforms[0].rec.width;
+        //         // printf("AAAAAAAA %.2f\n", platforms[0].rec.x + platforms[0].rec.width);
+
+        //     }
+        // }
 }
-
-

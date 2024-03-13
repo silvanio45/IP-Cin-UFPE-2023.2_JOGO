@@ -9,12 +9,20 @@ typedef struct {
 
     int direc;
     bool isJumping;
+    bool isPlayerLookingUp;
     float jumpSpeed;
 
     float health;
     float damage;
     float speed;
 } Player;  
+
+typedef struct Platforms{
+    Rectangle rec;
+    bool isBlocking;    
+
+} Platforms;
+
 
 typedef struct RU {
     float Ru_POSINICIAL_X;
