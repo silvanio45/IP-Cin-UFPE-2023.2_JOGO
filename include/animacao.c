@@ -34,6 +34,7 @@ SpriteAnimation inim2Anim_attackingRight;
 SpriteAnimation inim2Anim_attackingLeft;
 SpriteAnimation inim2Anim_dyingRight;
 SpriteAnimation inim2Anim_dyingLeft;
+
 // Inimigo 3
 SpriteAnimation inim3Anim_walkingRight;
 SpriteAnimation inim3Anim_walkingLeft;
@@ -632,6 +633,97 @@ void initAnimations(Texture2D playerSpriteSheet, Texture2D inimigo1SpriteSheet, 
         (Rectangle){(73*4),(60*17),73,60},
         (Rectangle){(73*5),(60*17),73,60},
     },39);
+    // Inimigo 3
+    inim3Anim_walkingRight = CreateSpriteAnimation(inimigo3SpriteSheet,10,(Rectangle[]){
+        (Rectangle){(40*11),(40*2),40,40},
+        (Rectangle){(40*10),(40*2),40,40},
+        (Rectangle){(40*9),(40*2),40,40},
+        (Rectangle){(40*8),(40*2),40,40},
+        (Rectangle){(40*7),(40*2),40,40},
+        (Rectangle){(40*6),(40*2),40,40},
+        (Rectangle){(40*5),(40*2),40,40},
+        (Rectangle){(40*4),(40*2),40,40},
+        (Rectangle){(40*3),(40*2),40,40},
+        (Rectangle){(40*2),(40*2),40,40},
+        (Rectangle){(40*1),(40*2),40,40},
+        (Rectangle){(40*0),(40*2),40,40},
+
+        (Rectangle){(40*3),(40*3),40,40},
+        (Rectangle){(40*2),(40*3),40,40},
+        (Rectangle){(40*1),(40*3),40,40},
+        (Rectangle){(40*0),(40*3),40,40},
+    },16);
+    inim3Anim_walkingLeft = CreateSpriteAnimation(inimigo3SpriteSheet,10,(Rectangle[]){
+        (Rectangle){(40*0),(40*0),40,40},
+        (Rectangle){(40*1),(40*0),40,40},
+        (Rectangle){(40*2),(40*0),40,40},
+        (Rectangle){(40*3),(40*0),40,40},
+        (Rectangle){(40*4),(40*0),40,40},
+        (Rectangle){(40*5),(40*0),40,40},
+        (Rectangle){(40*6),(40*0),40,40},
+        (Rectangle){(40*7),(40*0),40,40},
+        (Rectangle){(40*8),(40*0),40,40},
+        (Rectangle){(40*9),(40*0),40,40},
+        (Rectangle){(40*10),(40*0),40,40},
+        (Rectangle){(40*11),(40*0),40,40},
+
+        (Rectangle){(40*0),(40*1),40,40},
+        (Rectangle){(40*1),(40*1),40,40},
+        (Rectangle){(40*2),(40*1),40,40},
+        (Rectangle){(40*3),(40*1),40,40},
+    },16);
+    inim3Anim_attackingRight = CreateSpriteAnimation(inimigo3SpriteSheet,10,(Rectangle[]){
+        (Rectangle){(40*6),(40*11),40,40},
+        (Rectangle){(40*5),(40*11),40,40},
+        (Rectangle){(40*4),(40*11),40,40},
+        (Rectangle){(40*3),(40*11),40,40},
+        (Rectangle){(40*2),(40*11),40,40},
+        (Rectangle){(40*1),(40*11),40,40},
+        (Rectangle){(40*0),(40*11),40,40},
+    },7);
+    inim3Anim_attackingLeft = CreateSpriteAnimation(inimigo3SpriteSheet,10,(Rectangle[]){
+        (Rectangle){(40*0),(40*10),40,40},
+        (Rectangle){(40*1),(40*10),40,40},
+        (Rectangle){(40*2),(40*10),40,40},
+        (Rectangle){(40*3),(40*10),40,40},
+        (Rectangle){(40*4),(40*10),40,40},
+        (Rectangle){(40*5),(40*10),40,40},
+        (Rectangle){(40*6),(40*10),40,40},
+    },7);
+    inim3Anim_dyingRight = CreateSpriteAnimation(inimigo3SpriteSheet,10,(Rectangle[]){
+        (Rectangle){(40*11),(40*7),40,40},
+        (Rectangle){(40*10),(40*7),40,40},
+        (Rectangle){(40*9),(40*7),40,40},
+        (Rectangle){(40*8),(40*7),40,40},
+        (Rectangle){(40*7),(40*7),40,40},
+        (Rectangle){(40*6),(40*7),40,40},
+        (Rectangle){(40*5),(40*7),40,40},
+        (Rectangle){(40*4),(40*7),40,40},
+        (Rectangle){(40*3),(40*7),40,40},
+        (Rectangle){(40*2),(40*7),40,40},
+        (Rectangle){(40*1),(40*7),40,40},
+        (Rectangle){(40*0),(40*7),40,40},
+
+        (Rectangle){(40*1),(40*8),40,40},
+        (Rectangle){(40*0),(40*8),40,40},
+    },14);
+    inim3Anim_dyingLeft = CreateSpriteAnimation(inimigo3SpriteSheet,10,(Rectangle[]){
+        (Rectangle){(40*0),(40*5),40,40},
+        (Rectangle){(40*1),(40*5),40,40},
+        (Rectangle){(40*2),(40*5),40,40},
+        (Rectangle){(40*3),(40*5),40,40},
+        (Rectangle){(40*4),(40*5),40,40},
+        (Rectangle){(40*5),(40*5),40,40},
+        (Rectangle){(40*6),(40*5),40,40},
+        (Rectangle){(40*7),(40*5),40,40},
+        (Rectangle){(40*8),(40*5),40,40},
+        (Rectangle){(40*9),(40*5),40,40},
+        (Rectangle){(40*10),(40*5),40,40},
+        (Rectangle){(40*11),(40*5),40,40},
+
+        (Rectangle){(40*0),(40*6),40,40},
+        (Rectangle){(40*1),(40*6),40,40},
+    },14);
 }
 
 

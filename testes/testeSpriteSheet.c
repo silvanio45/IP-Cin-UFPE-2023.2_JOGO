@@ -1,86 +1,23 @@
-#include "raylib.h"
-#include "movimentacao.h"
-#include "entity.h"
-#include <stdio.h>
-
-void movx(Player *player, Platforms *platforms) {
-
-    if ((IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) && (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) ) {player->rec.x += 0;}
-    else if (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) {
-        // if (platforms[0].rec.x <) 
-        if(!CheckCollisionRecs(player->rec, platforms->rec)){
-            player->rec.x += player->speed;
+void updateEnemy(Texture2D inimigo1SpriteSheet, Enemy* enemy, int* cont, int SCREEN_WIDTH, int* direct, float Pposx, Texture2D bala, GUNCTG** GunRU, int* contRU){
+    for(int i = 0; i < *cont; i++){
+        if(Pposx <= enemy[i].enemy_POSINICIAL_X){
+            *direct = 1;
+        }else{
+            *direct = -1;
         }
-        else if(player->rec.y <= platforms[0].rec.y) {
-            player->rec.x += player->speed;
+        
+        enemy[i].enemy_POSINICIAL_X = f2(enemy[i].enemy_POSINICIAL_X, enemy[i].speed, *direct);
+        enemy[i].rec = (Rectangle){enemy[i].enemy_POSINICIAL_X, enemy[i].enemy_POSINICIAL_Y, enemy[i].enemy_DIM_X, enemy[i].enemy_DIM_Y};
+        
+        if (*direct == 1) { 
+            DrawSpriteAnimationPro(inim1Anim_walkingLeft, enemy[i].rec, (Vector2){0, 0}, 0, WHITE);
+        }else if(*direct == -1 ){ 
+            DrawSpriteAnimationPro(inim1Anim_walkingRight, enemy[i].rec, (Vector2){0, 0}, 0, WHITE);
         }
-
+        
+        if(IsKeyDown(KEY_E)){// Verifique se a tecla "E" está pressionada e adicione balas conforme necessário
+            *GunRU = addGunRU(enemy[i].enemy_POSINICIAL_X, enemy[i].enemy_POSINICIAL_Y, *GunRU, contRU, bala, direct);
+        }
     }
-    else if (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) {
-            
-        if(!CheckCollisionRecs(player->rec, platforms->rec)){
-            player->rec.x -= player->speed;
-        }
-        else if(player->rec.y <= platforms[0].rec.y) {
-            player->rec.x -= player->speed;
-        }
-        int teste = CheckCollisionRecs(player->rec, platforms->rec);
-        printf("%d\n", teste);
-    }   
-    
-    if (player->rec.x < 0) player->rec.x = 0;
-    if (player->rec.x > 1200) player->rec.x = 1200;
-
-    // printf("x: %.2f, y: %.2f\n", player.rec.x, player.rec.y);
-
-    // return posx;
+    updateGunRU(*GunRU, *contRU, bala);
 }
-
-
-float movy(float posy, float gravidade) {
-    if (posy < 0) posy = 0;
-    if (posy > 600) posy = 600;
-    posy = posy + gravidade;
-
-    return posy;
-}
-
-void pulo(Player *player, float gravidade, Platforms *platforms){
-    
- // Jumping
-        if (IsKeyDown(KEY_SPACE) && !player->isJumping)
-        {
-            player->isJumping = true;
-            player->jumpSpeed = -6.0f; // Set the initial jump speed
-        }
-
-        // Apply gravity
-        if (player->isJumping && CheckCollisionRecs(player->rec, platforms[0].rec)){
-
-                if(player->rec.y <= platforms[0].rec.y) {
-                    player->isJumping = false;
-                }
-                else {
-                    player->jumpSpeed = 3.f;
-                }
-                // printf("AAA\n");
-        }
-        if (player->isJumping || !CheckCollisionRecs(player->rec, platforms[0].rec)) {
-            player->jumpSpeed += gravidade * GetFrameTime();
-            player->rec.y += player->jumpSpeed;
-            // printf("%.2f\n", player->jumpSpeed);
-        }
-
-                // player->jumpSpeed += gravidade * GetFrameTime();
-                // player->rec.y += player->jumpSpeed;
-
-        // Check if player is on the ground
-        if (player->rec.y >= GROUND_LEVEL)
-        {
-            player->rec.y = GROUND_LEVEL;
-            player->isJumping = false;
-        }
-
-}
-
-

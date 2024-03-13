@@ -24,11 +24,13 @@ typedef struct Platforms{
 
 } Platforms;
 
+
+
 typedef struct {
-    float Ru_POSINICIAL_X;
-    float Ru_POSINICIAL_Y;
-    float Ru_DIM_X;
-    float Ru_DIM_Y;
+    float enemy_POSINICIAL_X;
+    float enemy_POSINICIAL_Y;
+    float enemy_DIM_X;
+    float enemy_DIM_Y;
 
     Rectangle rec;
 
@@ -41,43 +43,63 @@ typedef struct {
     float damage;
     float speed;
     
-} RU; 
+} Enemy; 
 
-typedef struct {
-    float CAC_POSINICIAL_X;
-    float CAC_POSINICIAL_Y;
-    float CAC_DIM_X;
-    float CAC_DIM_Y;
 
-    Rectangle rec;
+// typedef struct {
+//     float Ru_POSINICIAL_X;
+//     float Ru_POSINICIAL_Y;
+//     float Ru_DIM_X;
+//     float Ru_DIM_Y;
 
-    int direct;
-    bool isJumping;
+//     Rectangle rec;
 
-    float health;
-    float damage;
-    float speed;
+//     int direct;
+//     bool isJumping;
+//     bool isAlive;
+//     bool hit;
+
+//     float health;
+//     float damage;
+//     float speed;
     
-} CarangueijoArmandoCarlos; 
+// } RU; 
 
-typedef struct {
-    float CTG_POSINICIAL_X;
-    float CTG_POSINICIAL_Y;
-    float CTG_DIM_X;
-    float CTG_DIM_Y;
+// typedef struct {
+//     float CAC_POSINICIAL_X;
+//     float CAC_POSINICIAL_Y;
+//     float CAC_DIM_X;
+//     float CAC_DIM_Y;
 
-    Rectangle rec;
+//     Rectangle rec;
 
-    int direct;
-    int contGun;
+//     int direct;
+//     bool isJumping;
+
+//     float health;
+//     float damage;
+//     float speed;
     
-    bool isJumping;
+// } CarangueijoArmandoCarlos; 
+
+// typedef struct {
+//     float CTG_POSINICIAL_X;
+//     float CTG_POSINICIAL_Y;
+//     float CTG_DIM_X;
+//     float CTG_DIM_Y;
+
+//     Rectangle rec;
+
+//     int direct;
+//     int contGun;
     
-    float health;
-    float damage;
-    float speed;
+//     bool isJumping;
     
-} CalabresoTarcioGeometria; 
+//     float health;
+//     float damage;
+//     float speed;
+    
+// } CalabresoTarcioGeometria; 
 
 typedef struct {
     
@@ -88,29 +110,41 @@ typedef struct {
     float speed;
     Rectangle rec;
     
-}GUNCTG;
+} gun;
 
-typedef struct {
-    
-    float posx;
-    float posy;
-    int direct;
-    int contGun;
-    float speed;
-    Rectangle rec;
-    
-}GUNRU;
 
-typedef struct {
+// typedef struct {
     
-    float posx;
-    float posy;
-    int direct;
-    int contGun;
-    float speed;
-    Rectangle rec;
+//     float posx;
+//     float posy;
+//     int direct;
+//     int contGun;
+//     float speed;
+//     Rectangle rec;
     
-}GUNCAC;
+// }GUNCTG;
+
+// typedef struct {
+    
+//     float posx;
+//     float posy;
+//     int direct;
+//     int contGun;
+//     float speed;
+//     Rectangle rec;
+    
+// }GUNRU;
+
+// typedef struct {
+    
+//     float posx;
+//     float posy;
+//     int direct;
+//     int contGun;
+//     float speed;
+//     Rectangle rec;
+    
+// }GUNCAC;
 
 
 #endif

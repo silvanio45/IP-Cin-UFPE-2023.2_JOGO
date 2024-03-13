@@ -71,13 +71,13 @@ int contGunCTG = 0;
 int contGunCAC = 0;
 
 // Gun gun;
-GUNCTG* GunRU = NULL;
-GUNCTG* GunCAC = NULL;
-GUNCTG* GunCTG = NULL;
+gun* GunRU = NULL;
+gun* GunCAC = NULL;
+gun* GunCTG = NULL;
 
-RU* Ru = NULL;
-CarangueijoArmandoCarlos* CAC = NULL;
-CalabresoTarcioGeometria* CTG = NULL;
+Enemy* Ru = NULL;
+Enemy* CAC = NULL;
+Enemy* CTG = NULL;
 
 float timeSinceLastRu = 0.0f;
 float timeSinceLastCAC = 0.0f;
@@ -101,7 +101,7 @@ Platforms platforms[] = {
 //----------------------------------------------------------------------------------
 // Declaração de Funções Locais
 //----------------------------------------------------------------------------------
-bool collision;
+bool collisionRU, collisionCAC, collisionCTG;
 static void UpdateDrawFrame(void);
 
 //----------------------------------------------------------------------------------
@@ -114,17 +114,17 @@ int main()
     // Inicialização
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Tela Inicial");
 
-    playerSpriteSheet =     LoadTexture("./resources/Personagem_SpriteSheet.png");
-    inimigo1SpriteSheet =   LoadTexture("resources/Inimigo1_SpriteSheet.png");
-    inimigo2SpriteSheet =   LoadTexture("resources/Inimigo2_SpriteSheet.png");
-    inimigo3SpriteSheet =   LoadTexture("resources/Inimigo3_SpriteSheet.png");
-    bulletTexture =         LoadTexture("./resources/bullet2.png");
-    cenario =               LoadTexture("./resources/front_scenario.png");
-    cenarioLog =            LoadTexture("./resources/cenarioLogMetal.png");
-    botaoStart =            LoadTexture("./resources/botao2.png");
-    skyBackground =            LoadTexture("./resources/skyBackground.png");
-    clouds =            LoadTexture("./resources/clouds1.png");
-    clouds1 =            LoadTexture("./resources/clouds2.png");
+    playerSpriteSheet =     LoadTexture("./resources/player/Personagem_SpriteSheet.png");
+    inimigo1SpriteSheet =   LoadTexture("resources/enemys/Inimigo1_SpriteSheet.png");
+    inimigo2SpriteSheet =   LoadTexture("resources/enemys/Inimigo2_SpriteSheet.png");
+    inimigo3SpriteSheet =   LoadTexture("resources/enemys/Inimigo3_SpriteSheet.png");
+    bulletTexture =         LoadTexture("./resources/miscellaneous/bullet2.png");
+    botaoStart =            LoadTexture("./resources/miscellaneous/botao2.png");
+    cenario =               LoadTexture("./resources/scenario/front_scenario.png");
+    cenarioLog =            LoadTexture("./resources/scenario/cenarioLogMetal.png");
+    skyBackground =         LoadTexture("./resources/scenario/skyBackground.png");
+    clouds =                LoadTexture("./resources/scenario/clouds1.png");
+    clouds1 =               LoadTexture("./resources/scenario/clouds2.png");
 
 
     scrollingBack = 0.f;
@@ -200,19 +200,19 @@ static void UpdateDrawFrame(void)
         
         if(IsKeyDown(KEY_J)){
             if(timeSinceLastRu >= RuDelay){
-                Ru = addRu(Ru, &cont, inimigo1SpriteSheet);
+                Ru = addEnemy(Ru, &cont, inimigo1SpriteSheet);
                 timeSinceLastRu = 0.0f;
             }
         }
         if(IsKeyDown(KEY_K)){
             if(timeSinceLastCAC >= CACDelay){
-                CAC = addCAC(CAC, &contCAC, inimigo1SpriteSheet);
+                CAC = addEnemy(CAC, &contCAC, inimigo1SpriteSheet);
                 timeSinceLastCAC = 0.0f;
             }
         }
         if(IsKeyDown(KEY_L)){
             if(timeSinceLastCTG >= CTGDelay){
-                CTG = addCTG(CTG, &contCTG, inimigo2SpriteSheet);
+                CTG = addEnemy(CTG, &contCTG, inimigo2SpriteSheet);
                 timeSinceLastCTG = 0.0f;
             }
         }
@@ -276,12 +276,19 @@ static void UpdateDrawFrame(void)
 
             DrawTexture(cenario, 0, 0, WHITE);
             
-            collision = updateProjectils(bulletTexture, sourceRecBullet, SCREEN_WIDTH, Ru, &cont, player.isPlayerLookingUp, platforms);    
             
-            updateRu(inimigo1SpriteSheet, Ru, &cont, SCREEN_WIDTH, &Ru->direct, player.rec.x, bulletTexture, &GunRU, &contGunRU);
-            updateCAC(inimigo1SpriteSheet, CAC, &contCAC, SCREEN_WIDTH, &CAC->direct, player.rec.x, bulletTexture, &GunCAC, &contGunCAC);
-            updateCTG(inimigo2SpriteSheet, CTG, &contCTG, SCREEN_WIDTH, &CTG->direct, player.rec.x, bulletTexture, &GunCTG, &contGunCTG);
+
+
+            collisionRU = updateProjectils(bulletTexture, sourceRecBullet, SCREEN_WIDTH, Ru, &cont, player.isPlayerLookingUp, platforms);    
             
+            collisionCAC = updateProjectils(bulletTexture, sourceRecBullet, SCREEN_WIDTH, CAC, &contCAC, player.isPlayerLookingUp, platforms);
+
+            collisionCTG = updateProjectils(bulletTexture, sourceRecBullet, SCREEN_WIDTH, CTG, &contCTG, player.isPlayerLookingUp, platforms);
+
+            updateEnemy(1, Ru, &cont, SCREEN_WIDTH, &Ru->direct, player.rec.x, bulletTexture, &GunRU, &contGunRU, collisionRU);
+            updateEnemy(2, CAC, &contCAC, SCREEN_WIDTH, &CAC->direct, player.rec.x, bulletTexture, &GunCAC, &contGunCAC, collisionCAC);
+            updateEnemy(3, CTG, &contCTG, SCREEN_WIDTH, &CTG->direct, player.rec.x, bulletTexture, &GunCTG, &contGunCTG, collisionCTG);
+
             playerAnimation(player.direc, player.rec, player);
             
         EndDrawing();
