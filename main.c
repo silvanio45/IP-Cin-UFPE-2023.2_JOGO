@@ -31,6 +31,9 @@ Texture2D ruTexture;
 Texture2D cenario;
 Texture2D cenarioLog;
 Texture2D botaoStart;
+Texture2D skyBackground;
+Texture2D clouds;
+Texture2D clouds1;
 
 Rectangle botaoStartColis;
 // Rectangle playerRect;
@@ -65,7 +68,9 @@ int TRU = 0;
 Player player;
 RU* Ru = NULL;
 
-
+float scrollingBack;
+float scrollingClouds;
+float scrollingClouds1;
 //objetos do cenario
 
 Platforms platforms[] = {
@@ -94,12 +99,16 @@ int main()
     inimigo2SpriteSheet =   LoadTexture("resources/Inimigo2_SpriteSheet.png");
     inimigo3SpriteSheet =   LoadTexture("resources/Inimigo3_SpriteSheet.png");
     bulletTexture =         LoadTexture("./resources/bullet2.png");
-    cenario =               LoadTexture("./resources/cenario4.png");
+    cenario =               LoadTexture("./resources/front_scenario.png");
     cenarioLog =            LoadTexture("./resources/cenarioLogMetal.png");
     botaoStart =            LoadTexture("./resources/botao2.png");
+    skyBackground =            LoadTexture("./resources/skyBackground.png");
+    clouds =            LoadTexture("./resources/clouds1.png");
+    clouds1 =            LoadTexture("./resources/clouds2.png");
 
 
-
+    scrollingBack = 0.f;
+    scrollingClouds = 0.f;
 
     //----------------------------------------------------------------------------------
     //  Animacoes
@@ -205,19 +214,36 @@ static void UpdateDrawFrame(void)
     }
     else
     {
+        // scrollingBack += 0.1f;
+        // if (scrollingBack <= -skyBackground.width*2) scrollingBack = 0;
+        
         BeginDrawing();
             ClearBackground(WHITE);
-            
-            // printf("%f %f\n", player.rec.x, player.rec.y);
+
+            scrollingBack -= 4.f;
+            if (scrollingBack <= -skyBackground.width*1.5) scrollingBack = 0;
+
+            scrollingClouds -= 0.2f;
+            if (scrollingClouds <= -clouds.width) scrollingClouds = 0;
+
+            scrollingClouds1 -= 0.35f;
+            if (scrollingClouds1 <= -clouds1.width) scrollingClouds1 = 0;
+
+
+            DrawTextureEx(skyBackground, (Vector2){ scrollingBack, -270}, 0.0f, 1.5f, WHITE);
+            DrawTextureEx(skyBackground, (Vector2){ skyBackground.width*1.5 + scrollingBack, -270 }, 0.0f, 1.5f, WHITE);
+
+
+            DrawTextureEx(clouds, (Vector2){ scrollingClouds, 0}, 0.0f, 1.0f, WHITE);
+            DrawTextureEx(clouds, (Vector2){ clouds.width*1 + scrollingClouds, 0 }, 0.0f, 1.0f, WHITE);
+
+            DrawTextureEx(clouds1, (Vector2){ scrollingClouds1, 0}, 0.0f, 1.0f, WHITE);
+            DrawTextureEx(clouds1, (Vector2){ clouds1.width*1 + scrollingClouds1, 0 }, 0.0f, 1.0f, WHITE);
+
             DrawTexture(cenario, 0, 0, WHITE);
-            // DrawRectangleRec(platforms[0].rec, BLACK);
-            // DrawRectangleRec(platforms[1].rec, BLACK);
             collision = updateProjectils(bulletTexture, sourceRecBullet, SCREEN_WIDTH, Ru, &cont, player.isPlayerLookingUp, platforms);    
             updateRu(playerSpriteSheet, inimigo1SpriteSheet, inimigo2SpriteSheet, inimigo3SpriteSheet, Ru, &cont, SCREEN_WIDTH, collision);
             playerAnimation(player.direc, player.rec, player);
-            //DrawTexture(RonaldoUmidade, Ru.rec.x, Ru.rec.y, WHITE);
-
-            
             
         EndDrawing();
     }
