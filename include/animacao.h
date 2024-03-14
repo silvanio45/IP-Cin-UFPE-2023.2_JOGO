@@ -26,6 +26,8 @@ SpriteAnimation CreateSpriteAnimation(Texture2D spriteSheet, int framesPerSecond
     
 void DisposeSpriteAnimation(SpriteAnimation animation);
 
+void DisposeAllAnimations();
+
 void DrawSpriteAnimationPro(SpriteAnimation animation, Rectangle dest, Vector2 origin, float rotation, Color tint);
 
 void initAnimations(Texture2D playerSpriteSheet, Texture2D inimigo1SpriteSheet, Texture2D inimigo2SpriteSheet, Texture2D inimigo3SpriteSheet);
@@ -74,5 +76,11 @@ extern SpriteAnimation inim3Anim_attackingRight;
 extern SpriteAnimation inim3Anim_attackingLeft;
 extern SpriteAnimation inim3Anim_dyingRight;
 extern SpriteAnimation inim3Anim_dyingLeft;
+
+
+
+
+
+
 //----------------------------------------------------------------------------------
 #endif // ANIMACAO_H

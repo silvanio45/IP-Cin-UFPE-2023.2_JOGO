@@ -20,10 +20,12 @@
 //----------------------------------------------------------------------------------
 
 #define MAX_SOUNDS 2
-#define SCREEN_WIDTH 1080
+#define SCREEN_WIDTH 1280
 #define SCREEN_HEIGHT 540
 
 Sound sounds[MAX_SOUNDS];
+
+
 
 Texture2D playerSpriteSheet;
 Texture2D inimigo2SpriteSheet;
@@ -36,6 +38,10 @@ Texture2D skyBackground;
 Texture2D clouds;
 Texture2D clouds1;
 Texture2D gameOver;
+Texture2D musicON;
+Texture2D musicOFF;
+Texture2D pontuacaoTable;
+
 
 Rectangle botaoStartColis;
 // Rectangle playerRect;
@@ -104,6 +110,8 @@ Platforms platforms[] = {
 
 int MAX_ENEMIES = 5;
 
+Rectangle musicButton;
+
 
 //Músicas 
 
@@ -122,13 +130,13 @@ static void UpdateDrawFrame(void);
 FILE *file;
 bool nameInput = false;
 
- Music Start; 
+Music Start; 
 
 Color color = WHITE;
 
 Music jogo_g1;
 
-#define MAX_INPUT_CHARS     20
+#define MAX_INPUT_CHARS  20
 
 //Spawn points
 
@@ -140,15 +148,14 @@ bool mouseOnText = false;
 
 int framesCounter = 0;
 
+Vector2 spawnPoints[] = {
+    {1200, 400}, // 1
+    {0, 400},    // 2
+};
 
 
+void loadTextures(){
 
-int main()
-{   
-    
-    
-    // Inicialização
-    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Tela Inicial");
 
     playerSpriteSheet =     LoadTexture("./resources/player/Personagem_SpriteSheet.png");
     inimigo1SpriteSheet =   LoadTexture("resources/enemys/Inimigo1_SpriteSheet.png");
@@ -162,54 +169,16 @@ int main()
     clouds =                LoadTexture("./resources/scenario/clouds1.png");
     clouds1 =               LoadTexture("./resources/scenario/clouds2.png");
     gameOver =               LoadTexture("./resources/miscellaneous/maxresdefault.png");
-
-    color.a = 0.f;
-
-    scrollingBack = 0.f;
-    scrollingClouds = 0.f;
-
-    Start = LoadMusicStream("resources/sound/abertura.mp3");
-   
-    PlayMusicStream(Start);
-
-    jogo_g1 = LoadMusicStream("resources/sound/jogo_g1.mp3");
+    musicON =               LoadTexture("resources/miscellaneous/sound_on.png");
+    musicOFF =              LoadTexture("resources/miscellaneous/sound_off.png");
+    pontuacaoTable =              LoadTexture("resources/miscellaneous/pontuacaoTable.png");
 
 
-    //----------------------------------------------------------------------------------
-    //  Animacoes
-    //  Player
-    player.direc = 1;
-    player.isJumping = false;
-    player.speed = 6.0f;
-    player.health = 200;
-    player.damage = 40;
-    player.isAlive = true;
-    player.deathTimer = 1.0f;
-    player.pontuacao = 0.0f;
-    
-
-    botaoStartColis = (Rectangle){ BOTAOINICIAL_POS_X, BOTAOINICIAL_POS_Y, botaoStart.width, botaoStart.height };
-    player.rec = (Rectangle){SCREEN_WIDTH/2, SCREEN_HEIGHT-PLAYER_DIM_Y - 40, PLAYER_DIM_X, PLAYER_DIM_Y};
-    //Ru.rec =(Rectangle){Ru.Ru_POSINICIAL_X, Ru.Ru_POSINICIAL_Y, Ru.Ru_DIM_X, Ru.Ru_DIM_Y}; 
-
-    initAnimations(playerSpriteSheet, inimigo1SpriteSheet, inimigo2SpriteSheet, inimigo3SpriteSheet);
-
-    // Define the source rectangle for the bullet
-    sourceRecBullet = (Rectangle) {0, 0, bulletTexture.width, bulletTexture.height};
-
-    #if defined(PLATFORM_WEB)
-        emscripten_set_main_loop(UpdateDrawFrame, 60, 1);
-    #else
-        SetTargetFPS(60);
+}
 
 
-
-        // Loop principal do jogo
-        while (!WindowShouldClose())
-        {
-             // Update
-        //----------------------------------------------------------------------------------
-        if (CheckCollisionPointRec(GetMousePosition(), textBox)) mouseOnText = true;
+void mouseText() { 
+       if (CheckCollisionPointRec(GetMousePosition(), textBox)) mouseOnText = true;
         else mouseOnText = false;
 
         if (mouseOnText)
@@ -245,6 +214,82 @@ int main()
 
         if (mouseOnText) framesCounter++;
         else framesCounter = 0;
+}
+
+int main()
+{   
+    
+    
+    // Inicialização
+    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Tela Inicial");
+
+    loadTextures();
+
+    color.a = 0.f;
+    scrollingBack = 0.f;
+    scrollingClouds = 0.f;
+
+
+    
+    //----------------------------------------------------------------------------------
+    //  Animacoes
+    
+    player.direc = 1;
+    player.isJumping = false;
+    player.speed = 6.0f;
+    player.health = 200;
+    player.damage = 40;
+    player.isAlive = true;
+    player.deathTimer = 1.0f;
+    player.pontuacao = 0.0f;
+    
+
+    botaoStartColis = (Rectangle){ BOTAOINICIAL_POS_X, BOTAOINICIAL_POS_Y, botaoStart.width, botaoStart.height };
+    player.rec = (Rectangle){SCREEN_WIDTH/2, SCREEN_HEIGHT-PLAYER_DIM_Y - 40, PLAYER_DIM_X, PLAYER_DIM_Y};
+
+    // Cria o botão de ligar e desligar a música no menu.
+    musicButton = (Rectangle) {10, 10, musicON.width, musicON.height}; 
+
+    initAnimations(playerSpriteSheet, inimigo1SpriteSheet, inimigo2SpriteSheet, inimigo3SpriteSheet);
+
+    // Define the source rectangle for the bullet
+    sourceRecBullet = (Rectangle) {0, 0, bulletTexture.width, bulletTexture.height};
+
+    #if defined(PLATFORM_WEB)
+        emscripten_set_main_loop(UpdateDrawFrame, 60, 1);
+    #else
+        SetTargetFPS(60);
+
+        InitAudioDevice();
+
+
+        char linha[256];
+        FILE* file = fopen("music.txt", "r");
+        
+        if (file == NULL) // Verifica se o arquivo foi aberto, caso não foi para o programa e retorna erro.
+        {
+            printf("Não foi possível abrir o arquivo");
+            exit(1);
+        }
+        
+        while (!feof(file)) //Pega linha por linha do arquivo "music.txt" e vai carregando a música na struct sounds.
+        {
+            
+            fscanf(file, "%s\n", linha);
+            sounds[numSounds] = LoadSound(linha);
+            numSounds++;
+        }
+        fclose(file);
+        
+        
+
+        // Loop principal do jogo
+        while (!WindowShouldClose())
+        {
+             // Update
+        //----------------------------------------------------------------------------------
+            mouseText();
+
             timeSinceLastShot += GetFrameTime();
             timeSinceLastRu += GetFrameTime();
             timeSinceLastCAC += GetFrameTime();
@@ -260,28 +305,21 @@ int main()
     UnloadTexture(botaoStart);
     UnloadTexture(cenarioLog);
     UnloadTexture(bulletTexture);
-    DisposeSpriteAnimation(playerAnim_idleLeft);
-    DisposeSpriteAnimation(playerAnim_idleRight);
-    DisposeSpriteAnimation(playerAnim_walkingLeft);
-    DisposeSpriteAnimation(playerAnim_walkingRight);
+    CloseAudioDevice();
+    DisposeAllAnimations();
 
     return 0;
 }
 
-// Atualiza e desenha um frame do jogo
-//spawn points:
-// 1 - x: 1200, y: 400
-// 2 - x: 0, y: 400
-//spawn points:
-Vector2 spawnPoints[] = {
-    {1200, 400}, // 1
-    {0, 400},    // 2
-};
 
 static void UpdateDrawFrame(void)
 {
     // Atualização
-    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && CheckCollisionPointRec(GetMousePosition(), botaoStartColis)) menu_open = false;
+    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && CheckCollisionPointRec(GetMousePosition(), botaoStartColis)) {
+        menu_open = false;
+        StopSound(sounds[0]);
+        PlaySound(sounds[1]);
+    }
     else
     {
         
@@ -294,44 +332,44 @@ static void UpdateDrawFrame(void)
 
         if (player.rec.y > 600 ) player.rec.y = 600;
         
-int numRu = 0, numCAC = 0, numCTG = 0;
+        int numRu = 0, numCAC = 0, numCTG = 0;
 
-if(numEnemies < MAX_ENEMIES && !menu_open){
-    int spawnIndex = GetRandomValue(0, sizeof(spawnPoints)/sizeof(spawnPoints[0]) - 1);
-    Vector2 spawnPoint = spawnPoints[spawnIndex];
+        if(numEnemies < MAX_ENEMIES && !menu_open){
+        int spawnIndex = GetRandomValue(0, sizeof(spawnPoints)/sizeof(spawnPoints[0]) - 1);
+        Vector2 spawnPoint = spawnPoints[spawnIndex];
 
-    int enemyType = GetRandomValue(1, 3); // Randomly choose the type of enemy
+        int enemyType = GetRandomValue(1, 3); // Randomly choose the type of enemy
 
-    switch(enemyType){
-        case 1: // Estudante de Engenharia
-            if(timeSinceLastRu >= RuDelay && numRu < MAX_ENEMIES/3){
-                // printf("1\n");
-                Ru = addEnemy(Ru, &cont, 0.3f, 80, spawnPoint.x, spawnPoint.y, RonaldoUmidade);
-                timeSinceLastRu = 0.0f;
-                numEnemies++;
-                numRu++;
+        switch(enemyType){
+            case 1: // Estudante de Engenharia
+                if(timeSinceLastRu >= RuDelay && numRu < MAX_ENEMIES/3){
+                    // printf("1\n");
+                    Ru = addEnemy(Ru, &cont, 0.3f, 80, spawnPoint.x, spawnPoint.y, RonaldoUmidade);
+                    timeSinceLastRu = 0.0f;
+                    numEnemies++;
+                    numRu++;
+                }
+                break;
+            case 2: // Caranguejo
+                if(timeSinceLastCAC >= CACDelay && numCAC < MAX_ENEMIES/3){
+                    // printf("2\n");
+                    CAC = addEnemy(CAC, &contCAC, 0.3f, 80, spawnPoint.x, spawnPoint.y, CarangueijoArmandoCarlos);
+                    timeSinceLastCAC = 0.0f;
+                    numEnemies++;
+                    numCAC++;
+                }
+                break;
+            case 3: // Dengue
+                if(timeSinceLastCTG >= CTGDelay && numCTG < MAX_ENEMIES/3){
+                    // printf("3\n");
+                    CTG = addEnemy(CTG, &contCTG,  0.3f, 45, spawnPoint.x, spawnPoint.y, CalabresoTarcioGeometria);
+                    timeSinceLastCTG = 0.0f;
+                    numEnemies++;
+                    numCTG++;
+                }
+                break;
             }
-            break;
-        case 2: // Caranguejo
-            if(timeSinceLastCAC >= CACDelay && numCAC < MAX_ENEMIES/3){
-                // printf("2\n");
-                CAC = addEnemy(CAC, &contCAC, 0.3f, 80, spawnPoint.x, spawnPoint.y, CarangueijoArmandoCarlos);
-                timeSinceLastCAC = 0.0f;
-                numEnemies++;
-                numCAC++;
-            }
-            break;
-        case 3: // Dengue
-            if(timeSinceLastCTG >= CTGDelay && numCTG < MAX_ENEMIES/3){
-                // printf("3\n");
-                CTG = addEnemy(CTG, &contCTG,  0.3f, 45, spawnPoint.x, spawnPoint.y, CalabresoTarcioGeometria);
-                timeSinceLastCTG = 0.0f;
-                numEnemies++;
-                numCTG++;
-            }
-            break;
-    }
-}
+        }
         
         // MAX_ENEMIES = updateInimigo(MAX_ENEMIES, player.pontuacao);
 
@@ -359,12 +397,38 @@ if(numEnemies < MAX_ENEMIES && !menu_open){
     // player.isAlive = false;
     // Desenho
     if (menu_open)
-    {
-        
+    {   
+
+         if (musica == 0){ //Se a música estiver desligada (inicialização do jogo), ela inicia.
+            PlaySound(sounds[0]);
+            musica = 1;
+        }
+
+        if (CheckCollisionPointRec(GetMousePosition(), musicButton) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)){ // Verifica se clicou no botão de ligar/desligar a música
+            if (musica == 1) //Se a música tava ligada, ela é desligada.
+            {
+                PauseSound(sounds[0]);
+                musica = 2;
+            }
+            else if (musica == 2) //Se tiver desligada, ela é ligada.
+            {
+                ResumeSound(sounds[0]);
+                musica = 1;
+            }
+        }
+
         BeginDrawing();
             ClearBackground(WHITE);
 
             DrawTexture(cenarioLog, 0, 0, WHITE);
+
+            if (musica == 1) //Verifica se a música estiver ligada, se estiver muda o ícone para musicON
+                DrawTexture(musicON, musicButton.x, musicButton.y, WHITE);
+
+            else //Se a música acabou de ser desligada, muda o ícone para musicOFF
+                DrawTexture(musicOFF, musicButton.x, musicButton.y, WHITE);
+
+
             DrawTexture(botaoStart, BOTAOINICIAL_POS_X, BOTAOINICIAL_POS_Y, WHITE);
 
             DrawText("Digite seu nome!", textBox.x, textBox.y - 30, 20, YELLOW);
@@ -391,15 +455,24 @@ if(numEnemies < MAX_ENEMIES && !menu_open){
         EndDrawing();
     }
     else if (!endGame && !menu_open){
-        // scrollingBack += 0.1f;
-        // if (scrollingBack <= -skyBackground.width*2) scrollingBack = 0;
-
-            
-        
 
         // UpdateMusicStream(Start);
         BeginDrawing();
             ClearBackground(WHITE);
+
+            if (CheckCollisionPointRec(GetMousePosition(), musicButton) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)){ // Verifica se clicou no botão de ligar/desligar a música        
+                if (musica == 1) //Se a música tava ligada, ela é desligada.
+                    {
+                        PauseSound(sounds[1]);
+                        musica = 2;
+                    }
+                    else if (musica == 2) //Se tiver desligada, ela é ligada.
+                    {
+                        ResumeSound(sounds[1]);
+                        musica = 1;
+                    }
+        }
+
 
             scrollingBack -= 0.08f;
             if (scrollingBack <= -skyBackground.width*1.5) scrollingBack = 0;
@@ -446,17 +519,14 @@ if(numEnemies < MAX_ENEMIES && !menu_open){
             };
 
             if(endGame){
-                // Open the file in append mode
                 file = fopen("pontuacao.txt", "a");
                 if (file == NULL) {
                     printf("Cannot open file \n");
                     return 0;
                 }
 
-                // Write the player name and score to the file
                 fprintf(file, "\n%s %d\n", name, player.pontuacao);
 
-                // Close the file
                 fclose(file);
             }
             
@@ -465,15 +535,36 @@ if(numEnemies < MAX_ENEMIES && !menu_open){
         BeginDrawing();
             ClearBackground(WHITE);
             DrawTexture(gameOver, 0, -100, WHITE);
+
+            //Printa pontuação e salva
+                FILE *file;
+                    char lines[100][100];  // Array to store each line
+                    int count = 0;
+
+                    file = fopen("pontuacao.txt", "r");
+                    if (file == NULL) {
+                        printf("Cannot open file\n");
+                    }
+
+                    while (fgets(lines[count], sizeof(lines[count]), file)) {
+                        if (lines[count][0] != '\n') {
+                            count++;
+                        }
+                    }
+
+                    fclose(file);
+
+                    for(int i = 0; i < count; i++){
+                        DrawText(lines[i], 80, 70+ i * 50, 30, WHITE);
+                    }
+
+
+
+
         EndDrawing();
     }
 
 
-
-
-    // while (bulletList != NULL) {
-    //     removeBullet(bulletList);
-    // }
 
 
 
@@ -486,6 +577,10 @@ if(numEnemies < MAX_ENEMIES && !menu_open){
     // Lembre-se de atualizar a música no loop principal do jogo
     // UpdateMusicStream(music);
 }
+
+
+
+
 
 void freePonteiros(){
 

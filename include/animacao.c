@@ -85,6 +85,38 @@ void DisposeSpriteAnimation(SpriteAnimation animation)
     free(animation.rectanges);
 }
 
+void DisposeAllAnimations()
+{
+    DisposeSpriteAnimation(playerAnim_runningShotingLeft);
+    DisposeSpriteAnimation(playerAnim_jumppingMovRight);
+    DisposeSpriteAnimation(playerAnim_jumppingMovLeft);
+    DisposeSpriteAnimation(playerAnim_jumppingRight);
+    DisposeSpriteAnimation(playerAnim_jumppingLeft);
+    DisposeSpriteAnimation(playerAnim_idleShotingUpRight);
+    DisposeSpriteAnimation(playerAnim_idleShotingUpLeft);
+    DisposeSpriteAnimation(playerAnim_runningShotingUpRight);
+    DisposeSpriteAnimation(playerAnim_runningShotingUpLeft);
+    DisposeSpriteAnimation(playerAnim_dyingRight);
+    DisposeSpriteAnimation(playerAnim_dyingLeft);
+    DisposeSpriteAnimation(inim1Anim_walkingRight);
+    DisposeSpriteAnimation(inim1Anim_walkingLeft);
+    DisposeSpriteAnimation(inim1Anim_attackingRight);
+    DisposeSpriteAnimation(inim1Anim_attackingLeft);
+    DisposeSpriteAnimation(inim1Anim_dyingRight);
+    DisposeSpriteAnimation(inim1Anim_dyingLeft);
+    DisposeSpriteAnimation(inim2Anim_walkingRight);
+    DisposeSpriteAnimation(inim2Anim_walkingLeft);
+    DisposeSpriteAnimation(inim2Anim_attackingRight);
+    DisposeSpriteAnimation(inim2Anim_attackingLeft);
+    DisposeSpriteAnimation(inim2Anim_dyingRight);
+    DisposeSpriteAnimation(inim2Anim_dyingLeft);
+    DisposeSpriteAnimation(inim3Anim_walkingRight);
+    DisposeSpriteAnimation(inim3Anim_walkingLeft);
+    DisposeSpriteAnimation(inim3Anim_attackingRight);
+    DisposeSpriteAnimation(inim3Anim_attackingLeft);
+    DisposeSpriteAnimation(inim3Anim_dyingRight);
+    DisposeSpriteAnimation(inim3Anim_dyingLeft);
+}
 void DrawSpriteAnimationPro(SpriteAnimation animation, Rectangle dest, Vector2 origin, float rotation, Color tint)//animacao de sprite, posicao que ira ficar na tela, onde eh o meio do retangulo, rotacao, matiz   
 {
     int index = (int)((GetTime()- animation.timeStarted) *animation.framesPerSecond) % animation.rectanglesLength;

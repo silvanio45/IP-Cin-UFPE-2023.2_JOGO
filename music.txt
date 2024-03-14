@@ -1,0 +1,2 @@
+resources/sound/jogo_g1.mp3
+resources/sound/abertura.mp3
