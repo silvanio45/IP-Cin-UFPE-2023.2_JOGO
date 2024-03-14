@@ -136,6 +136,8 @@ int main()
     player.direc = 1;
     player.isJumping = false;
     player.speed = 6.0f;
+    player.health = 100;
+    player.damage = 40;
     
 
     botaoStartColis = (Rectangle){ BOTAOINICIAL_POS_X, BOTAOINICIAL_POS_Y, botaoStart.width, botaoStart.height };
@@ -223,7 +225,7 @@ static void UpdateDrawFrame(void)
        pulo(&player, gravidade, platforms, 2);
 
 
-        if(IsKeyDown(KEY_F)){
+        if(IsKeyDown(KEY_X)){
             if (player.isPlayerLookingUp) {
                     shotDelay = 0.6f;
                 }
@@ -279,15 +281,15 @@ static void UpdateDrawFrame(void)
             
 
 
-            collisionRU = updateProjectils(bulletTexture, sourceRecBullet, SCREEN_WIDTH, Ru, &cont, player.isPlayerLookingUp, platforms);    
+            collisionRU = updateProjectils(bulletTexture, sourceRecBullet, SCREEN_WIDTH, Ru, &cont, player.isPlayerLookingUp, platforms, player);    
             
-            collisionCAC = updateProjectils(bulletTexture, sourceRecBullet, SCREEN_WIDTH, CAC, &contCAC, player.isPlayerLookingUp, platforms);
+            collisionCAC = updateProjectils(bulletTexture, sourceRecBullet, SCREEN_WIDTH, CAC, &contCAC, player.isPlayerLookingUp, platforms , player);
 
-            collisionCTG = updateProjectils(bulletTexture, sourceRecBullet, SCREEN_WIDTH, CTG, &contCTG, player.isPlayerLookingUp, platforms);
+            collisionCTG = updateProjectils(bulletTexture, sourceRecBullet, SCREEN_WIDTH, CTG, &contCTG, player.isPlayerLookingUp, platforms , player);
 
-            updateEnemy(1, Ru, &cont, SCREEN_WIDTH, &Ru->direct, player.rec.x, bulletTexture, &GunRU, &contGunRU, collisionRU);
-            updateEnemy(2, CAC, &contCAC, SCREEN_WIDTH, &CAC->direct, player.rec.x, bulletTexture, &GunCAC, &contGunCAC, collisionCAC);
-            updateEnemy(3, CTG, &contCTG, SCREEN_WIDTH, &CTG->direct, player.rec.x, bulletTexture, &GunCTG, &contGunCTG, collisionCTG);
+            updateEnemy(1, Ru, &cont, SCREEN_WIDTH, &Ru->direct, player.rec.x, bulletTexture, &GunRU, &contGunRU, collisionRU, player);
+            updateEnemy(2, CAC, &contCAC, SCREEN_WIDTH, &CAC->direct, player.rec.x, bulletTexture, &GunCAC, &contGunCAC, collisionCAC, player);
+            updateEnemy(3, CTG, &contCTG, SCREEN_WIDTH, &CTG->direct, player.rec.x, bulletTexture, &GunCTG, &contGunCTG, collisionCTG, player);
 
             playerAnimation(player.direc, player.rec, player);
             

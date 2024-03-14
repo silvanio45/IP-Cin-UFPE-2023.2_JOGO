@@ -39,6 +39,9 @@ typedef struct {
     bool isAlive;
     bool hit;
 
+    float hitTimer;
+    float deathTimer;
+    
     float health;
     float damage;
     float speed;

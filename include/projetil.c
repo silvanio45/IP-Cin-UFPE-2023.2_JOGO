@@ -50,7 +50,7 @@ void removeProjectil(Projectil* projectil) {
     free(projectil);
 }
 
-bool updateProjectils(Texture2D projectilTexture, Rectangle sourceRecProject, int SCREEN_WIDTH, Enemy* Ru, int* cont, bool isPlayerLookingUp, Platforms *platforms){
+bool updateProjectils(Texture2D projectilTexture, Rectangle sourceRecProject, int SCREEN_WIDTH, Enemy* Ru, int* cont, bool isPlayerLookingUp, Platforms *platforms, Player player){
     Projectil* current = projectilList;
     Projectil* prev = NULL;
     float rotation;
@@ -81,8 +81,11 @@ bool updateProjectils(Texture2D projectilTexture, Rectangle sourceRecProject, in
         for(int i = 0; i < *cont; i++) {
             // Check for collision with enemy
             if (CheckCollisionRecs(destRecProject, Ru[i].rec) && Ru[i].isAlive)  {
-                Ru[i].hit = true;
-                // printf("Bullet hit the enemy!\n");
+                // Ru[i].hit = true;
+                Ru[i].hitTimer = 0.2f;
+                Ru[i].health -= player.damage;
+                
+                
                 Projectil* next = current->next;
                 if (prev != NULL) {
                     prev->next = next;

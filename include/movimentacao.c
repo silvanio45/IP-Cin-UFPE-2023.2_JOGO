@@ -105,5 +105,8 @@ void pulo(Player *player, float gravidade, Platforms *platforms, int platformsLe
         player->isJumping = false;
         player->jumpSpeed = 0.0f;
     }
+
+    if (player->rec.y <= -50) player->rec.y = -50;
+
 }
 

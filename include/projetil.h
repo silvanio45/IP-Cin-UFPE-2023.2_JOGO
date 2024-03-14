@@ -20,7 +20,7 @@ void addProjectil(Rectangle playerRect, float speed, int playerDirec, bool isPla
 // Function to remove a bullet from the list
 void removeProjectil(Projectil* bullet);
 
-bool updateProjectils(Texture2D projectilTexture, Rectangle sourceRecProject, int SCREEN_WIDTH, Enemy* Ru, int* cont, bool isPlayerLookingUp, Platforms *platforms);
+bool updateProjectils(Texture2D projectilTexture, Rectangle sourceRecProject, int SCREEN_WIDTH, Enemy* Ru, int* cont, bool isPlayerLookingUp, Platforms *platforms, Player player);
 
 
 

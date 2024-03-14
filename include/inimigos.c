@@ -64,6 +64,13 @@ Enemy* addEnemy(Enemy* CAC, int* contCAC, Texture2D inimigo1SpriteSheet){
     CAC[*contCAC].enemy_DIM_X = 105;
     CAC[*contCAC].enemy_DIM_Y = 105;
     CAC[*contCAC].speed = -1;
+    CAC[*contCAC].health = 100;
+    CAC[*contCAC].damage = 10;
+    CAC[*contCAC].isAlive = true;
+    CAC[*contCAC].hit = false;
+    CAC[*contCAC].hitTimer = 0.f;
+    CAC[*contCAC].deathTimer = 0.f;
+
 
     printf("AAA\n");
 
@@ -75,23 +82,34 @@ Enemy* addEnemy(Enemy* CAC, int* contCAC, Texture2D inimigo1SpriteSheet){
     return CAC;
 }
 
-void updateEnemy(int type, Enemy* enemy, int* cont, int SCREEN_WIDTH, int* direct, float Pposx, Texture2D bala, gun** GunRU, int* contRU, bool collision){
+void updateEnemy(int type, Enemy* enemy, int* cont, int SCREEN_WIDTH, int* direct, float Pposx, Texture2D bala, gun** GunRU, int* contRU, bool collision, Player player){
     
     
     SpriteAnimation inimAnim_walkingRight;
     SpriteAnimation inimAnim_walkingLeft;
+    SpriteAnimation inimAnim_dyingLeft;
+    SpriteAnimation inimAnim_dyingRight;
     
     if (type == 1) {
         inimAnim_walkingRight = inim1Anim_walkingRight;
         inimAnim_walkingLeft = inim1Anim_walkingLeft;
+        inimAnim_dyingLeft = inim1Anim_dyingLeft;
+        inimAnim_dyingRight = inim1Anim_dyingRight;
+
     }
     else if (type == 2) {
         inimAnim_walkingRight = inim2Anim_walkingRight;
         inimAnim_walkingLeft = inim2Anim_walkingLeft;
+        inimAnim_dyingLeft = inim2Anim_dyingLeft;
+        inimAnim_dyingRight = inim2Anim_dyingRight;
+
     }
     else if (type == 3) {
         inimAnim_walkingRight = inim3Anim_walkingRight;
         inimAnim_walkingLeft = inim3Anim_walkingLeft;
+        inimAnim_dyingLeft = inim3Anim_dyingLeft;
+        inimAnim_dyingRight = inim3Anim_dyingRight;
+
     }
 
     for(int i = 0; i < *cont; i++){
@@ -102,15 +120,50 @@ void updateEnemy(int type, Enemy* enemy, int* cont, int SCREEN_WIDTH, int* direc
         }
         
         
-        enemy[i].enemy_POSINICIAL_X = f2(enemy[i].enemy_POSINICIAL_X, enemy[i].speed, *direct);
+        if (enemy[i].isAlive) enemy[i].enemy_POSINICIAL_X = f2(enemy[i].enemy_POSINICIAL_X, enemy[i].speed, *direct);
         enemy[i].rec = (Rectangle){enemy[i].enemy_POSINICIAL_X, enemy[i].enemy_POSINICIAL_Y, enemy[i].enemy_DIM_X, enemy[i].enemy_DIM_Y};
         
-        if (*direct == 1) { 
-            DrawSpriteAnimationPro(inimAnim_walkingLeft, enemy[i].rec, (Vector2){0, 0}, 0, WHITE);
-        }else if(*direct == -1 ){ 
-            DrawSpriteAnimationPro(inimAnim_walkingRight, enemy[i].rec, (Vector2){0, 0}, 0, WHITE);
+
+
+        if (enemy[i].hitTimer > 0.0f && enemy[i].isAlive) {
+            enemy[i].hitTimer -= GetFrameTime(); // Decrease the timer by the frame time
+            
+            
+
+            if (*direct == 1) {     
+                DrawSpriteAnimationPro(inimAnim_walkingLeft, enemy[i].rec, (Vector2){0, 0}, 0, RED);
+            }
+            else if(*direct == -1 ){ 
+                DrawSpriteAnimationPro(inimAnim_walkingRight, enemy[i].rec, (Vector2){0, 0}, 0, RED);
+            }
+
+        } 
+        else if (enemy[i].health >= 0 ) {
+            if (*direct == 1) { 
+                DrawSpriteAnimationPro(inimAnim_walkingLeft, enemy[i].rec, (Vector2){0, 0}, 0, WHITE);
+            }else if(*direct == -1 ){ 
+                DrawSpriteAnimationPro(inimAnim_walkingRight, enemy[i].rec, (Vector2){0, 0}, 0, WHITE);
+            }
+        }
+
+        if (enemy[i].health < 0 && enemy[i].isAlive) {
+            enemy[i].isAlive = false;
+            enemy[i].deathTimer = 1.2f; // Set the timer to the length of the death animation
+        }
+
+        // If the deathTimer is greater than 0, draw the death animation
+        if (enemy[i].deathTimer > 0.0f) {
+            enemy[i].deathTimer -= GetFrameTime(); // Decrease the timer by the frame time
+            if (*direct == 1) { 
+                DrawSpriteAnimationPro(inimAnim_dyingLeft, enemy[i].rec, (Vector2){0, 0}, 0, WHITE);
+            }else if(*direct == -1 ){ 
+                DrawSpriteAnimationPro(inimAnim_dyingRight, enemy[i].rec, (Vector2){0, 0}, 0, WHITE);
+            }
+
         }
         
+        // printf("enemy health %f playey damage %f\n", enemy[i].health, player.damage);
+
         if(IsKeyDown(KEY_E)){// Verifique se a tecla "E" está pressionada e adicione balas conforme necessário
             *GunRU = addGun(enemy[i].enemy_POSINICIAL_X, enemy[i].enemy_POSINICIAL_Y, *GunRU, contRU, bala, direct);
         }

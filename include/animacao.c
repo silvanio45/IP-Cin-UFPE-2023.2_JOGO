@@ -733,7 +733,7 @@ void playerAnimation(int playerDirec, Rectangle playerRect, Player player) {
     playerRect.width = PLAYER_DIM_X;
     playerLookingUp = (IsKeyDown(KEY_W))||(IsKeyDown(KEY_UP));
     playerRunning = (IsKeyDown(KEY_A))||(IsKeyDown(KEY_LEFT)) || (IsKeyDown(KEY_D))||(IsKeyDown(KEY_RIGHT));
-    playerShoting = (IsKeyDown(KEY_F));
+    playerShoting = (IsKeyDown(KEY_X));
     playerStanding = (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) && (IsKeyDown(KEY_D)  || IsKeyDown(KEY_RIGHT));
 
     switch (playerDirec)
