@@ -5,7 +5,7 @@ CC = gcc
 CFLAGS = -Wall -std=c99 -g -I$(IDIR)
 
 # Libraries
-LIBS = -lraylib
+LIBS = -lraylib -lm
 
 # Directories
 IDIR = .\\include

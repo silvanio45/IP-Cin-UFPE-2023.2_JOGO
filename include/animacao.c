@@ -727,7 +727,7 @@ void initAnimations(Texture2D playerSpriteSheet, Texture2D inimigo1SpriteSheet, 
 }
 
 
-void playerAnimation(int playerDirec, Rectangle playerRect, Player player) {
+void playerAnimation(int playerDirec, Rectangle playerRect, Player *player) {
     //animacao
     playerRect.height = PLAYER_DIM_Y;
     playerRect.width = PLAYER_DIM_X;
@@ -735,6 +735,17 @@ void playerAnimation(int playerDirec, Rectangle playerRect, Player player) {
     playerRunning = (IsKeyDown(KEY_A))||(IsKeyDown(KEY_LEFT)) || (IsKeyDown(KEY_D))||(IsKeyDown(KEY_RIGHT));
     playerShoting = (IsKeyDown(KEY_X));
     playerStanding = (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) && (IsKeyDown(KEY_D)  || IsKeyDown(KEY_RIGHT));
+
+    Color COLOR = WHITE;
+
+    if (player->hitTimer > 0.0) {
+        player->hitTimer -= GetFrameTime(); // Decrease the timer by the frame time
+        COLOR = RED;
+
+
+    } else {
+        COLOR = WHITE;
+    }
 
     switch (playerDirec)
     {
@@ -744,31 +755,31 @@ void playerAnimation(int playerDirec, Rectangle playerRect, Player player) {
                 if(playerShoting){
                     if(playerLookingUp){
                         playerRect.height = 200;
-                        DrawSpriteAnimationPro(playerAnim_runningShotingUpRight, playerRect, (Vector2){0,95}, 0, WHITE );
+                        DrawSpriteAnimationPro(playerAnim_runningShotingUpRight, playerRect, (Vector2){0,95}, 0, COLOR );
                     } 
                     else{
                         playerRect.width = 150;
-                        DrawSpriteAnimationPro(playerAnim_runningShotingRight, playerRect, (Vector2){0,0}, 0, WHITE );
+                        DrawSpriteAnimationPro(playerAnim_runningShotingRight, playerRect, (Vector2){0,0}, 0, COLOR );
                     } 
                 }
-                else if (IsKeyDown(KEY_SPACE) || player.isJumping || player.isPlayerFalling) {DrawSpriteAnimationPro(playerAnim_jumppingMovRight, playerRect, (Vector2){0,0}, 0, WHITE );}
-                else DrawSpriteAnimationPro(playerAnim_walkingRight, playerRect, (Vector2){0,0}, 0, WHITE );
+                else if (IsKeyDown(KEY_SPACE) || player->isJumping || player->isPlayerFalling) {DrawSpriteAnimationPro(playerAnim_jumppingMovRight, playerRect, (Vector2){0,0}, 0, COLOR );}
+                else DrawSpriteAnimationPro(playerAnim_walkingRight, playerRect, (Vector2){0,0}, 0, COLOR );
             }
             else
             {
                 if(playerShoting){
                     if(playerLookingUp){
                         playerRect.height = 200;
-                        DrawSpriteAnimationPro(playerAnim_idleShotingUpRight, playerRect, (Vector2){0,95}, 0, WHITE );
+                        DrawSpriteAnimationPro(playerAnim_idleShotingUpRight, playerRect, (Vector2){0,95}, 0, COLOR );
                     } 
                     else{
                         playerRect.width = 150;
-                        DrawSpriteAnimationPro(playerAnim_idleShotingRight, playerRect, (Vector2){0,0}, 0, WHITE );
+                        DrawSpriteAnimationPro(playerAnim_idleShotingRight, playerRect, (Vector2){0,0}, 0, COLOR );
                     } 
                 }
-                else if (IsKeyDown(KEY_SPACE) || player.isJumping || player.isPlayerFalling) {DrawSpriteAnimationPro(playerAnim_jumppingRight, playerRect, (Vector2){0,0}, 0, WHITE );}
+                else if (IsKeyDown(KEY_SPACE) || player->isJumping || player->isPlayerFalling) {DrawSpriteAnimationPro(playerAnim_jumppingRight, playerRect, (Vector2){0,0}, 0, COLOR );}
                 
-                else DrawSpriteAnimationPro(playerAnim_idleRight, playerRect, (Vector2){0,0}, 0, WHITE );
+                else DrawSpriteAnimationPro(playerAnim_idleRight, playerRect, (Vector2){0,0}, 0, COLOR );
             }
             break;
         case -1://esquerda
@@ -777,46 +788,46 @@ void playerAnimation(int playerDirec, Rectangle playerRect, Player player) {
                 if(playerShoting){
                     if(playerLookingUp){
                         playerRect.height = 200;
-                        DrawSpriteAnimationPro(playerAnim_runningShotingUpLeft, playerRect, (Vector2){0,95}, 0, WHITE );
+                        DrawSpriteAnimationPro(playerAnim_runningShotingUpLeft, playerRect, (Vector2){0,95}, 0, COLOR );
                     } 
                     else{
                         playerRect.width = 150;
-                        DrawSpriteAnimationPro(playerAnim_runningShotingLeft, playerRect, (Vector2){0,0}, 0, WHITE );
+                        DrawSpriteAnimationPro(playerAnim_runningShotingLeft, playerRect, (Vector2){0,0}, 0, COLOR );
                     } 
                 }
-                else if (IsKeyDown(KEY_SPACE) || player.isJumping || player.isPlayerFalling) {DrawSpriteAnimationPro(playerAnim_jumppingMovLeft, playerRect, (Vector2){0,0}, 0, WHITE );}
+                else if (IsKeyDown(KEY_SPACE) || player->isJumping || player->isPlayerFalling) {DrawSpriteAnimationPro(playerAnim_jumppingMovLeft, playerRect, (Vector2){0,0}, 0, COLOR );}
                 
-                else DrawSpriteAnimationPro(playerAnim_walkingLeft, playerRect, (Vector2){0,0}, 0, WHITE );
+                else DrawSpriteAnimationPro(playerAnim_walkingLeft, playerRect, (Vector2){0,0}, 0, COLOR );
             }
             else 
             {
                 if (playerShoting){
                     if(playerLookingUp){
                         playerRect.height = 200;
-                        DrawSpriteAnimationPro(playerAnim_idleShotingUpLeft, playerRect, (Vector2){0,95}, 0, WHITE );
+                        DrawSpriteAnimationPro(playerAnim_idleShotingUpLeft, playerRect, (Vector2){0,95}, 0, COLOR );
                     } 
                     else{
                         playerRect.width = 150;
-                        DrawSpriteAnimationPro(playerAnim_idleShotingLeft, playerRect, (Vector2){0,0}, 0, WHITE );
+                        DrawSpriteAnimationPro(playerAnim_idleShotingLeft, playerRect, (Vector2){0,0}, 0, COLOR );
                     } 
                 }
-                else if (IsKeyDown(KEY_SPACE) || player.isJumping || player.isPlayerFalling) {DrawSpriteAnimationPro(playerAnim_jumppingLeft, playerRect, (Vector2){0,0}, 0, WHITE );}
+                else if (IsKeyDown(KEY_SPACE) || player->isJumping || player->isPlayerFalling) {DrawSpriteAnimationPro(playerAnim_jumppingLeft, playerRect, (Vector2){0,0}, 0, COLOR );}
                 
-                else DrawSpriteAnimationPro(playerAnim_idleLeft, playerRect, (Vector2){0,0}, 0, WHITE );
+                else DrawSpriteAnimationPro(playerAnim_idleLeft, playerRect, (Vector2){0,0}, 0, COLOR );
             }
             break;
         default:
             if (playerShoting){
                 if(playerLookingUp){
                         playerRect.height = 200;
-                        DrawSpriteAnimationPro(playerAnim_idleShotingUpRight, playerRect, (Vector2){0,95}, 0, WHITE );
+                        DrawSpriteAnimationPro(playerAnim_idleShotingUpRight, playerRect, (Vector2){0,95}, 0, COLOR );
                     } 
                 else{
                     playerRect.width = 150;
-                    DrawSpriteAnimationPro(playerAnim_idleShotingRight, playerRect, (Vector2){0,0}, 0, WHITE );
+                    DrawSpriteAnimationPro(playerAnim_idleShotingRight, playerRect, (Vector2){0,0}, 0, COLOR );
                 } 
             }
-            else DrawSpriteAnimationPro(playerAnim_idleRight, playerRect, (Vector2){0,0}, 0, WHITE );
+            else DrawSpriteAnimationPro(playerAnim_idleRight, playerRect, (Vector2){0,0}, 0, COLOR );
             break;
     }
 }

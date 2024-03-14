@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 #include "raylib.h"
 
@@ -108,8 +109,14 @@ static void UpdateDrawFrame(void);
 // Ponto de Entrada Principal
 //----------------------------------------------------------------------------------
 
+ Music Start; 
+   
+
+Music jogo_g1;
+
 int main()
-{
+{   
+    
     
     // Inicialização
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Tela Inicial");
@@ -129,6 +136,12 @@ int main()
 
     scrollingBack = 0.f;
     scrollingClouds = 0.f;
+
+    Start = LoadMusicStream("resources/sound/abertura.mp3");
+   
+    PlayMusicStream(Start);
+
+    jogo_g1 = LoadMusicStream("resources/sound/jogo_g1.mp3");
 
     //----------------------------------------------------------------------------------
     //  Animacoes
@@ -202,19 +215,19 @@ static void UpdateDrawFrame(void)
         
         if(IsKeyDown(KEY_J)){
             if(timeSinceLastRu >= RuDelay){
-                Ru = addEnemy(Ru, &cont, inimigo1SpriteSheet);
+                Ru = addEnemy(Ru, &cont, inimigo1SpriteSheet, 0.3f);
                 timeSinceLastRu = 0.0f;
             }
         }
         if(IsKeyDown(KEY_K)){
             if(timeSinceLastCAC >= CACDelay){
-                CAC = addEnemy(CAC, &contCAC, inimigo1SpriteSheet);
+                CAC = addEnemy(CAC, &contCAC, inimigo1SpriteSheet, 0.3f);
                 timeSinceLastCAC = 0.0f;
             }
         }
         if(IsKeyDown(KEY_L)){
             if(timeSinceLastCTG >= CTGDelay){
-                CTG = addEnemy(CTG, &contCTG, inimigo2SpriteSheet);
+                CTG = addEnemy(CTG, &contCTG, inimigo2SpriteSheet, 0.3f);
                 timeSinceLastCTG = 0.0f;
             }
         }
@@ -242,6 +255,7 @@ static void UpdateDrawFrame(void)
     // Desenho
     if (menu_open)
     {
+        
         BeginDrawing();
             ClearBackground(WHITE);
             DrawTexture(cenarioLog, 0, 0, WHITE);
@@ -252,7 +266,9 @@ static void UpdateDrawFrame(void)
     {
         // scrollingBack += 0.1f;
         // if (scrollingBack <= -skyBackground.width*2) scrollingBack = 0;
-        
+        StopMusicStream(Start);
+        PlayMusicStream(jogo_g1);
+        // UpdateMusicStream(Start);
         BeginDrawing();
             ClearBackground(WHITE);
 
@@ -287,12 +303,13 @@ static void UpdateDrawFrame(void)
 
             collisionCTG = updateProjectils(bulletTexture, sourceRecBullet, SCREEN_WIDTH, CTG, &contCTG, player.isPlayerLookingUp, platforms , player);
 
-            updateEnemy(1, Ru, &cont, SCREEN_WIDTH, &Ru->direct, player.rec.x, bulletTexture, &GunRU, &contGunRU, collisionRU, player);
-            updateEnemy(2, CAC, &contCAC, SCREEN_WIDTH, &CAC->direct, player.rec.x, bulletTexture, &GunCAC, &contGunCAC, collisionCAC, player);
-            updateEnemy(3, CTG, &contCTG, SCREEN_WIDTH, &CTG->direct, player.rec.x, bulletTexture, &GunCTG, &contGunCTG, collisionCTG, player);
+            updateEnemy(1, Ru, &cont, SCREEN_WIDTH, &Ru->direct, player.rec.x, bulletTexture, &GunRU, &contGunRU, collisionRU, &player);
+            updateEnemy(2, CAC, &contCAC, SCREEN_WIDTH, &CAC->direct, player.rec.x, bulletTexture, &GunCAC, &contGunCAC, collisionCAC, &player);
+            updateEnemy(3, CTG, &contCTG, SCREEN_WIDTH, &CTG->direct, player.rec.x, bulletTexture, &GunCTG, &contGunCTG, collisionCTG, &player);
 
-            playerAnimation(player.direc, player.rec, player);
+            playerAnimation(player.direc, player.rec, &player);
             
+
         EndDrawing();
     }
 
@@ -302,4 +319,13 @@ static void UpdateDrawFrame(void)
 
 
 
+}void playMusicAndSoundEffects() {
+    Music Start = LoadMusicStream("resources/sound/abertura.mp3");
+   
+    PlayMusicStream(Start);
+
+     Music jogo_g1 = LoadMusicStream("resources/sound/jogo_g1.mp3");
+    // Lembre-se de atualizar a música no loop principal do jogo
+    // UpdateMusicStream(music);
 }
+

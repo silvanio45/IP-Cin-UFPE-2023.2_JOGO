@@ -18,6 +18,15 @@ void movx(Player *player, Platforms *platforms)
     else if (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT))
         player->rec.x -= player->speed;
 
+    //add knock back movement for x axis
+    if(player->hitTimer > 0) {
+        if(player->direc == 1) {
+            player->rec.x -= 5;
+        } else {
+            player->rec.x += 5;
+        }
+    }
+
     if (player->rec.x < 0)
         player->rec.x = 0;
     if (player->rec.x > 1200)
@@ -104,6 +113,11 @@ void pulo(Player *player, float gravidade, Platforms *platforms, int platformsLe
         player->rec.y = GROUND_LEVEL;
         player->isJumping = false;
         player->jumpSpeed = 0.0f;
+    }
+
+    //add knock back movement for y axis
+    if(player->hitTimer > 0) {
+        player->rec.y -= 5;
     }
 
     if (player->rec.y <= -50) player->rec.y = -50;

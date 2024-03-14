@@ -11,11 +11,18 @@ typedef struct {
     bool isJumping;
     bool isPlayerLookingUp;
     bool isPlayerFalling;
+    
+    float hitTimer;
+
+
+    float deathTimer;
     float jumpSpeed;
 
     float health;
     float damage;
     float speed;
+
+
 } Player;  
 
 typedef struct Platforms{
@@ -37,10 +44,16 @@ typedef struct {
     int direct;
     bool isJumping;
     bool isAlive;
-    bool hit;
+    bool attackPosition;
+    
 
     float hitTimer;
     float deathTimer;
+
+    float hitDelay; 
+    float attackAnimationLength; 
+    float attackAnimationTimer; 
+    float timeSinceLastHit;      
     
     float health;
     float damage;

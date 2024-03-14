@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include "projetil.h"
 #include "inimigos.h"
+#include <math.h>
 
 Projectil* projectilList = NULL; // Start with an empty list
 
@@ -54,6 +55,8 @@ bool updateProjectils(Texture2D projectilTexture, Rectangle sourceRecProject, in
     Projectil* current = projectilList;
     Projectil* prev = NULL;
     float rotation;
+
+
 
     while (current != NULL) {
         // Update bullet position
