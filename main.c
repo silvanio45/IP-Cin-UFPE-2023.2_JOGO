@@ -27,7 +27,7 @@ Texture2D playerSpriteSheet;
 Texture2D inimigo2SpriteSheet;
 Texture2D inimigo3SpriteSheet;
 Texture2D inimigo1SpriteSheet;
-Texture2D RonaldoUmidade;
+Texture2D RonaldoUmidadeSprite;
 Texture2D ruTexture;
 Texture2D cenario;
 Texture2D cenarioLog;
@@ -200,7 +200,7 @@ int main()
     UnloadTexture(botaoStart);
     UnloadTexture(cenarioLog);
     UnloadTexture(bulletTexture);
-    UnloadTexture(RonaldoUmidade);
+    UnloadTexture(RonaldoUmidadeSprite);
     DisposeSpriteAnimation(playerAnim_idleLeft);
     DisposeSpriteAnimation(playerAnim_idleRight);
     DisposeSpriteAnimation(playerAnim_walkingLeft);
@@ -241,18 +241,19 @@ static void UpdateDrawFrame(void)
         Vector2 spawnPoint = spawnPoints[spawnIndex];
 
         if(numEnemies < MAX_ENEMIES){
-            if(timeSinceLastRu >= RuDelay){ //Caranguejo
-                Ru = addEnemy(Ru, &cont, inimigo1SpriteSheet, 0.3f, 80, spawnPoint.x, spawnPoint.y, 1.2f);
+            if(timeSinceLastRu >= RuDelay){ //Estudante de Engenharia
+                Ru = addEnemy(Ru, &cont, spawnPoint.x, spawnPoint.y, RonaldoUmidade);
                 timeSinceLastRu = 0.0f;
                 numEnemies++;
             }
-            else if(timeSinceLastCAC >= CACDelay){//Dengue
-                CAC = addEnemy(CAC, &contCAC, inimigo1SpriteSheet, 0.3f, 80, spawnPoint.x, spawnPoint.y, 1.f);
+            else if(timeSinceLastCAC >= CACDelay){//Caranguejo
+                CAC = addEnemy(CAC, &cont, spawnPoint.x, spawnPoint.y, CarangueijoArmandoCarlos);
+
                 timeSinceLastCAC = 0.0f;
                 numEnemies++;
             }
-            else if(timeSinceLastCTG >= CTGDelay){//Estudante de Engenharia
-                CTG = addEnemy(CTG, &contCTG, inimigo2SpriteSheet, 0.3f, 45, spawnPoint.x, spawnPoint.y, 0.4f);
+            else if(timeSinceLastCTG >= CTGDelay){//Dengue
+                CTG = addEnemy(CTG, &cont, spawnPoint.x, spawnPoint.y, CalabresoTarcioGeometria);
                 timeSinceLastCTG = 0.0f;
                 numEnemies++;
             }
