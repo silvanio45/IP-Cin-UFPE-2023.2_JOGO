@@ -17,6 +17,6 @@ void updateEnemy(int type, Enemy* CTG, int* contCTG, int SCREEN_WIDTH, int* dire
 
 gun* addGun(float posX, float posY, gun* Bala, int* cont, Texture2D bala, int* direct);
 
-Enemy* addEnemy(Enemy* CAC, int* contCAC, Texture2D inimigo1SpriteSheet, float enemyDelay);
+Enemy* addEnemy(Enemy* CAC, int* contCAC, Texture2D inimigo1SpriteSheet, float enemyDelay, float atackThreshold, float SpawnX, float SpawnY);
 
 #endif // INIMIGOS_H

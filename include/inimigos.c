@@ -58,27 +58,36 @@ gun* addGun(float posX, float posY, gun* Bala, int* cont, Texture2D bala, int* d
     return Bala;
 }
 
-void removeEnemy(Enemy* CAC, int* contCAC, int index) {
+void removeEnemy(Enemy** CAC, int* contCAC, int index) {
     if (index < 0 || index >= *contCAC) {
-        return CAC;
+        return;
     }
 
     for (int i = index; i < *contCAC - 1; i++) {
-        CAC[i] = CAC[i + 1];
+        (*CAC)[i] = (*CAC)[i + 1];
     }
 
     (*contCAC)--;
 
-    CAC = (Enemy*)realloc(CAC, (*contCAC) * sizeof(Enemy));
+    Enemy* temp = (Enemy*)realloc(*CAC, (*contCAC + 1) * sizeof(Enemy));
+    if (temp == NULL) {
+        // Handle the error, e.g., by logging an error message and exiting the program
+        printf("Error reallocating memory!\n");
+        exit(1);
+    } else {
+        *CAC = temp;
+    }
 
-    return CAC;
 }
 
-Enemy* addEnemy(Enemy* CAC, int* contCAC, Texture2D inimigo1SpriteSheet, float enemyDelay){
+
+Enemy* addEnemy(Enemy* CAC, int* contCAC, Texture2D inimigo1SpriteSheet, float attackAnimationLength, float atackThreshold, float SpawnX, float SpawnY){
     CAC = (Enemy*) realloc(CAC, (*contCAC+1)*(sizeof(Enemy)));
     
-    CAC[*contCAC].enemy_POSINICIAL_X = 1280;
-    CAC[*contCAC].enemy_POSINICIAL_Y = 400;
+    
+
+    CAC[*contCAC].enemy_POSINICIAL_X = SpawnX;
+    CAC[*contCAC].enemy_POSINICIAL_Y = SpawnY;
     CAC[*contCAC].enemy_DIM_X = 105;
     CAC[*contCAC].enemy_DIM_Y = 105;
     CAC[*contCAC].speed = -1;
@@ -88,8 +97,11 @@ Enemy* addEnemy(Enemy* CAC, int* contCAC, Texture2D inimigo1SpriteSheet, float e
     CAC[*contCAC].attackPosition = false;
     CAC[*contCAC].hitTimer = 0.f;
     CAC[*contCAC].deathTimer = 0.f;
-    CAC[*contCAC].hitDelay = enemyDelay;
+    CAC[*contCAC].hitDelay = 0.5f;
     CAC[*contCAC].timeSinceLastHit = 0.f;
+    CAC[*contCAC].attackAnimationLength = attackAnimationLength;
+    CAC[*contCAC].attackAnimationTimer = 0.0f;
+    CAC[*contCAC].attackThreshold = atackThreshold;
 
 
     printf("AAA\n");
@@ -159,20 +171,19 @@ void updateEnemy(int type, Enemy* enemy, int* cont, int SCREEN_WIDTH, int* direc
 
         if (enemy[i].hitTimer > 0.0f && enemy[i].isAlive) {
             enemy[i].hitTimer -= GetFrameTime(); // Decrease the timer by the frame time
-            printf("AAA\n");
 
             if(!enemy[i].attackPosition)
                 if (*direct) DrawSpriteAnimationPro(inimAnim_walkingLeft, enemy[i].rec, (Vector2){0, 0}, 0, RED);
                 else DrawSpriteAnimationPro(inimAnim_walkingRight, enemy[i].rec, (Vector2){0, 0}, 0, RED);
             else
-                if (*direct) DrawSpriteAnimationPro(inim1Anim_attackingLeft, enemy[i].rec, (Vector2){0, 0}, 0, RED);
+                if (*direct) DrawSpriteAnimationPro(inimAnim_attackingLeft, enemy[i].rec, (Vector2){0, 0}, 0, RED);
                 else DrawSpriteAnimationPro(inim1Anim_attackingRight, enemy[i].rec, (Vector2){0, 0}, 0, RED);
 
         } 
         else if (enemy[i].health >= 0 &&  enemy[i].isAlive) {
 
             if (enemy[i].attackPosition)
-                if (*direct) DrawSpriteAnimationPro(inim1Anim_attackingLeft, enemy[i].rec, (Vector2){0, 0}, 0, WHITE);
+                if (*direct) DrawSpriteAnimationPro(inimAnim_attackingLeft, enemy[i].rec, (Vector2){0, 0}, 0, WHITE);
                 else DrawSpriteAnimationPro(inim1Anim_attackingRight, enemy[i].rec, (Vector2){0, 0}, 0, WHITE);
             else 
                 if (*direct) DrawSpriteAnimationPro(inimAnim_walkingLeft, enemy[i].rec, (Vector2){0, 0}, 0, WHITE);
@@ -197,8 +208,10 @@ void updateEnemy(int type, Enemy* enemy, int* cont, int SCREEN_WIDTH, int* direc
         }
 
         if(enemy[i].deathTimer <= 0.0f && !enemy[i].isAlive) {
-            removeEnemy(&enemy[i], cont, i);
+            removeEnemy(&enemy, cont, i);
+            i--;
         }
+
         
         // printf("enemy health %f playey damage %f\n", enemy[i].health, player->damage);
 
@@ -210,24 +223,37 @@ void updateEnemy(int type, Enemy* enemy, int* cont, int SCREEN_WIDTH, int* direc
         // printf("enemy position: %f\n", enemy[i].enemy_POSINICIAL_X);
         // printf("player position: %f\n", player->rec.x);
 
-        float distance = enemy[i].enemy_POSINICIAL_X > player->rec.x ? (enemy[i].enemy_POSINICIAL_X - player->rec.x) : (player->rec.x - enemy[i].enemy_POSINICIAL_X);
+       float distance = enemy[i].enemy_POSINICIAL_X > player->rec.x ? (enemy[i].enemy_POSINICIAL_X - player->rec.x) : (player->rec.x - enemy[i].enemy_POSINICIAL_X);
 
         // printf("distance: %f\n", distance);
 
-        if(distance <= 100 && (enemy[i].timeSinceLastHit >= enemy[i].hitDelay)){
+        if(distance <= enemy[i].attackThreshold && (enemy[i].timeSinceLastHit >= enemy[i].hitDelay) && enemy[i].attackPosition == false){
             enemy[i].attackPosition = true;
             enemy[i].attackAnimationTimer = enemy[i].attackAnimationLength; // Start the attack animation
         }
-        else {
+        // else {
+            // enemy[i].attackPosition = false;
+        // }
+
+        // If the attack animation is playing
+        if(enemy[i].attackAnimationTimer > 0){
+            enemy[i].attackAnimationTimer -= GetFrameTime(); // Decrease the timer by the frame time
+            // Draw the attack animation here
+        }
+
+
+        // If the attack animation has finished, apply the damage
+        if(enemy[i].attackAnimationTimer <= 0 && CheckCollisionRecs(enemy[i].rec, player->rec) && enemy[i].attackPosition){
+            player->health -= enemy[i].damage;
+            player->hitTimer = 0.3f;
+            enemy[i].timeSinceLastHit = 0; // Reset the hit delay timer
             enemy[i].attackPosition = false;
         }
 
-        
-        if(CheckCollisionRecs(enemy[i].rec, player->rec) && enemy[i].attackPosition){
-            player->health -= enemy[i].damage;
-            player->hitTimer = 0.3f;
-        
-        }
+
+
+        printf("player health: %f\n", player->health);
+
 
 
     }

@@ -11,6 +11,7 @@ typedef struct {
     bool isJumping;
     bool isPlayerLookingUp;
     bool isPlayerFalling;
+    bool isAlive;
     
     float hitTimer;
 
@@ -54,6 +55,7 @@ typedef struct {
     float attackAnimationLength; 
     float attackAnimationTimer; 
     float timeSinceLastHit;      
+    float attackThreshold;
     
     float health;
     float damage;

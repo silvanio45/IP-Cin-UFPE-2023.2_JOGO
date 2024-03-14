@@ -19,7 +19,7 @@ void movx(Player *player, Platforms *platforms)
         player->rec.x -= player->speed;
 
     //add knock back movement for x axis
-    if(player->hitTimer > 0) {
+    if(player->hitTimer > 0 && player->isAlive) {
         if(player->direc == 1) {
             player->rec.x -= 5;
         } else {
@@ -120,7 +120,7 @@ void pulo(Player *player, float gravidade, Platforms *platforms, int platformsLe
         player->rec.y -= 5;
     }
 
-    if (player->rec.y <= -50) player->rec.y = -50;
+    if (player->rec.y <= -50 && player->isAlive) player->rec.y = -50;
 
 }
 

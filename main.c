@@ -35,6 +35,7 @@ Texture2D botaoStart;
 Texture2D skyBackground;
 Texture2D clouds;
 Texture2D clouds1;
+Texture2D gameOver;
 
 Rectangle botaoStartColis;
 // Rectangle playerRect;
@@ -59,7 +60,7 @@ float timeSinceLastShot = 0.8f;
 float bulletSpeed;
 // Define the delay between each shot (1.0f means one second)
 float shotDelay = 0.4f; 
-
+bool endGame = false;
 int TRU = 0; 
 
 Player player;
@@ -110,9 +111,15 @@ static void UpdateDrawFrame(void);
 //----------------------------------------------------------------------------------
 
  Music Start; 
-   
+
+Color color = WHITE;
 
 Music jogo_g1;
+
+//Spawn points
+
+
+
 
 int main()
 {   
@@ -132,7 +139,9 @@ int main()
     skyBackground =         LoadTexture("./resources/scenario/skyBackground.png");
     clouds =                LoadTexture("./resources/scenario/clouds1.png");
     clouds1 =               LoadTexture("./resources/scenario/clouds2.png");
+    gameOver =               LoadTexture("./resources/miscellaneous/maxresdefault.png");
 
+    color.a = 0.f;
 
     scrollingBack = 0.f;
     scrollingClouds = 0.f;
@@ -149,8 +158,10 @@ int main()
     player.direc = 1;
     player.isJumping = false;
     player.speed = 6.0f;
-    player.health = 100;
+    player.health = 20;
     player.damage = 40;
+    player.isAlive = true;
+    player.deathTimer = 1.0f;
     
 
     botaoStartColis = (Rectangle){ BOTAOINICIAL_POS_X, BOTAOINICIAL_POS_Y, botaoStart.width, botaoStart.height };
@@ -197,6 +208,10 @@ int main()
 }
 
 // Atualiza e desenha um frame do jogo
+//spawn points:
+// 1 - x: 1200, y: 400
+// 2 - x: 0, y: 400
+// 3 - x: 1200, y: 98
 static void UpdateDrawFrame(void)
 {
     // Atualização
@@ -215,19 +230,19 @@ static void UpdateDrawFrame(void)
         
         if(IsKeyDown(KEY_J)){
             if(timeSinceLastRu >= RuDelay){
-                Ru = addEnemy(Ru, &cont, inimigo1SpriteSheet, 0.3f);
+                Ru = addEnemy(Ru, &cont, inimigo1SpriteSheet, 0.3f, 80);
                 timeSinceLastRu = 0.0f;
             }
         }
         if(IsKeyDown(KEY_K)){
             if(timeSinceLastCAC >= CACDelay){
-                CAC = addEnemy(CAC, &contCAC, inimigo1SpriteSheet, 0.3f);
+                CAC = addEnemy(CAC, &contCAC, inimigo1SpriteSheet, 0.3f, 80);
                 timeSinceLastCAC = 0.0f;
             }
         }
         if(IsKeyDown(KEY_L)){
             if(timeSinceLastCTG >= CTGDelay){
-                CTG = addEnemy(CTG, &contCTG, inimigo2SpriteSheet, 0.3f);
+                CTG = addEnemy(CTG, &contCTG, inimigo2SpriteSheet, 0.3f, 45);
                 timeSinceLastCTG = 0.0f;
             }
         }
@@ -251,7 +266,7 @@ static void UpdateDrawFrame(void)
             }
         }
     }
-
+    // player.isAlive = false;
     // Desenho
     if (menu_open)
     {
@@ -262,8 +277,7 @@ static void UpdateDrawFrame(void)
             DrawTexture(botaoStart, BOTAOINICIAL_POS_X, BOTAOINICIAL_POS_Y, WHITE);
         EndDrawing();
     }
-    else
-    {
+    else if (!endGame && !menu_open){
         // scrollingBack += 0.1f;
         // if (scrollingBack <= -skyBackground.width*2) scrollingBack = 0;
         StopMusicStream(Start);
@@ -307,11 +321,19 @@ static void UpdateDrawFrame(void)
             updateEnemy(2, CAC, &contCAC, SCREEN_WIDTH, &CAC->direct, player.rec.x, bulletTexture, &GunCAC, &contGunCAC, collisionCAC, &player);
             updateEnemy(3, CTG, &contCTG, SCREEN_WIDTH, &CTG->direct, player.rec.x, bulletTexture, &GunCTG, &contGunCTG, collisionCTG, &player);
 
-            playerAnimation(player.direc, player.rec, &player);
+            if(player.deathTimer >= 0.0f || player.isAlive) playerAnimation(player.direc, player.rec, &player);
             
+            // if(player.deathTimer <= 0.0f && !player.isAlive) {
+            //     color.a += 5.f;
+            //     if (color.a >= 255) {color.a = 255; endGame = true;}
+            //     DrawTexture(gameOver, 0, -140, color);
+                
+            // }
+
+            printf("x = %.2f, y = %.2f\n", player.rec.x, player.rec.y);
 
         EndDrawing();
-    }
+    } 
 
     // while (bulletList != NULL) {
     //     removeBullet(bulletList);

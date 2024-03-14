@@ -337,7 +337,7 @@ void initAnimations(Texture2D playerSpriteSheet, Texture2D inimigo1SpriteSheet, 
         (Rectangle){440, 1168, 60, 47},
         (Rectangle){380, 1168, 60, 47}
     },13);
-    inim1Anim_attackingLeft = CreateSpriteAnimation(inimigo1SpriteSheet, 15, (Rectangle[]){
+    inim1Anim_attackingLeft = CreateSpriteAnimation(inimigo1SpriteSheet, 16, (Rectangle[]){
         (Rectangle){21, 292, 55, 47},
         (Rectangle){81, 292, 55, 47},
         (Rectangle){141, 286, 55, 52},
@@ -738,7 +738,20 @@ void playerAnimation(int playerDirec, Rectangle playerRect, Player *player) {
 
     Color COLOR = WHITE;
 
-    if (player->hitTimer > 0.0) {
+
+    if(player->health <= 0 && player->deathTimer > 0.0){
+        player->deathTimer -= GetFrameTime(); // Decrease the timer by the frame time
+
+        if(playerDirec == 1){
+            DrawSpriteAnimationPro(playerAnim_dyingRight, playerRect, (Vector2){0,0}, 0, COLOR );
+        }
+        else{
+            DrawSpriteAnimationPro(playerAnim_dyingLeft, playerRect, (Vector2){0,0}, 0, COLOR );
+        }
+        player->isAlive = 0;
+    }
+
+    else if (player->hitTimer > 0.0) {
         player->hitTimer -= GetFrameTime(); // Decrease the timer by the frame time
         COLOR = RED;
 
@@ -746,8 +759,8 @@ void playerAnimation(int playerDirec, Rectangle playerRect, Player *player) {
     } else {
         COLOR = WHITE;
     }
-
-    switch (playerDirec)
+    if(player->isAlive){
+        switch (playerDirec)
     {
         case 1://direita
             if(playerRunning && !playerStanding) 
@@ -829,6 +842,8 @@ void playerAnimation(int playerDirec, Rectangle playerRect, Player *player) {
             }
             else DrawSpriteAnimationPro(playerAnim_idleRight, playerRect, (Vector2){0,0}, 0, COLOR );
             break;
+    }
+
     }
 }
 
