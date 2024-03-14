@@ -14,7 +14,9 @@ typedef struct {
     bool isAlive;
     
     float hitTimer;
+    int pontuacao;
 
+    int lives; //qtd vidas do player 
 
     float deathTimer;
     float jumpSpeed;
@@ -32,7 +34,11 @@ typedef struct Platforms{
 
 } Platforms;
 
-
+typedef enum {
+    RonaldoUmidade,
+    CalabresoTarcioGeometria,
+    CarangueijoArmandoCarlos,
+} TipoInimigo;
 
 typedef struct {
     float enemy_POSINICIAL_X;
@@ -46,10 +52,11 @@ typedef struct {
     bool isJumping;
     bool isAlive;
     bool attackPosition;
+    bool set;
     
-
     float hitTimer;
     float deathTimer;
+    float pontuacao;
 
     float hitDelay; 
     float attackAnimationLength; 
@@ -64,12 +71,60 @@ typedef struct {
 } Enemy; 
 
 
-typedef enum {
-    CarangueijoArmandoCarlos,
-    RonaldoUmidade,
-    CalabresoTarcioGeometria
-} TipoInimigo;
+// typedef struct {
+//     float Ru_POSINICIAL_X;
+//     float Ru_POSINICIAL_Y;
+//     float Ru_DIM_X;
+//     float Ru_DIM_Y;
 
+//     Rectangle rec;
+
+//     int direct;
+//     bool isJumping;
+//     bool isAlive;
+//     bool hit;
+
+//     float health;
+//     float damage;
+//     float speed;
+    
+// } RU; 
+
+// typedef struct {
+//     float CAC_POSINICIAL_X;
+//     float CAC_POSINICIAL_Y;
+//     float CAC_DIM_X;
+//     float CAC_DIM_Y;
+
+//     Rectangle rec;
+
+//     int direct;
+//     bool isJumping;
+
+//     float health;
+//     float damage;
+//     float speed;
+    
+// } CarangueijoArmandoCarlos; 
+
+// typedef struct {
+//     float CTG_POSINICIAL_X;
+//     float CTG_POSINICIAL_Y;
+//     float CTG_DIM_X;
+//     float CTG_DIM_Y;
+
+//     Rectangle rec;
+
+//     int direct;
+//     int contGun;
+    
+//     bool isJumping;
+    
+//     float health;
+//     float damage;
+//     float speed;
+    
+// } CalabresoTarcioGeometria; 
 
 typedef struct {
     

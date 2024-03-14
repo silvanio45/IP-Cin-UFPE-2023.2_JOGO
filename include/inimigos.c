@@ -3,7 +3,6 @@
 #include "raylib.h"
 #include "entity.h"
 #include "animacao.h"
-#include "inimigos.h"
 
 
 SpriteAnimation inimAnim_walkingRight;
@@ -12,6 +11,12 @@ SpriteAnimation inimAnim_dyingLeft;
 SpriteAnimation inimAnim_dyingRight;
 SpriteAnimation inimAnim_attackingLeft;
 SpriteAnimation inimAnim_attackingRight;
+
+
+// int updateInimigo(int MAX_ENEMIES, int pontuacao){
+//     MAX_ENEMIES += (pontuacao%50);
+//     return MAX_ENEMIES;
+// }
 
 float f2(float posx, float speed, int direct) {
     if(posx >= -100 && direct == 1){
@@ -63,18 +68,18 @@ gun* addGun(float posX, float posY, gun* Bala, int* cont, Texture2D bala, int* d
     return Bala;
 }
 
-void removeEnemy(Enemy** CAC, int* contEnemy, int index) {
-    if (index < 0 || index >= *contEnemy) {
+void removeEnemy(Enemy** CAC, int* contCAC, int index) {
+    if (index < 0 || index >= *contCAC) {
         return;
     }
 
-    for (int i = index; i < *contEnemy - 1; i++) {
+    for (int i = index; i < *contCAC - 1; i++) {
         (*CAC)[i] = (*CAC)[i + 1];
     }
 
-    (*contEnemy)--;
+    (*contCAC)--;
 
-    Enemy* temp = (Enemy*)realloc(*CAC, (*contEnemy + 1) * sizeof(Enemy));
+    Enemy* temp = (Enemy*)realloc(*CAC, (*contCAC + 1) * sizeof(Enemy));
     if (temp == NULL) {
         // Handle the error, e.g., by logging an error message and exiting the program
         printf("Error reallocating memory!\n");
@@ -86,43 +91,8 @@ void removeEnemy(Enemy** CAC, int* contEnemy, int index) {
 }
 
 
-Enemy* addEnemy(Enemy* enemy, int* contEnemy,  float SpawnX, float SpawnY, TipoInimigo tipo){
-    
-    
-    enemy = (Enemy*) realloc(enemy, (*contEnemy+1)*(sizeof(Enemy)));
-    
-    enemy[*contEnemy].enemy_POSINICIAL_X = SpawnX;
-    enemy[*contEnemy].enemy_POSINICIAL_Y = SpawnY;
-    enemy[*contEnemy].enemy_DIM_X = 105;
-    enemy[*contEnemy].enemy_DIM_Y = 105;
-    enemy[*contEnemy].isAlive = true;
-    enemy[*contEnemy].attackPosition = false;
-    enemy[*contEnemy].hitTimer = 0.f;
-    enemy[*contEnemy].deathTimer = 0.f;
-    enemy[*contEnemy].hitDelay = 0.5f;
-    enemy[*contEnemy].timeSinceLastHit = 0.f;
-    enemy[*contEnemy].attackAnimationTimer = 0.0f;
-
-
-    // selectEnemy(&enemy[*contEnemy], tipo);
-
-    enemy[*contEnemy].rec =(Rectangle){enemy[*contEnemy].enemy_POSINICIAL_X, enemy[*contEnemy].enemy_POSINICIAL_Y, enemy[*contEnemy].enemy_DIM_X, enemy[*contEnemy].enemy_DIM_Y}; 
-    
-    (*contEnemy)++;
-
-    return enemy;
-}
-
-
-
-void selectEnemy(Enemy* enemy, TipoInimigo tipo){
-    if(tipo == CarangueijoArmandoCarlos){
-        enemy->health = 150;
-        enemy->damage = 15;
-        enemy->speed = -1.2f;
-        enemy->attackAnimationLength = 0.3f;
-        enemy->attackThreshold = 80;
-
+void selectEnemyTexture(Enemy* enemy, TipoInimigo tipo){
+  if (tipo == CarangueijoArmandoCarlos) {
         inimAnim_walkingRight = inim1Anim_walkingRight;
         inimAnim_walkingLeft = inim1Anim_walkingLeft;
         inimAnim_dyingLeft = inim1Anim_dyingLeft;
@@ -130,13 +100,8 @@ void selectEnemy(Enemy* enemy, TipoInimigo tipo){
         inimAnim_attackingLeft = inim1Anim_attackingLeft;
         inimAnim_attackingRight = inim1Anim_attackingRight;
 
-    }else if(tipo == RonaldoUmidade){
-        enemy->health = 100;
-        enemy->damage = 10;
-        enemy->speed = -0.4f;
-        enemy->attackAnimationLength = 0.3f;
-        enemy->attackThreshold = 45;    
-
+    }
+    else if (tipo == CalabresoTarcioGeometria) {
         inimAnim_walkingRight = inim2Anim_walkingRight;
         inimAnim_walkingLeft = inim2Anim_walkingLeft;
         inimAnim_dyingLeft = inim2Anim_dyingLeft;
@@ -144,14 +109,9 @@ void selectEnemy(Enemy* enemy, TipoInimigo tipo){
         inimAnim_attackingLeft = inim2Anim_attackingLeft;
         inimAnim_attackingRight = inim2Anim_attackingRight;
 
-    }else if(tipo == CalabresoTarcioGeometria){
-        enemy->health = 120;
-        enemy->damage = 30;
-        enemy->speed = -2.f;
-        enemy->attackAnimationLength = 0.3f;
-        enemy->attackThreshold = 80;
 
-
+    }
+    else if (tipo == RonaldoUmidade) {
         inimAnim_walkingRight = inim3Anim_walkingRight;
         inimAnim_walkingLeft = inim3Anim_walkingLeft;
         inimAnim_dyingLeft = inim3Anim_dyingLeft;
@@ -159,12 +119,98 @@ void selectEnemy(Enemy* enemy, TipoInimigo tipo){
         inimAnim_attackingLeft = inim3Anim_attackingLeft;
         inimAnim_attackingRight = inim3Anim_attackingRight;
 
+
     }
 }
 
-void updateEnemy(int type, Enemy* enemy, int* cont, int SCREEN_WIDTH, int* direct, float Pposx, Texture2D bala, gun** GunRU, int* contRU, bool collision, Player *player){
+void selectEnemyAtributes(Enemy *enemy, TipoInimigo tipo){
+    
+    if (tipo == CarangueijoArmandoCarlos) {
+
+        enemy->enemy_DIM_X = 120;
+        enemy->enemy_DIM_Y = 120;
+
+        enemy->health = 150;
+        enemy->damage = 30;
+        enemy->speed = -1.f;
+        enemy->pontuacao = 51;
+
+        enemy->attackAnimationLength = 0.3f;
+        enemy->attackThreshold = 80;
+
+
+
+
+    }
+
+    else if (tipo == CalabresoTarcioGeometria) {
+
+        enemy->enemy_DIM_X = 105;
+        enemy->enemy_DIM_Y = 105;
+
+        enemy->health = 100;
+        enemy->damage = 10;
+        enemy->speed = -1.4f;
+        enemy->pontuacao = 41;
+
+        enemy->attackAnimationLength = 0.3f;
+        enemy->attackThreshold = 80;
+
+    }
+    else if (tipo == RonaldoUmidade) {
+
+        enemy->enemy_DIM_X = 105;
+        enemy->enemy_DIM_Y = 105;
+
+
+        enemy->health = 80;
+        enemy->damage = 15;
+        enemy->speed = -0.3f;
+        enemy->pontuacao = 11;
+
+        enemy->attackAnimationLength = 0.3f;
+        enemy->attackThreshold = 50;
+
+    }
+}
+
+
+
+
+
+Enemy* addEnemy(Enemy* CAC, int* contCAC, float attackAnimationLength, float atackThreshold, float SpawnX, float SpawnY, TipoInimigo tipo){
+    CAC = (Enemy*) realloc(CAC, (*contCAC+1)*(sizeof(Enemy)));
     
     
+
+    CAC[*contCAC].enemy_POSINICIAL_X = SpawnX;
+    CAC[*contCAC].enemy_POSINICIAL_Y = SpawnY;
+    CAC[*contCAC].isAlive = true;
+    CAC[*contCAC].attackPosition = false;
+    CAC[*contCAC].hitTimer = 0.f;
+    CAC[*contCAC].deathTimer = 0.f;
+    CAC[*contCAC].hitDelay = 0.5f;
+    CAC[*contCAC].timeSinceLastHit = 0.f;
+    CAC[*contCAC].attackAnimationTimer = 0.0f;
+
+
+    // printf("AAA\n");
+
+
+    //print tipo
+    // printf("tipo: %d\n", tipo);
+
+    selectEnemyAtributes(&CAC[*contCAC], tipo);
+
+
+    CAC[*contCAC].rec =(Rectangle){CAC[*contCAC].enemy_POSINICIAL_X, CAC[*contCAC].enemy_POSINICIAL_Y, CAC[*contCAC].enemy_DIM_X, CAC[*contCAC].enemy_DIM_Y}; 
+    
+    (*contCAC)++;
+
+    return CAC;
+}
+
+void updateEnemy(int type, Enemy* enemy, int* cont, int SCREEN_WIDTH, int* direct, float Pposx, Texture2D bala, gun** GunRU, int* contRU, bool collision, Player *player, int* numEnemies, TipoInimigo tipo, int* MAX_ENEMIES){
     
 
 
@@ -175,6 +221,8 @@ void updateEnemy(int type, Enemy* enemy, int* cont, int SCREEN_WIDTH, int* direc
             *direct = -1;
         }
         
+        selectEnemyTexture(&enemy[i], tipo);
+
         enemy[i].timeSinceLastHit += GetFrameTime();
 
         if (enemy[i].isAlive && !enemy[i].attackPosition) enemy[i].enemy_POSINICIAL_X = f2(enemy[i].enemy_POSINICIAL_X, enemy[i].speed, *direct);
@@ -209,6 +257,11 @@ void updateEnemy(int type, Enemy* enemy, int* cont, int SCREEN_WIDTH, int* direc
         if (enemy[i].health < 0 && enemy[i].isAlive) {
             enemy[i].isAlive = false;
             enemy[i].deathTimer = 1.2f; // Set the timer to the length of the death animation
+            player->pontuacao += enemy[i].pontuacao;
+            if (player->pontuacao >= 100) *(MAX_ENEMIES) += (player->pontuacao  % 3);
+
+            printf("Teste: %d MAX_ENEMIES %d\n" , (player->pontuacao  % 10), *MAX_ENEMIES);
+
         }
 
         // If the deathTimer is greater than 0, draw the death animation
@@ -223,6 +276,8 @@ void updateEnemy(int type, Enemy* enemy, int* cont, int SCREEN_WIDTH, int* direc
         if(enemy[i].deathTimer <= 0.0f && !enemy[i].isAlive) {
             removeEnemy(&enemy, cont, i);
             i--;
+            (*numEnemies)--;
+
         }
 
         
@@ -240,7 +295,7 @@ void updateEnemy(int type, Enemy* enemy, int* cont, int SCREEN_WIDTH, int* direc
 
         // printf("distance: %f\n", distance);
 
-        if(distance <= enemy[i].attackThreshold && (enemy[i].timeSinceLastHit >= enemy[i].hitDelay) && enemy[i].attackPosition == false && CheckCollisionRecs(enemy[i].rec, player->rec)){
+        if(distance <= enemy[i].attackThreshold && (enemy[i].timeSinceLastHit >= enemy[i].hitDelay) && enemy[i].attackPosition == false && CheckCollisionRecs(enemy[i].rec, player->rec) && enemy[i].isAlive){
             enemy[i].attackPosition = true;
             enemy[i].attackAnimationTimer = enemy[i].attackAnimationLength; // Start the attack animation
         }
@@ -268,7 +323,7 @@ void updateEnemy(int type, Enemy* enemy, int* cont, int SCREEN_WIDTH, int* direc
         // printf("player health: %f\n", player->health);
 
 
-
+        // printf("pontuacao %.2f\n", player->pontuacao);
     }
     updateGun(*GunRU, *contRU, bala);
 }

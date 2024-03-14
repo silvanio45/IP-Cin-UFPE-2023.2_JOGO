@@ -19,16 +19,16 @@
 // Variáveis Locais (local para este módulo)
 //----------------------------------------------------------------------------------
 
-#define SCREEN_WIDTH 1280
+#define MAX_SOUNDS 2
+#define SCREEN_WIDTH 1080
 #define SCREEN_HEIGHT 540
-#define MAX_ENEMIES 10
+
+Sound sounds[MAX_SOUNDS];
 
 Texture2D playerSpriteSheet;
 Texture2D inimigo2SpriteSheet;
 Texture2D inimigo3SpriteSheet;
 Texture2D inimigo1SpriteSheet;
-Texture2D RonaldoUmidadeSprite;
-Texture2D ruTexture;
 Texture2D cenario;
 Texture2D cenarioLog;
 Texture2D botaoStart;
@@ -102,6 +102,13 @@ Platforms platforms[] = {
     {{900, 204, 400, 60}, 1}
 };
 
+int MAX_ENEMIES = 5;
+
+
+//Músicas 
+
+int musica = 0, numSounds = 0;
+
 //----------------------------------------------------------------------------------
 // Declaração de Funções Locais
 //----------------------------------------------------------------------------------
@@ -112,13 +119,26 @@ static void UpdateDrawFrame(void);
 // Ponto de Entrada Principal
 //----------------------------------------------------------------------------------
 
+FILE *file;
+bool nameInput = false;
+
  Music Start; 
 
 Color color = WHITE;
 
 Music jogo_g1;
 
+#define MAX_INPUT_CHARS     20
+
 //Spawn points
+
+char name[MAX_INPUT_CHARS + 1] = "\0";      // NOTE: One extra space required for null terminator char '\0'
+int letterCount = 0;
+
+Rectangle textBox = { SCREEN_WIDTH/2.0f - 100, 180, 225, 50 };
+bool mouseOnText = false;
+
+int framesCounter = 0;
 
 
 
@@ -154,16 +174,18 @@ int main()
 
     jogo_g1 = LoadMusicStream("resources/sound/jogo_g1.mp3");
 
+
     //----------------------------------------------------------------------------------
     //  Animacoes
     //  Player
     player.direc = 1;
     player.isJumping = false;
     player.speed = 6.0f;
-    player.health = 20;
+    player.health = 200;
     player.damage = 40;
     player.isAlive = true;
     player.deathTimer = 1.0f;
+    player.pontuacao = 0.0f;
     
 
     botaoStartColis = (Rectangle){ BOTAOINICIAL_POS_X, BOTAOINICIAL_POS_Y, botaoStart.width, botaoStart.height };
@@ -185,6 +207,44 @@ int main()
         // Loop principal do jogo
         while (!WindowShouldClose())
         {
+             // Update
+        //----------------------------------------------------------------------------------
+        if (CheckCollisionPointRec(GetMousePosition(), textBox)) mouseOnText = true;
+        else mouseOnText = false;
+
+        if (mouseOnText)
+        {
+            // Set the window's cursor to the I-Beam
+            SetMouseCursor(MOUSE_CURSOR_IBEAM);
+
+            // Get char pressed (unicode character) on the queue
+            int key = GetCharPressed();
+
+            // Check if more characters have been pressed on the same frame
+            while (key > 0)
+            {
+                // NOTE: Only allow keys in range [32..125]
+                if ((key >= 32) && (key <= 125) && (letterCount < MAX_INPUT_CHARS))
+                {
+                    name[letterCount] = (char)key;
+                    name[letterCount+1] = '\0'; // Add null terminator at the end of the string.
+                    letterCount++;
+                }
+
+                key = GetCharPressed();  // Check next character in the queue
+            }
+
+            if (IsKeyPressed(KEY_BACKSPACE))
+            {
+                letterCount--;
+                if (letterCount < 0) letterCount = 0;
+                name[letterCount] = '\0';
+            }
+        }
+        else SetMouseCursor(MOUSE_CURSOR_DEFAULT);
+
+        if (mouseOnText) framesCounter++;
+        else framesCounter = 0;
             timeSinceLastShot += GetFrameTime();
             timeSinceLastRu += GetFrameTime();
             timeSinceLastCAC += GetFrameTime();
@@ -200,7 +260,6 @@ int main()
     UnloadTexture(botaoStart);
     UnloadTexture(cenarioLog);
     UnloadTexture(bulletTexture);
-    UnloadTexture(RonaldoUmidadeSprite);
     DisposeSpriteAnimation(playerAnim_idleLeft);
     DisposeSpriteAnimation(playerAnim_idleRight);
     DisposeSpriteAnimation(playerAnim_walkingLeft);
@@ -235,35 +294,53 @@ static void UpdateDrawFrame(void)
 
         if (player.rec.y > 600 ) player.rec.y = 600;
         
-        
-         // Choose a random spawn point
-        int spawnIndex = GetRandomValue(0, sizeof(spawnPoints)/sizeof(spawnPoints[0]) - 1);
-        Vector2 spawnPoint = spawnPoints[spawnIndex];
+int numRu = 0, numCAC = 0, numCTG = 0;
 
-        if(numEnemies < MAX_ENEMIES){
-            if(timeSinceLastRu >= RuDelay){ //Estudante de Engenharia
-                Ru = addEnemy(Ru, &cont, spawnPoint.x, spawnPoint.y, RonaldoUmidade);
+if(numEnemies < MAX_ENEMIES && !menu_open){
+    int spawnIndex = GetRandomValue(0, sizeof(spawnPoints)/sizeof(spawnPoints[0]) - 1);
+    Vector2 spawnPoint = spawnPoints[spawnIndex];
+
+    int enemyType = GetRandomValue(1, 3); // Randomly choose the type of enemy
+
+    switch(enemyType){
+        case 1: // Estudante de Engenharia
+            if(timeSinceLastRu >= RuDelay && numRu < MAX_ENEMIES/3){
+                // printf("1\n");
+                Ru = addEnemy(Ru, &cont, 0.3f, 80, spawnPoint.x, spawnPoint.y, RonaldoUmidade);
                 timeSinceLastRu = 0.0f;
                 numEnemies++;
+                numRu++;
             }
-            else if(timeSinceLastCAC >= CACDelay){//Caranguejo
-                CAC = addEnemy(CAC, &cont, spawnPoint.x, spawnPoint.y, CarangueijoArmandoCarlos);
-
+            break;
+        case 2: // Caranguejo
+            if(timeSinceLastCAC >= CACDelay && numCAC < MAX_ENEMIES/3){
+                // printf("2\n");
+                CAC = addEnemy(CAC, &contCAC, 0.3f, 80, spawnPoint.x, spawnPoint.y, CarangueijoArmandoCarlos);
                 timeSinceLastCAC = 0.0f;
                 numEnemies++;
+                numCAC++;
             }
-            else if(timeSinceLastCTG >= CTGDelay){//Dengue
-                CTG = addEnemy(CTG, &cont, spawnPoint.x, spawnPoint.y, CalabresoTarcioGeometria);
+            break;
+        case 3: // Dengue
+            if(timeSinceLastCTG >= CTGDelay && numCTG < MAX_ENEMIES/3){
+                // printf("3\n");
+                CTG = addEnemy(CTG, &contCTG,  0.3f, 45, spawnPoint.x, spawnPoint.y, CalabresoTarcioGeometria);
                 timeSinceLastCTG = 0.0f;
                 numEnemies++;
+                numCTG++;
             }
-        }    
+            break;
+    }
+}
+        
+        // MAX_ENEMIES = updateInimigo(MAX_ENEMIES, player.pontuacao);
 
+        // printf("%d %d\n", MAX_ENEMIES, player.pontuacao);
 
         if(IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)) player.isPlayerLookingUp = true;
         else player.isPlayerLookingUp = false;
 
-       pulo(&player, gravidade, platforms, 2);
+        pulo(&player, gravidade, platforms, 2);
 
 
         if(IsKeyDown(KEY_X)){
@@ -286,15 +363,40 @@ static void UpdateDrawFrame(void)
         
         BeginDrawing();
             ClearBackground(WHITE);
+
             DrawTexture(cenarioLog, 0, 0, WHITE);
             DrawTexture(botaoStart, BOTAOINICIAL_POS_X, BOTAOINICIAL_POS_Y, WHITE);
+
+            DrawText("Digite seu nome!", textBox.x, textBox.y - 30, 20, YELLOW);
+
+            DrawRectangleRec(textBox, LIGHTGRAY);
+            if (mouseOnText) DrawRectangleLines((int)textBox.x, (int)textBox.y, (int)textBox.width, (int)textBox.height, RED);
+            else DrawRectangleLines((int)textBox.x, (int)textBox.y, (int)textBox.width, (int)textBox.height, DARKGRAY);
+
+            DrawText(name, (int)textBox.x + 5, (int)textBox.y + 8, 40, MAROON);
+
+            // DrawText(TextFormat("INPUT CHARS: %i/%i", letterCount, MAX_INPUT_CHARS), 315, 250, 20, DARKGRAY);
+
+            if (mouseOnText)
+            {
+                if (letterCount < MAX_INPUT_CHARS)
+                {
+                    // Draw blinking underscore char
+                    if (((framesCounter/20)%2) == 0) DrawText("_", (int)textBox.x + 8 + MeasureText(name, 40), (int)textBox.y + 12, 40, MAROON);
+                }
+                else DrawText("Press BACKSPACE to delete chars...", 230, 300, 20, GRAY);
+            }
+
+
         EndDrawing();
     }
     else if (!endGame && !menu_open){
         // scrollingBack += 0.1f;
         // if (scrollingBack <= -skyBackground.width*2) scrollingBack = 0;
-        StopMusicStream(Start);
-        PlayMusicStream(jogo_g1);
+
+            
+        
+
         // UpdateMusicStream(Start);
         BeginDrawing();
             ClearBackground(WHITE);
@@ -320,8 +422,7 @@ static void UpdateDrawFrame(void)
             DrawTextureEx(clouds1, (Vector2){ clouds1.width*1 + scrollingClouds1, 0 }, 0.0f, 1.0f, WHITE);
 
             DrawTexture(cenario, 0, 0, WHITE);
-            
-            
+                       
 
 
             collisionRU = updateProjectils(bulletTexture, sourceRecBullet, SCREEN_WIDTH, Ru, &cont, player.isPlayerLookingUp, platforms, player);    
@@ -330,23 +431,45 @@ static void UpdateDrawFrame(void)
 
             collisionCTG = updateProjectils(bulletTexture, sourceRecBullet, SCREEN_WIDTH, CTG, &contCTG, player.isPlayerLookingUp, platforms , player);
 
-            updateEnemy(1, Ru, &cont, SCREEN_WIDTH, &Ru->direct, player.rec.x, bulletTexture, &GunRU, &contGunRU, collisionRU, &player);
-            updateEnemy(2, CAC, &contCAC, SCREEN_WIDTH, &CAC->direct, player.rec.x, bulletTexture, &GunCAC, &contGunCAC, collisionCAC, &player);
-            updateEnemy(3, CTG, &contCTG, SCREEN_WIDTH, &CTG->direct, player.rec.x, bulletTexture, &GunCTG, &contGunCTG, collisionCTG, &player);
+            updateEnemy(1, Ru, &cont, SCREEN_WIDTH, &Ru->direct, player.rec.x, bulletTexture, &GunRU, &contGunRU, collisionRU, &player, &numEnemies, RonaldoUmidade, &MAX_ENEMIES);
+            updateEnemy(2, CAC, &contCAC, SCREEN_WIDTH, &CAC->direct, player.rec.x, bulletTexture, &GunCAC, &contGunCAC, collisionCAC, &player, &numEnemies, CarangueijoArmandoCarlos, &MAX_ENEMIES);
+            updateEnemy(3, CTG, &contCTG, SCREEN_WIDTH, &CTG->direct, player.rec.x, bulletTexture, &GunCTG, &contGunCTG, collisionCTG, &player, &numEnemies, CalabresoTarcioGeometria, &MAX_ENEMIES);
 
             if(player.deathTimer >= 0.0f || player.isAlive) playerAnimation(player.direc, player.rec, &player);
             
-            // if(player.deathTimer <= 0.0f && !player.isAlive) {
-            //     color.a += 5.f;
-            //     if (color.a >= 255) {color.a = 255; endGame = true;}
-            //     DrawTexture(gameOver, 0, -140, color);
-                
-            // }
+            
 
-            printf("x = %.2f, y = %.2f\n", player.rec.x, player.rec.y);
 
+
+            if(player.deathTimer <= 0.0f && !player.isAlive){
+                endGame = true;
+            };
+
+            if(endGame){
+                // Open the file in append mode
+                file = fopen("pontuacao.txt", "a");
+                if (file == NULL) {
+                    printf("Cannot open file \n");
+                    return 0;
+                }
+
+                // Write the player name and score to the file
+                fprintf(file, "\n%s %d\n", name, player.pontuacao);
+
+                // Close the file
+                fclose(file);
+            }
+            
         EndDrawing();
-    } 
+    }else if(endGame && !menu_open){
+        BeginDrawing();
+            ClearBackground(WHITE);
+            DrawTexture(gameOver, 0, -100, WHITE);
+        EndDrawing();
+    }
+
+
+
 
     // while (bulletList != NULL) {
     //     removeBullet(bulletList);
@@ -364,3 +487,7 @@ static void UpdateDrawFrame(void)
     // UpdateMusicStream(music);
 }
 
+void freePonteiros(){
+
+    
+}
