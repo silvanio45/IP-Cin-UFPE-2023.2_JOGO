@@ -21,7 +21,7 @@
 
 #define SCREEN_WIDTH 1280
 #define SCREEN_HEIGHT 540
-
+#define MAX_ENEMIES 10
 
 Texture2D playerSpriteSheet;
 Texture2D inimigo2SpriteSheet;
@@ -39,6 +39,8 @@ Texture2D gameOver;
 
 Rectangle botaoStartColis;
 // Rectangle playerRect;
+
+int numEnemies = 0;
 
 Rectangle sourceRecBullet;
 Texture2D bulletTexture;
@@ -211,7 +213,12 @@ int main()
 //spawn points:
 // 1 - x: 1200, y: 400
 // 2 - x: 0, y: 400
-// 3 - x: 1200, y: 98
+//spawn points:
+Vector2 spawnPoints[] = {
+    {1200, 400}, // 1
+    {0, 400},    // 2
+};
+
 static void UpdateDrawFrame(void)
 {
     // Atualização
@@ -228,25 +235,30 @@ static void UpdateDrawFrame(void)
 
         if (player.rec.y > 600 ) player.rec.y = 600;
         
-        if(IsKeyDown(KEY_J)){
-            if(timeSinceLastRu >= RuDelay){
-                Ru = addEnemy(Ru, &cont, inimigo1SpriteSheet, 0.3f, 80);
-                timeSinceLastRu = 0.0f;
-            }
-        }
-        if(IsKeyDown(KEY_K)){
-            if(timeSinceLastCAC >= CACDelay){
-                CAC = addEnemy(CAC, &contCAC, inimigo1SpriteSheet, 0.3f, 80);
-                timeSinceLastCAC = 0.0f;
-            }
-        }
-        if(IsKeyDown(KEY_L)){
-            if(timeSinceLastCTG >= CTGDelay){
-                CTG = addEnemy(CTG, &contCTG, inimigo2SpriteSheet, 0.3f, 45);
-                timeSinceLastCTG = 0.0f;
-            }
-        }
         
+         // Choose a random spawn point
+        int spawnIndex = GetRandomValue(0, sizeof(spawnPoints)/sizeof(spawnPoints[0]) - 1);
+        Vector2 spawnPoint = spawnPoints[spawnIndex];
+
+        if(numEnemies < MAX_ENEMIES){
+            if(timeSinceLastRu >= RuDelay){ //Caranguejo
+                Ru = addEnemy(Ru, &cont, inimigo1SpriteSheet, 0.3f, 80, spawnPoint.x, spawnPoint.y, 1.2f);
+                timeSinceLastRu = 0.0f;
+                numEnemies++;
+            }
+            else if(timeSinceLastCAC >= CACDelay){//Dengue
+                CAC = addEnemy(CAC, &contCAC, inimigo1SpriteSheet, 0.3f, 80, spawnPoint.x, spawnPoint.y, 1.f);
+                timeSinceLastCAC = 0.0f;
+                numEnemies++;
+            }
+            else if(timeSinceLastCTG >= CTGDelay){//Estudante de Engenharia
+                CTG = addEnemy(CTG, &contCTG, inimigo2SpriteSheet, 0.3f, 45, spawnPoint.x, spawnPoint.y, 0.4f);
+                timeSinceLastCTG = 0.0f;
+                numEnemies++;
+            }
+        }    
+
+
         if(IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)) player.isPlayerLookingUp = true;
         else player.isPlayerLookingUp = false;
 

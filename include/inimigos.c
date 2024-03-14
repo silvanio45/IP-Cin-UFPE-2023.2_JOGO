@@ -81,7 +81,7 @@ void removeEnemy(Enemy** CAC, int* contCAC, int index) {
 }
 
 
-Enemy* addEnemy(Enemy* CAC, int* contCAC, Texture2D inimigo1SpriteSheet, float attackAnimationLength, float atackThreshold, float SpawnX, float SpawnY){
+Enemy* addEnemy(Enemy* CAC, int* contCAC, Texture2D inimigo1SpriteSheet, float attackAnimationLength, float atackThreshold, float SpawnX, float SpawnY, float speed){
     CAC = (Enemy*) realloc(CAC, (*contCAC+1)*(sizeof(Enemy)));
     
     
@@ -90,7 +90,7 @@ Enemy* addEnemy(Enemy* CAC, int* contCAC, Texture2D inimigo1SpriteSheet, float a
     CAC[*contCAC].enemy_POSINICIAL_Y = SpawnY;
     CAC[*contCAC].enemy_DIM_X = 105;
     CAC[*contCAC].enemy_DIM_Y = 105;
-    CAC[*contCAC].speed = -1;
+    CAC[*contCAC].speed = -speed;
     CAC[*contCAC].health = 100;
     CAC[*contCAC].damage = 10;
     CAC[*contCAC].isAlive = true;
@@ -173,20 +173,20 @@ void updateEnemy(int type, Enemy* enemy, int* cont, int SCREEN_WIDTH, int* direc
             enemy[i].hitTimer -= GetFrameTime(); // Decrease the timer by the frame time
 
             if(!enemy[i].attackPosition)
-                if (*direct) DrawSpriteAnimationPro(inimAnim_walkingLeft, enemy[i].rec, (Vector2){0, 0}, 0, RED);
+                if (*direct == 1) DrawSpriteAnimationPro(inimAnim_walkingLeft, enemy[i].rec, (Vector2){0, 0}, 0, RED);
                 else DrawSpriteAnimationPro(inimAnim_walkingRight, enemy[i].rec, (Vector2){0, 0}, 0, RED);
             else
-                if (*direct) DrawSpriteAnimationPro(inimAnim_attackingLeft, enemy[i].rec, (Vector2){0, 0}, 0, RED);
-                else DrawSpriteAnimationPro(inim1Anim_attackingRight, enemy[i].rec, (Vector2){0, 0}, 0, RED);
+                if (*direct == 1) DrawSpriteAnimationPro(inimAnim_attackingLeft, enemy[i].rec, (Vector2){0, 0}, 0, RED);
+                else DrawSpriteAnimationPro(inimAnim_attackingRight, enemy[i].rec, (Vector2){0, 0}, 0, RED);
 
         } 
         else if (enemy[i].health >= 0 &&  enemy[i].isAlive) {
 
             if (enemy[i].attackPosition)
-                if (*direct) DrawSpriteAnimationPro(inimAnim_attackingLeft, enemy[i].rec, (Vector2){0, 0}, 0, WHITE);
-                else DrawSpriteAnimationPro(inim1Anim_attackingRight, enemy[i].rec, (Vector2){0, 0}, 0, WHITE);
+                if (*direct == 1) DrawSpriteAnimationPro(inimAnim_attackingLeft, enemy[i].rec, (Vector2){0, 0}, 0, WHITE);
+                else DrawSpriteAnimationPro(inimAnim_attackingRight, enemy[i].rec, (Vector2){0, 0}, 0, WHITE);
             else 
-                if (*direct) DrawSpriteAnimationPro(inimAnim_walkingLeft, enemy[i].rec, (Vector2){0, 0}, 0, WHITE);
+                if (*direct == 1) DrawSpriteAnimationPro(inimAnim_walkingLeft, enemy[i].rec, (Vector2){0, 0}, 0, WHITE);
                 else DrawSpriteAnimationPro(inimAnim_walkingRight, enemy[i].rec, (Vector2){0, 0}, 0, WHITE);
 
 
@@ -202,7 +202,7 @@ void updateEnemy(int type, Enemy* enemy, int* cont, int SCREEN_WIDTH, int* direc
         if (enemy[i].deathTimer > 0.0f) {
             enemy[i].deathTimer -= GetFrameTime(); // Decrease the timer by the frame time
 
-            if (*direct) DrawSpriteAnimationPro(inimAnim_dyingLeft, enemy[i].rec, (Vector2){0, 0}, 0, WHITE);
+            if (*direct == 1) DrawSpriteAnimationPro(inimAnim_dyingLeft, enemy[i].rec, (Vector2){0, 0}, 0, WHITE);
             else DrawSpriteAnimationPro(inimAnim_dyingRight, enemy[i].rec, (Vector2){0, 0}, 0, WHITE);
 
         }
@@ -227,7 +227,7 @@ void updateEnemy(int type, Enemy* enemy, int* cont, int SCREEN_WIDTH, int* direc
 
         // printf("distance: %f\n", distance);
 
-        if(distance <= enemy[i].attackThreshold && (enemy[i].timeSinceLastHit >= enemy[i].hitDelay) && enemy[i].attackPosition == false){
+        if(distance <= enemy[i].attackThreshold && (enemy[i].timeSinceLastHit >= enemy[i].hitDelay) && enemy[i].attackPosition == false && CheckCollisionRecs(enemy[i].rec, player->rec)){
             enemy[i].attackPosition = true;
             enemy[i].attackAnimationTimer = enemy[i].attackAnimationLength; // Start the attack animation
         }
@@ -252,7 +252,7 @@ void updateEnemy(int type, Enemy* enemy, int* cont, int SCREEN_WIDTH, int* direc
 
 
 
-        printf("player health: %f\n", player->health);
+        // printf("player health: %f\n", player->health);
 
 
 
